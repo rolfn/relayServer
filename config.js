@@ -1,5 +1,5 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
 
 const MODULE = 'config';
 

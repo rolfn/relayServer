@@ -1,4 +1,6 @@
 
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
+
 const MODULE = 'relay';
 
 var exec = require('child_process').exec;
@@ -106,11 +108,6 @@ function analyzeActions_1(data, pRef) {
 
 exports.start = function start(_req, _res) {
   fdebug('time', '' + new Date().getTime(), 1);
-  if ((_req.headers.host) && (!exec)) {
-    var tmp = _req.headers.host.split(':');
-    THIS_HOST = tmp[0];
-    THIS_PORT = tmp[1];
-  }
   var pRef = {req:_req, res:_res, jobId:'NJS'+new Date().getTime()};
   fdebug('_req', inspect(_req), 102);
   _req.setEncoding('utf8');
@@ -120,7 +117,6 @@ exports.start = function start(_req, _res) {
     body += chunk;
   }); 
   _req.on('end', function () {
-    //getENV(pRef, body);
     tools.getEnv(cfg.env, analyzeActions_1, body, pRef);
   });
   _res.connection.on('close', function () {
@@ -128,6 +124,3 @@ exports.start = function start(_req, _res) {
     debug('close connection');
   });
 };
-
-
-console.log('------------------------------');

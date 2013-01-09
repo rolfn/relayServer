@@ -1,4 +1,6 @@
 
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
+
 const MODULE = 'tools';
 
 var util = require('util');
@@ -64,6 +66,10 @@ exports.inspect = function inspect(o) {
 
 String.prototype.trim = function() {
   return this.replace(/^\s+|\s+$/g,"");
+}
+
+exports.pad2 = function(n) {
+  return n<10 ? '0'+n : n
 }
 
 /**

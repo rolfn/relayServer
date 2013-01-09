@@ -1,14 +1,9 @@
-#!/usr/bin/env node
-
 // Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
 
-const MODULE = 'nodejsServers';
+const MODULE = 'external';
 
-var http = require('http');
-var cfg = require('./config.js'); 
+var cfg = require('./config.js');
 var tools = require('./tools.js');
-var relay = require('./relay.js');
-// var dispatcher = require('./dispatcher.js');
 
 /**
  * In Abhängigkeit von "level" Ausgabe von Informationen.
@@ -32,10 +27,3 @@ function fdebug (subitem, info, level) {
   debug(item, subitem, info, level);
 }
 
-var server1 = http.createServer(relay.start);
-server1.listen(cfg.RELAY_PORT);
-
-/*
-var server2 = http.createServer(dispatcher.start);
-server2.listen(exports.DISPATCHER_PORT);
-*/
