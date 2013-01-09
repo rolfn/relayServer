@@ -1,11 +1,12 @@
 
 // Rolf Niepraschk, Rolf.Niepraschk@ptb.de
 
-const MODUL = 'config';
+const MODULE = 'config';
 
 var cfg = {
   VERSION: '7.0a, 2013-01-09',
-  RELAY_PORT: 55555,
+  //RELAY_PORT: 55555,
+  RELAY_PORT: 61111,
   DISPATCHER_PORT: 55565,
   DEFAULT_EXEC_TIMEOUT: 10000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,

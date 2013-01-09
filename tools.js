@@ -1,4 +1,6 @@
 
+const MODULE = 'tools';
+
 var util = require('util');
 
 var debugLevel = (process.argv[2]) ? process.argv[2] : 0; // 5, 99
@@ -43,6 +45,17 @@ exports.debug = function debug(module, item, _subitem, _info, _level) {
       sgr(BOLD + ';' + (COLOR + BLUE)) + item + sgr(RESET) + 
         subitem + ']' + info + '\n');
   }
+}
+
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug (subitem, info, level) {
+  var item = arguments.callee.caller.name ? arguments.callee.caller.name : '::';
+  debug(item, subitem, info, level);
 }
 
 exports.inspect = function inspect(o) {
@@ -118,4 +131,30 @@ exports.getEnv = function(target, next, body) {
     next.apply(this, next_args);
   }
 }
+
+// Siehe: https://github.com/ryanmcgrath/wrench-js
+exports.rmdirRecursive = function(dir, clbk){
+  fs.readdir(dir, function(err, files){
+    if (err) return clbk(err);
+    (function rmFile(err){
+      if (err) return clbk(err);
+      var filename = files.shift();
+      if (filename === null || typeof filename == 'undefined') {
+        fdebug('rmdir', dir);
+        return fs.rmdir(dir, clbk);
+      }
+      var file = dir+'/'+filename;
+      fs.stat(file, function(err, stat){
+        if (err) return clbk(err);
+        if (stat.isDirectory()) {
+          rmdirRecursive(file, rmFile);
+          fdebug('rmdir', file);
+        } else {
+          fs.unlink(file, rmFile);
+          fdebug('unlink', file);
+        }
+      });
+    })();
+  });
+};
 

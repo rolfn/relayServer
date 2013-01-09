@@ -1,9 +1,133 @@
 
-const MODUL = 'relay';
+const MODULE = 'relay';
 
+var exec = require('child_process').exec;
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+var response = require('./response.js');
 
-console.log('MODUL: ' + MODUL);
-console.log(cfg.ENV);
+/**
+ * In Abhängigkeit von "level" Ausgabe von Informationen.
+ * @param item meist Funktionsname
+ * @param subitem spezifische Aktion innerhalb der Funktion.
+ * @param info Daten
+ * @param level
+ */
+function debug(item, subitem, info, level) {
+  tools.debug(MODULE, item, subitem, info, level);
+}
+
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug (subitem, info, level) {
+  var item = arguments.callee.caller.name ? arguments.callee.caller.name : '::';
+  debug(item, subitem, info, level);
+}
+
+function inspect(o) {
+  return tools.inspect(o);
+}
+
+/**
+ * Analysiert den Action-Typ.
+ * @param str Action-String.
+ * @returns -1 --> "internal action",
+ *           0 --> "invalid external action",
+ *           1 --> "valid external action"
+ */
+function getActionType(str) {
+  var ret = str.indexOf('/');
+  if (ret > -1) {
+    ret = 0;
+    for (i in cfg.bin) {
+      if (cfg.bin[i] == str) {
+        ret = 1; break;
+      }
+    }
+  }
+  return ret;
+}
+
+function analyzeActions_3(pRef, js) {
+  fdebug('js', inspect(js));
+  js.Repeat = tools.getInt(js.Repeat, 1);
+  js.Wait = tools.getInt(js.Wait, 0);
+  if (js.OutputType == undefined) js.OutputType = 'json';
+  if (js.OutputEncoding == undefined) js.OutputEncoding = 'utf8';
+  if (('DemoMode' in js) && (js.DemoMode) && ('DemoResponse' in js)) {
+    prepareResult(pRef, js, js.DemoResponse); // Hier auch _repeat?
+  } else if ('Action' in js) {
+    var aType = getActionType(js.Action);
+    fdebug('aType', '' + aType);
+    if (aType == -1) {
+      //callInternal(pRef, js);
+      response.prepareError(pRef, js, 'internal action not implementd');
+    } else if (aType == 1) {
+      //callExternal(pRef, js);
+      response.prepareError(pRef, js, 'external action not implementd');
+    } else if (aType == 0) {
+      response.prepareError(pRef, js, 'unknown external action');
+    }
+  } else response.prepareError(pRef, js, 'action not found');
+}
+
+function analyzeActions_2(pRef, js) {
+  if (js.Passwd != undefined) {
+    zlib.deflate(js.Passwd, function(err, buf) {
+      if (err) {
+        response.prepareError(pRef, js, 'internal error');
+      } else {
+        js.Passwd = buf;
+        analyzeActions_3(pRef, js);
+      }
+    });      
+  } else {
+    analyzeActions_3(pRef, js);
+  }
+}
+
+function analyzeActions_1(data, pRef) {
+  var js = {};
+  if (data) {
+    try{
+      js = JSON.parse(data);
+    } catch(err) {
+      response.prepareError(pRef, js, 'data error');
+    }
+    analyzeActions_2(pRef, js);
+  } else {
+    response.prepareError(pRef, js, 'no data');
+  }
+}
+
+exports.start = function start(_req, _res) {
+  fdebug('time', '' + new Date().getTime(), 1);
+  if ((_req.headers.host) && (!exec)) {
+    var tmp = _req.headers.host.split(':');
+    THIS_HOST = tmp[0];
+    THIS_PORT = tmp[1];
+  }
+  var pRef = {req:_req, res:_res, jobId:'NJS'+new Date().getTime()};
+  fdebug('_req', inspect(_req), 102);
+  _req.setEncoding('utf8');
+  _req.socket.setTimeout(0); 
+  var body = '';
+  _req.on('data', function (chunk) {
+    body += chunk;
+  }); 
+  _req.on('end', function () {
+    //getENV(pRef, body);
+    tools.getEnv(cfg.env, analyzeActions_1, body, pRef);
+  });
+  _res.connection.on('close', function () {
+    debug('close connection', 'time', '' + new Date().getTime(), 1);
+    debug('close connection');
+  });
+};
+
+
 console.log('------------------------------');

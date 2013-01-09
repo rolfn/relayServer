@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-const MODUL = 'nodejsServers';
+const MODULE = 'nodejsServers';
 
+var http = require('http');
 var cfg = require('./config.js'); 
 var tools = require('./tools.js');
 var relay = require('./relay.js');
@@ -15,23 +16,35 @@ for (var i in cfg.bin) {
 }
 console.log('------------------------------');
 
-function analyzeActions_1(body, pRef) {
-
-  console.log('body: ' + body);
-  console.log('pRef: ' + pRef);
-
+/**
+ * In Abhängigkeit von "level" Ausgabe von Informationen.
+ * @param item meist Funktionsname
+ * @param subitem spezifische Aktion innerhalb der Funktion.
+ * @param info Daten
+ * @param level
+ */
+function debug(item, subitem, info, level) {
+  tools.debug(MODULE, item, subitem, info, level);
 }
 
-tools.getEnv(cfg.env, analyzeActions_1, 'HUGO', 'GUSTAV');
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug (subitem, info, level) {
+  var item = arguments.callee.caller.name ? arguments.callee.caller.name : '::';
+  debug(item, subitem, info, level);
+}
 
-  console.log('MODUL: ' + MODUL);
+  console.log('MODULE: ' + MODULE);
   console.log(cfg.env); // zu früh!
   console.log('------------------------------');
 
-/*
 var server1 = http.createServer(relay.start);
-server1.listen(exports.RELAY_PORT);
-*/
+server1.listen(cfg.RELAY_PORT);
+
 /*
 var server2 = http.createServer(dispatcher.start);
 server2.listen(exports.DISPATCHER_PORT);
