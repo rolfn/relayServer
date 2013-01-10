@@ -6,16 +6,20 @@ var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
+var _tcp = require('./tcp.js');
+var _http = require('./http.js');
+var _email = require('./email.js');
+var _ldap = require('./ldap.js');
+var _latex = require('./latex.js');
 
 eval(tools.getFunctionCode('debug'));
 eval(tools.getFunctionCode('fdebug'));
 var inspect = tools.inspect;
 
 // Wenn "Repeat" wirksam werden soll, muss die Funktion "doIt" definiert werden.
-exports.call = function(pRef, js) {
+function call(pRef, js) {
   fdebug('js', inspect(js));
   var doIt = null;
-  var wait = js.Wait;
   switch (js.Action) {
     case 'RANDOM':
       doIt = function(b) {
@@ -31,7 +35,7 @@ exports.call = function(pRef, js) {
       };
       break;
     case 'TCP':
-      processTCP(pRef, js);
+      _tcp.call(pRef, js);
       break;
     case 'HTTP':
       processHTTP(pRef, js);
@@ -48,6 +52,7 @@ exports.call = function(pRef, js) {
     case 'LaTeX':
       // eigentl. external, aber wegen Komplexität intern verwaltet.
       // http://www.profv.de/texcaller/index.html
+      // https://github.com/vog/texcaller
       processLATEX_1(pRef, js);
       break;
     // Administration
@@ -58,8 +63,8 @@ exports.call = function(pRef, js) {
       response.prepareResult(pRef, js, cfg.env);
       break;
     case '_killRepeats':
-      for (key in theRepeats) {
-        theRepeats[key].running = false; // oder besser "delete"?
+      for (var key in cfg.theRepeats) {
+        delete cfg.theRepeats[key];
       }
       response.prepareResult(pRef, js, 'OK');
       break;
@@ -67,8 +72,10 @@ exports.call = function(pRef, js) {
   }
   // Wiederholte Funtionsaufrufe, falls gewünscht.
   if (doIt) {
-    utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
+    utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
       response.prepareResult(pRef, js, repeatResult);
     }, pRef);
   } 
 }
+
+exports.call = call;

@@ -122,6 +122,3 @@ exports.prepareError = function(pRef, js, data) {
   var jsonRes = {error:data};
   _sendResponse(pRef, js, jsonRes);
 }
-
-
-

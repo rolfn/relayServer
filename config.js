@@ -33,4 +33,3 @@ var cfg = {
 for (var i in cfg) exports[i] = cfg[i];
 
 delete cfg;
-

@@ -52,16 +52,16 @@ function debug(module, item, _subitem, _info, _level) {
 exports.debug = debug;
 
 var functions = {
-  debug: 'var debug = function(item, subitem, info, level) {' +
+  debug: 'function(item, subitem, info, level) {' +
          'tools.debug(MODULE, item, subitem, info, level); };',
-  fdebug: 'var fdebug = function fdebug (subitem, info, level) {' +
+  fdebug: 'function(subitem, info, level) {' +
           'var item = arguments.callee.caller.name ? ' +
           'arguments.callee.caller.name : "::";' +
           'debug(item, subitem, info, level); };'
-}
+};
 
-getFunctionCode = function(name) {
-  return functions[name];
+function getFunctionCode(name) {
+  return 'var ' + name + ' = ' + functions[name];
 }
 
 exports.getFunctionCode = getFunctionCode;

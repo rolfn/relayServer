@@ -37,17 +37,21 @@ function repeat(number, wait, exec, ready, pRef, _buf) {
   // Solange nb > 0 und kein "killRepeats" passiert ist: Ergebnis in
   // Array _buf speichern und nach Wartezeit sich selbst erneut aufrufen.
   fdebug('time', '' + new Date().getTime(), 1);
-  fdebug('nb', nb);
-  if ((nb--) && (cfg.theRepeats[pRef.jobId].running)) {
+  var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
+  if ((nb--) && running) {
     //_buf.push(exec());
     exec(_buf);
-    fdebug('1', '/' + number + '/' + wait + 'ms/ ' + inspect(_buf));
-    setTimeout(function() {
+    fdebug('_buf', ' (nb:' + nb + ') ' + inspect(_buf));
+    if (nb) {
+      setTimeout(function() {
+        repeat(nb, wait, exec, ready, pRef, _buf);
+      }, wait);
+    } else {// Nach letztem Durchgang nicht mehr warten
       repeat(nb, wait, exec, ready, pRef, _buf);
-    }, wait);
+    }
   } else {
     delete cfg.theRepeats[pRef.jobId];
-    fdebug('cfg.theRepeats', inspect(cfg.theRepeats));
+    fdebug('cfg.theRepeats 2', inspect(cfg.theRepeats));
     ready((_buf.length == 1) ? _buf[0] : _buf);// Ergebnis weiterleiten
   }
 }
