@@ -1,5 +1,5 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
 
 const MODULE = 'config';
 
@@ -26,7 +26,8 @@ var cfg = {
     TEXCALLER: '/usr/local/bin/texcaller',
     WHICH: '/usr/bin/which'
   },
-  env: {}
+  env: {},
+  theRepeats: {}
 }
 
 for (var i in cfg) exports[i] = cfg[i];

@@ -1,41 +1,25 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
 
 const MODULE = 'internal';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+var utils = require('./utils.js');
+var response = require('./response.js');
 
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {
-  tools.debug(MODULE, item, subitem, info, level);
-}
+eval(tools.getFunctionCode('debug'));
+eval(tools.getFunctionCode('fdebug'));
+var inspect = tools.inspect;
 
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug (subitem, info, level) {
-  var item = arguments.callee.caller.name ? arguments.callee.caller.name : '::';
-  debug(item, subitem, info, level);
-}
-
-function callInternal(pRef, js) {
+// Wenn "Repeat" wirksam werden soll, muss die Funktion "doIt" definiert werden.
+exports.call = function(pRef, js) {
   fdebug('js', inspect(js));
   var doIt = null;
   var wait = js.Wait;
   switch (js.Action) {
     case 'RANDOM':
       doIt = function(b) {
-        if (b) b.push(Math.random());
-        else prepareResult(pRef, js, Math.random());
+        b.push(Math.random());
       };
       break;
     case 'TIME':
@@ -43,7 +27,7 @@ function callInternal(pRef, js) {
         var d = new Date();
         var s = tools.pad2(d.getHours()) + ':' + tools.pad2(d.getMinutes()) +
           ':' + tools.pad2(d.getSeconds());
-        if (b) b.push(s); else prepareResult(pRef, js, s);
+        b.push(s);
       };
       break;
     case 'TCP':
@@ -62,30 +46,29 @@ function callInternal(pRef, js) {
       processLDAP_SEARCH_1(pRef, js);
       break;
     case 'LaTeX':
-      // eigentl. external, aber intern verwaltet.
+      // eigentl. external, aber wegen Komplexität intern verwaltet.
       // http://www.profv.de/texcaller/index.html
       processLATEX_1(pRef, js);
       break;
     // Administration
     case '_version':
-      prepareResult(pRef, js, cfg.VERSION);
+      response.prepareResult(pRef, js, cfg.VERSION);
       break;
     case '_environment':
-      prepareResult(pRef, js, cfg.ENV);
+      response.prepareResult(pRef, js, cfg.env);
       break;
     case '_killRepeats':
       for (key in theRepeats) {
-        theRepeats[key].running = false;
+        theRepeats[key].running = false; // oder besser "delete"?
       }
-      prepareResult(pRef, js, 'OK');
+      response.prepareResult(pRef, js, 'OK');
       break;
-    default: prepareError(pRef, js, 'unknown internal action');
+    default: response.prepareError(pRef, js, 'unknown internal action');
   }
   // Wiederholte Funtionsaufrufe, falls gewünscht.
   if (doIt) {
-    _repeat(js.Repeat, wait, doIt,
-      function(repeatResult) {
-        prepareResult(pRef, js, repeatResult);
-      }, pRef);
+    utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
+      response.prepareResult(pRef, js, repeatResult);
+    }, pRef);
   } 
 }

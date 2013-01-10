@@ -1,5 +1,5 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
 
 const MODULE = 'tools';
 
@@ -27,7 +27,7 @@ function sgr(code) {// Select Graphic Rendition
   return '\u001b[' + code + 'm';
 }
 
-exports.debug = function debug(module, item, _subitem, _info, _level) {
+function debug(module, item, _subitem, _info, _level) {
   var info = '';
   var level = 99;
   if (isDebug(_level)) {
@@ -49,18 +49,24 @@ exports.debug = function debug(module, item, _subitem, _info, _level) {
   }
 }
 
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug (subitem, info, level) {
-  var item = arguments.callee.caller.name ? arguments.callee.caller.name : '::';
-  debug(item, subitem, info, level);
+exports.debug = debug;
+
+var functions = {
+  debug: 'var debug = function(item, subitem, info, level) {' +
+         'tools.debug(MODULE, item, subitem, info, level); };',
+  fdebug: 'var fdebug = function fdebug (subitem, info, level) {' +
+          'var item = arguments.callee.caller.name ? ' +
+          'arguments.callee.caller.name : "::";' +
+          'debug(item, subitem, info, level); };'
 }
 
-exports.inspect = function inspect(o) {
+getFunctionCode = function(name) {
+  return functions[name];
+}
+
+exports.getFunctionCode = getFunctionCode;
+
+exports.inspect = function(o) {
   return util.inspect(o, false, 2, true);
 }
 

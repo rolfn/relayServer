@@ -1,38 +1,35 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-09
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
 
 const MODULE = 'relay';
 
 var exec = require('child_process').exec;
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+var internal = require('./internal.js');
 var response = require('./response.js');
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen.
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * Modulname wird ebenfalls ausgegeben.
+ *   function(item, subitem, info, level)
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
  * @param info Daten
  * @param level
  */
-function debug(item, subitem, info, level) {
-  tools.debug(MODULE, item, subitem, info, level);
-}
+eval(tools.getFunctionCode('debug'));
 
 /**
  * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ *   function fdebug (subitem, info, level)
  * @param subitem
  * @param info
  * @param level
  */
-function fdebug (subitem, info, level) {
-  var item = arguments.callee.caller.name ? arguments.callee.caller.name : '::';
-  debug(item, subitem, info, level);
-}
+eval(tools.getFunctionCode('fdebug'));
 
-function inspect(o) {
-  return tools.inspect(o);
-}
+var inspect = tools.inspect;
 
 /**
  * Analysiert den Action-Typ.
@@ -66,8 +63,7 @@ function analyzeActions_3(pRef, js) {
     var aType = getActionType(js.Action);
     fdebug('aType', '' + aType);
     if (aType == -1) {
-      //callInternal(pRef, js);
-      response.prepareError(pRef, js, 'internal action not implementd');
+      internal.call(pRef, js);
     } else if (aType == 1) {
       //callExternal(pRef, js);
       response.prepareError(pRef, js, 'external action not implementd');
