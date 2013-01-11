@@ -57,6 +57,7 @@ function analyzeActions_3(pRef, js) {
   js.Wait = tools.getInt(js.Wait, 0);
   if (js.OutputType == undefined) js.OutputType = 'json';
   if (js.OutputEncoding == undefined) js.OutputEncoding = 'utf8';
+  js.t_start = new Date().getTime(); 
   if (('DemoMode' in js) && (js.DemoMode) && ('DemoResponse' in js)) {
     prepareResult(pRef, js, js.DemoResponse); // Hier auch _repeat?
   } else if ('Action' in js) {

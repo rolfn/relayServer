@@ -39,7 +39,7 @@ function _sendResponse(pRef, js, _data) {
 exports.prepareResult = function(pRef, js, data) {
   var x = data;
   var jsonRes = {};
-  //if (!Array.isArray(x)) x = [x]; ???
+  js.t_stop = new Date().getTime();
   if (js.Action == cfg.bin.VXITRANSCEIVER) {
     /*
       Der oder die gelieferten Strings haben am Anfang und am Ende

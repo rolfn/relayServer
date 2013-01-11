@@ -22,23 +22,25 @@ function call(pRef, js) {
   var doIt = null;
   switch (js.Action) {
     case 'RANDOM':
-      doIt = function(b) {
+      doIt = function(b, next) {
         b.push(Math.random());
+        next();
       };
       break;
     case 'TIME':
-      doIt = function(b) {
+      doIt = function(b, next) {
         var d = new Date();
-        var s = tools.pad2(d.getHours()) + ':' + tools.pad2(d.getMinutes()) +
-          ':' + tools.pad2(d.getSeconds());
+        var s = _pad(d.getHours()) + ':' + _pad(d.getMinutes()) + ':' +
+          _pad(d.getSeconds());
         b.push(s);
+        next();
       };
       break;
     case 'TCP':
       _tcp.call(pRef, js);
       break;
     case 'HTTP':
-      processHTTP(pRef, js);
+      _http.call(pRef, js);
       break;  
     case 'EMAIL':
       processEMAIL(pRef, js);
@@ -74,7 +76,7 @@ function call(pRef, js) {
   if (doIt) {
     utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
       response.prepareResult(pRef, js, repeatResult);
-    }, pRef);
+    }, pRef, js);
   } 
 }
 

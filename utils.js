@@ -14,47 +14,53 @@ var inspect = tools.inspect;
  * Wiederholtes Aufrufen der Funktion ``exec''.
  * @param number Anzahl der Aufrufe.
  * @param wait Wartezeit zwischen zwei Aufrufen in ms.
- * @param exec Aufzurufende Funktion. Ihr Rückgabe-String wird
- * aufgesammelt. Ihr Parameter ist eine Array-Variable im Falle 
- * von echten Wiederholung. Es sollte aber auch der Fall, dass null
- * übergeben wird, behandelt werden ("number==1").
+ * @param exec Aufzurufende Funktion, die die Daten beschafft. Ihr erster
+ * Parameter muss eine Array-Variable sein. In ihr werden die Daten pro
+ * Durchgang abgelegt. Der zweite Parameter ist eine Funktion, die aufgerufen
+ * werden muss, nachdem Daten gespeichert wurden (oft innerhalb von
+ * callback-Funktion).
+ *
+ * |#######|<----- Wait ----->|#######|<----- Wait ----->|
+ * start1                     stop1
+ *                            start2                     stop2/Response
+ * 
  * @param ready Funktion, die nach dem letzten Aufruf von ``exec''
  *  aufgerufen wird. Ihr Parameter ist ein Array aller Rückgabe-Strings
  *  der einzelnen exec-Aufrufe.
  * @param pRef Object, speziell wegen "jobId" zum Kennzeichnen des
  *  Repeat-Prozesses und zum vorzeitigen Beenden.
+ * @param js Object, das allgemeine Datenobjekt.
  * @param _buf String-Array; darf beim ersten Aufruf nicht angegeben
  *  werden (nur interne Verwendung).
  */
-function repeat(number, wait, exec, ready, pRef, _buf) {
+function repeat_A(number, wait, exec, ready, pRef, js, _buf) {
+  function repeat_A1() {
+    fdebug('buf', ' (nb:' + nb + ') ' + inspect(_buf));
+    setTimeout(function() {
+      js.t_stop.push(new Date().getTime()); 
+      repeat_A(nb, wait, exec, ready, pRef, js, _buf);
+    }, wait);
+  }
   if (!_buf) {// Erster Aufruf
-    var _buf = [];
-    cfg.theRepeats[pRef.jobId] = { running:true };
-    var nb;
+    var _buf = [], nb;
+    theRepeats[pRef.jobId] = { running:true }; 
   }
   nb = number;
-  fdebug('cfg.theRepeats 1', inspect(cfg.theRepeats));
+  fdebug('theRepeats 1', inspect(theRepeats));
+  fdebug('time', '' + new Date().getTime(), 1);
+  var running = theRepeats[pRef.jobId] && theRepeats[pRef.jobId].running;
   // Solange nb > 0 und kein "killRepeats" passiert ist: Ergebnis in
   // Array _buf speichern und nach Wartezeit sich selbst erneut aufrufen.
-  fdebug('time', '' + new Date().getTime(), 1);
-  var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
-  if ((nb--) && running) {
-    //_buf.push(exec());
-    exec(_buf);
-    fdebug('_buf', ' (nb:' + nb + ') ' + inspect(_buf));
-    if (nb) {
-      setTimeout(function() {
-        repeat(nb, wait, exec, ready, pRef, _buf);
-      }, wait);
-    } else {// Nach letztem Durchgang nicht mehr warten
-      repeat(nb, wait, exec, ready, pRef, _buf);
-    }
+  if (nb-- && running) {
+    fdebug('exec', inspect(exec));
+    js.t_start.push(new Date().getTime()); 
+    exec(_buf, repeat_A1);
   } else {
-    delete cfg.theRepeats[pRef.jobId];
-    fdebug('cfg.theRepeats 2', inspect(cfg.theRepeats));
-    ready((_buf.length == 1) ? _buf[0] : _buf);// Ergebnis weiterleiten
+    delete theRepeats[pRef.jobId];
+    fdebug('theRepeats 2', inspect(theRepeats));
+    ready(_buf.length == 1 ? _buf[0] : _buf);// Ergebnis weiterleiten
   }
 }
 
-exports.repeat = repeat;
+exports.repeat = repeat_A;
 

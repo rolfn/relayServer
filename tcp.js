@@ -14,7 +14,7 @@ var inspect = tools.inspect;
 
 function call(pRef, js) {
 
-  function doIt(b) {
+  function doIt(b, next) {
     var result = [], host = js.Host, port = tools.getInt(js.Port),
       cmd = (js.Value) ? js.Value : '';
     var conn = net.createConnection(port, host);
@@ -36,7 +36,9 @@ function call(pRef, js) {
         }
       }
       result = result.join('\n');
+      js.t_stop = new Date().getTime();
       b.push(result);
+      next();
     });
     conn.addListener('error', function (e) {
       conn.destroy();
@@ -59,7 +61,7 @@ function call(pRef, js) {
   var wait = js.Wait < cfg.MIN_TCP_WAIT ? cfg.MIN_TCP_WAIT : js.Wait;
   utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
     response.prepareResult(pRef, js, repeatResult);
-  }, pRef);
+  }, pRef, js);
 
 }
 
