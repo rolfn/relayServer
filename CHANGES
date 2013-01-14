@@ -1,0 +1,25 @@
+* Mon Jan 14 2013 Rolf.Niepraschk@ptb.de
+- Aufteilung auf Module, Versionsnummer des rpm-Paketes identisch zu der von
+  nodejsServers.
+
+* Fri Jan 11 2013 Rolf.Niepraschk@ptb.de
+- Änderungen zu t_start und t_stop (erste Tests)
+
+* Fri Dec 14 2012 Rolf.Niepraschk@ptb.de 
+- Korrekte Wandlung String nach Int/Float
+
+* Thu Sep 27 2012 Rolf.Niepraschk@ptb.de
+- Debug-Ausgabe optimiert.
+
+* Wed Sep 26 2012 Rolf.Niepraschk@ptb.de
+- Debug-Ausgabe optimiert.
+
+* Tue Sep 25 2012 Rolf.Niepraschk@ptb.de
+- timestamps für VXITRANSCEIVER
+
+* Fri Aug 31 2012 Rolf.Niepraschk@ptb.de 
+- Korrekturen zu filelist
+
+* Thu Aug 30 2012 Rolf.Niepraschk@ptb.de
+- Neue rpm-Erzeugung direkt mit "rpmbuild", "relay-add.js"ergänzt.
+

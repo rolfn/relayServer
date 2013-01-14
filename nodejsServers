@@ -1,0 +1,16 @@
+#!/bin/bash --login
+
+# Copyright (c) PTB
+# All rights reserved.
+#
+# Author: Rolf Niepraschk, 2012-08-10, Rolf.Niepraschk@ptb.de
+#
+
+NODEJS_BIN=/usr/bin/node
+NODEJS_PARAM=/usr/local/share/vaclab/nodejs/nodejsServers.js
+
+$NODEJS_BIN --expose_gc $NODEJS_PARAM $1 
+# 2>&1 > /dev/null
+
+exit 0
+

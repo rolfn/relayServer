@@ -1,0 +1,108 @@
+#!/bin/bash
+
+# Copyright (c) PTB
+# All rights reserved.
+#
+# Author: Rolf Niepraschk, 2011-05-19, Rolf.Niepraschk@ptb.de
+#
+# /etc/init.d/NodejsServers
+#   and its symbolic link
+# /usr/sbin/rcNodejsServers
+
+### BEGIN INIT INFO
+# Provides:          NodejsServers
+# Required-Start:    $network
+# Required-Stop:
+# Default-Start:     3 5
+# Default-Stop:      0 1 2 6
+# Short-Description: NodejsServers daemon
+# Description:       The NodejsServers daemon provides http access to ports 55555/55565
+#	for executing some external or internal actions.
+### END INIT INFO
+
+# service NodejsServers restart 99
+#   or
+# rcNodejsServers restart 99
+
+# Check for missing binaries
+NODEJS_BIN=/usr/bin/node
+test -x $NODEJS_BIN || { echo "$NODEJS_BIN not installed";
+        if [ "$1" = "stop" ]; then exit 0;
+        else exit 5; fi; }
+
+NODEJSSERVERS_BIN=/usr/local/bin/nodejsServers
+test -x $NODEJSSERVERS_BIN || { echo "$NODEJSSERVERS_BIN not installed";
+        if [ "$1" = "stop" ]; then exit 0;
+        else exit 5; fi; }
+
+# Load the rc.status script for this service.
+. /etc/rc.status
+
+# Reset status of this service
+rc_reset
+
+DEBUG_LEVEL=0
+
+if [ "$2" != "" ]; then DEBUG_LEVEL=$2 ; fi
+
+case "$1" in
+    start)
+        echo -n "Starting NodejsServers (debug level=$DEBUG_LEVEL)"
+        ## Start daemon with startproc(8). If this fails
+        ## the return value is set appropriately by startproc.
+        ####startproc $NODEJSSERVERS_BIN
+        
+        startproc -g www -u wwwrun $NODEJSSERVERS_BIN $DEBUG_LEVEL 2>&1 > /dev/null
+
+        # Remember status and be verbose
+        rc_status -v
+        ;;
+    stop)
+        echo -n "Shutting down NodejsServers "
+        ## Stop daemon with killproc(8) and if this fails
+        ## killproc sets the return value according to LSB.
+
+        killproc -TERM -g $NODEJSSERVERS_BIN
+
+        # Remember status and be verbose
+        rc_status -v
+        ;;
+    restart)
+        ## Stop the service and regardless of whether it was
+        ## running or not, start it again.
+        $0 stop
+        $0 start $DEBUG_LEVEL
+
+        # Remember status and be quiet
+        rc_status
+        ;;
+    reload)
+        ;;
+    status)
+        echo -n "Checking for service NodejsServers "
+        ## Check status with checkproc(8), if process is running
+        ## checkproc will return with exit status 0.
+
+        # Return value is slightly different for the status command:
+        # 0 - service up and running
+        # 1 - service dead, but /var/run/  pid  file exists
+        # 2 - service dead, but /var/lock/ lock file exists
+        # 3 - service not running (unused)
+        # 4 - service status unknown :-(
+        # 5--199 reserved (5--99 LSB, 100--149 distro, 150--199 appl.)
+
+        # NOTE: checkproc returns LSB compliant status values.
+        checkproc $NODEJSSERVERS_BIN
+        # NOTE: rc_status knows that we called this init script with
+        # "status" option and adapts its messages accordingly.
+        rc_status -v
+        ;;
+    *)
+        ## If no parameters are given, print which are avaiable.
+        echo "Usage: $0 {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+
+rc_exit
+

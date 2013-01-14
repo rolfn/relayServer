@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if false; then
+echo '{"Action":"/usr/local/bin/vxiTransceiver","Host":"e75481",
+"Device":"gpib0,10","Value":":meas:func\\n","Repeat":"5","Wait":"300"}' | \
+curl -T - -X PUT  http://i75434.berlin.ptb.de:55555
+
+else 
+
+echo '{"Action":"/usr/local/bin/vxiTransceiver","Host":"e75481",
+"Device":"gpib0,10","Value":":meas:func\\n","Repeat":"5","Wait":"300",
+"PostProcessing":"t_start=_t_start;t_stop=_t_stop;Result=_x;"}' | \
+curl -T - -X PUT  http://i75434.berlin.ptb.de:55555
+
+fi
+
+exit
+
+
+
+
