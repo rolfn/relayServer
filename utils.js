@@ -1,5 +1,5 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
 
 const MODULE = 'utils';
 
@@ -37,27 +37,29 @@ function repeat_A(number, wait, exec, ready, pRef, js, _buf) {
   function repeat_A1() {
     fdebug('buf', ' (nb:' + nb + ') ' + inspect(_buf));
     setTimeout(function() {
-      js.t_stop.push(new Date().getTime()); 
+      js.t_stop.push(new Date().getTime());
+      fdebug('t_stop.push', '' + js.t_stop[js.t_stop.length-1]);
+      //fdebug('js', inspect(js));
       repeat_A(nb, wait, exec, ready, pRef, js, _buf);
     }, wait);
   }
   if (!_buf) {// Erster Aufruf
     var _buf = [], nb;
-    theRepeats[pRef.jobId] = { running:true }; 
+    cfg.theRepeats[pRef.jobId] = { running:true }; 
   }
   nb = number;
-  fdebug('theRepeats 1', inspect(theRepeats));
-  fdebug('time', '' + new Date().getTime(), 1);
-  var running = theRepeats[pRef.jobId] && theRepeats[pRef.jobId].running;
+  fdebug('cfg.theRepeats 1', inspect(cfg.theRepeats));
+  var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
   // Solange nb > 0 und kein "killRepeats" passiert ist: Ergebnis in
   // Array _buf speichern und nach Wartezeit sich selbst erneut aufrufen.
   if (nb-- && running) {
     fdebug('exec', inspect(exec));
-    js.t_start.push(new Date().getTime()); 
+    js.t_start.push(new Date().getTime());
+    fdebug('t_start.push', '' + js.t_start[js.t_start.length-1]); 
     exec(_buf, repeat_A1);
   } else {
-    delete theRepeats[pRef.jobId];
-    fdebug('theRepeats 2', inspect(theRepeats));
+    delete cfg.theRepeats[pRef.jobId];
+    fdebug('cfg.theRepeats 2', inspect(cfg.theRepeats));
     ready(_buf.length == 1 ? _buf[0] : _buf);// Ergebnis weiterleiten
   }
 }

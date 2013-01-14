@@ -36,10 +36,15 @@ function _sendResponse(pRef, js, _data) {
 }
 
 // Ergebnis an den Aufrufer zurücksenden.
-exports.prepareResult = function(pRef, js, data) {
+function prepareResult(pRef, js, data) {
   var x = data;
   var jsonRes = {};
-  js.t_stop = new Date().getTime();
+
+  fdebug('js', inspect(js));
+
+  if (js.t_start != undefined) jsonRes.t_start = js.t_start;
+  if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;    
+  
   if (js.Action == cfg.bin.VXITRANSCEIVER) {
     /*
       Der oder die gelieferten Strings haben am Anfang und am Ende
@@ -49,27 +54,43 @@ exports.prepareResult = function(pRef, js, data) {
                  t_start       GPIB-Response       t_stop
     */
     var a;
-    if (Array.isArray(x)) {
-      jsonRes.t_start = [], jsonRes.t_stop = [];
-      for (var i=0;i<x.length;i++) {
-        a = x[i].split('|');
-        jsonRes.t_start.push(parseInt(a.shift())); // erstes Element ist Startzeit
-        jsonRes.t_stop.push(parseInt(a.pop()));    // letztes Element ist Stoppzeit
-        x[i] = a.join('|'); // Falls vorher mehr als zwei "|" enthalten waren.
-      }
-    } else {
-      a = x.split('|');
-      jsonRes.t_start = parseInt(a.shift());
-      jsonRes.t_stop = parseInt(a.pop());
-      x = a.join('|');
+    /// Zum Vergleich der Zeiten ///
+    jsonRes.t__start = [];
+    for (var i=0;i<js.t_start.length;i++) {
+      jsonRes.t__start[i] = js.t_start[i];
     }
-  } else {
-    // Anderweitig timestamps vorhanden?
-    // TODO: Generell in Repeat-Schleife timestamps nach "js" schreiben
-    // (außer für VXITRANSCEIVER und ??? und ???)
-    if (js.t_start != undefined) jsonRes.t_start = js.t_start;
-    if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;    
+    jsonRes.t__stop = [];
+    for (var i=0;i<js.t_stop.length;i++) {
+      jsonRes.t__stop[i] = js.t_stop[i];
+    }
+    /// //////////////////////////////
+    if (!Array.isArray(x)) x = [x];
+    jsonRes.t_start = [], jsonRes.t_stop = [];
+    for (var i=0;i<x.length;i++) {
+      a = x[i].split('|');
+      jsonRes.t_start.push(parseInt(a.shift())); // erstes Element ist Startzeit
+      jsonRes.t_stop.push(parseInt(a.pop()));    // letztes Element ist Stoppzeit
+      x[i] = a.join('|'); // Falls vorher mehr als zwei "|" enthalten waren.
+    }
+    ///
+    if (!jsonRes.t__start.length || !jsonRes.t__stop.length) {
+      delete jsonRes.t__start;
+      delete jsonRes.t__stop;
+    } else if (jsonRes.t__start.length == 1) {
+      jsonRes.t__start = jsonRes.t__start[0];
+      jsonRes.t__stop = jsonRes.t__stop[0];
+    }
+    ///
   }
+fdebug('jsonRes A', inspect(jsonRes));
+  if (!jsonRes.t_start.length || !jsonRes.t_stop.length) {
+    delete jsonRes.t_start;
+    delete jsonRes.t_stop;
+  } else if (jsonRes.t_start.length == 1) {
+    jsonRes.t_start = jsonRes.t_start[0];
+    jsonRes.t_stop = jsonRes.t_stop[0];
+  }
+fdebug('jsonRes B', inspect(jsonRes));  
   if ((js) && (js.PostProcessing)) {
     // Einfache Strings und String-Arrays unterstützen.
     var evalStr = (Array.isArray(js.PostProcessing)) ?
@@ -79,7 +100,7 @@ exports.prepareResult = function(pRef, js, data) {
     sandbox._x = x;
     if (jsonRes.t_start != undefined) {
       sandbox._t_start = jsonRes.t_start;
-      delete jsonRes.t_start;
+      delete jsonRes.t_start; //???
     } 
     if (jsonRes.t_stop != undefined) {
       sandbox._t_stop = jsonRes.t_stop;
@@ -116,9 +137,14 @@ exports.prepareResult = function(pRef, js, data) {
   }
 }
 
+exports.prepareResult = prepareResult;
+
 // Fehlermeldung an den Aufrufer zurücksenden.
-exports.prepareError = function(pRef, js, data) {
+function prepareError(pRef, js, data) {
   js.OutputType = 'json';
   var jsonRes = {error:data};
   _sendResponse(pRef, js, jsonRes);
 }
+
+exports.prepareError = prepareError;
+

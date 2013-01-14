@@ -4,8 +4,14 @@
 const MODULE = 'tools';
 
 var util = require('util');
+var fs = require('fs');
 
 var debugLevel = (process.argv[2]) ? process.argv[2] : 0; // 5, 99
+
+function fdebug(subitem, info, level) {
+  item = arguments.callee.caller.name ? arguments.callee.caller.name : '---';
+  debug(MODULE, item, subitem, info, level);
+}
 
 function isDebug(level) {
   var l = 99;
@@ -14,6 +20,8 @@ function isDebug(level) {
   }
   return (l <= debugLevel);
 }
+
+exports.isDebug = isDebug;
 
 const BOLD = 1;
 const DEFCOLOR = 39;
@@ -66,9 +74,11 @@ function getFunctionCode(name) {
 
 exports.getFunctionCode = getFunctionCode;
 
-exports.inspect = function(o) {
+function inspect(o) {
   return util.inspect(o, false, 2, true);
 }
+
+exports.inspect = inspect;
 
 String.prototype.trim = function() {
   return this.replace(/^\s+|\s+$/g,"");

@@ -4,7 +4,6 @@ const MODULE = 'http';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
-var utils = require('./utils.js');
 var response = require('./response.js');
 var request = require('/usr/lib/node_modules/request');
 

@@ -30,8 +30,8 @@ function call(pRef, js) {
     case 'TIME':
       doIt = function(b, next) {
         var d = new Date();
-        var s = _pad(d.getHours()) + ':' + _pad(d.getMinutes()) + ':' +
-          _pad(d.getSeconds());
+        var s = tools.pad2(d.getHours()) + ':' + tools.pad2(d.getMinutes()) + ':' +
+          tools.pad2(d.getSeconds());
         b.push(s);
         next();
       };
@@ -43,7 +43,7 @@ function call(pRef, js) {
       _http.call(pRef, js);
       break;  
     case 'EMAIL':
-      processEMAIL(pRef, js);
+      _email.call(pRef, js);
       break;
     case 'LDAP_AUTH':
       processLDAP_AUTH_1(pRef, js);
@@ -55,6 +55,8 @@ function call(pRef, js) {
       // eigentl. external, aber wegen Komplexität intern verwaltet.
       // http://www.profv.de/texcaller/index.html
       // https://github.com/vog/texcaller
+      // TODO: Auslagern nach "dispatcher.js" und external action
+      // "/usr/local/bin/texcaller" benutzen.
       processLATEX_1(pRef, js);
       break;
     // Administration

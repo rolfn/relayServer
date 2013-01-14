@@ -1,12 +1,12 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
 
 const MODULE = 'relay';
 
-var exec = require('child_process').exec;
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var internal = require('./internal.js');
+var external = require('./external.js');
 var response = require('./response.js');
 
 /**
@@ -57,7 +57,7 @@ function analyzeActions_3(pRef, js) {
   js.Wait = tools.getInt(js.Wait, 0);
   if (js.OutputType == undefined) js.OutputType = 'json';
   if (js.OutputEncoding == undefined) js.OutputEncoding = 'utf8';
-  js.t_start = new Date().getTime(); 
+  js.t_start = []; js.t_stop = [];
   if (('DemoMode' in js) && (js.DemoMode) && ('DemoResponse' in js)) {
     prepareResult(pRef, js, js.DemoResponse); // Hier auch _repeat?
   } else if ('Action' in js) {
@@ -66,8 +66,8 @@ function analyzeActions_3(pRef, js) {
     if (aType == -1) {
       internal.call(pRef, js);
     } else if (aType == 1) {
-      //callExternal(pRef, js);
-      response.prepareError(pRef, js, 'external action not implementd');
+      external.call(pRef, js);
+      //response.prepareError(pRef, js, 'external action not implementd');
     } else if (aType == 0) {
       response.prepareError(pRef, js, 'unknown external action');
     }

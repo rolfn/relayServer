@@ -36,7 +36,6 @@ function call(pRef, js) {
         }
       }
       result = result.join('\n');
-      js.t_stop = new Date().getTime();
       b.push(result);
       next();
     });
