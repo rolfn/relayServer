@@ -5,6 +5,7 @@ const MODULE = 'relay';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+var utils = require('./utils.js');
 var internal = require('./internal.js');
 var external = require('./external.js');
 var response = require('./response.js');
@@ -12,7 +13,7 @@ var response = require('./response.js');
 /**
  * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
  * Modulname wird ebenfalls ausgegeben.
- *   function(item, subitem, info, level)
+ * -->  function debug(item, subitem, info, level)
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
  * @param info Daten
@@ -22,7 +23,7 @@ eval(tools.getFunctionCode('debug'));
 
 /**
  * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- *   function fdebug (subitem, info, level)
+ * -->  function fdebug(subitem, info, level)
  * @param subitem
  * @param info
  * @param level
@@ -59,7 +60,14 @@ function analyzeActions_3(pRef, js) {
   if (js.OutputEncoding == undefined) js.OutputEncoding = 'utf8';
   js.t_start = []; js.t_stop = [];
   if (('DemoMode' in js) && (js.DemoMode) && ('DemoResponse' in js)) {
-    prepareResult(pRef, js, js.DemoResponse); // Hier auch _repeat?
+    var doIt = function(b, next) {
+      b.push(js.DemoResponse);
+      next();
+    };
+    utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
+      response.prepareResult(pRef, js, repeatResult);
+    }, pRef, js);    
+    //prepareResult(pRef, js, js.DemoResponse); // Hier auch _repeat?
   } else if ('Action' in js) {
     var aType = getActionType(js.Action);
     fdebug('aType', '' + aType);
@@ -67,8 +75,7 @@ function analyzeActions_3(pRef, js) {
       internal.call(pRef, js);
     } else if (aType == 1) {
       external.call(pRef, js);
-      //response.prepareError(pRef, js, 'external action not implementd');
-    } else if (aType == 0) {
+    } else {
       response.prepareError(pRef, js, 'unknown external action');
     }
   } else response.prepareError(pRef, js, 'action not found');

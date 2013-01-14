@@ -1,4 +1,4 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
 
 const MODULE = 'email';
 

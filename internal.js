@@ -1,4 +1,4 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
 
 const MODULE = 'internal';
 
@@ -9,14 +9,14 @@ var response = require('./response.js');
 var _tcp = require('./tcp.js');
 var _http = require('./http.js');
 var _email = require('./email.js');
-var _ldap = require('./ldap.js');
-var _latex = require('./latex.js');
+//var _ldap = require('./ldap.js'); // derzeit (2013-01-14) Probleme (buffertools)!
+// npm install buffertools -g ; npm install ldapjs -g
+// var _latex = require('./latex.js');
 
 eval(tools.getFunctionCode('debug'));
 eval(tools.getFunctionCode('fdebug'));
 var inspect = tools.inspect;
 
-// Wenn "Repeat" wirksam werden soll, muss die Funktion "doIt" definiert werden.
 function call(pRef, js) {
   fdebug('js', inspect(js));
   var doIt = null;
@@ -46,10 +46,12 @@ function call(pRef, js) {
       _email.call(pRef, js);
       break;
     case 'LDAP_AUTH':
-      processLDAP_AUTH_1(pRef, js);
+      //_ldap.auth(pRef, js);
+      response.prepareError(pRef, js, 'not working!');
       break;
     case 'LDAP_SEARCH':
-      processLDAP_SEARCH_1(pRef, js);
+      //_ldap.search(pRef, js);
+      response.prepareError(pRef, js, 'not working!');
       break;
     case 'LaTeX':
       // eigentl. external, aber wegen Komplexität intern verwaltet.
@@ -57,7 +59,8 @@ function call(pRef, js) {
       // https://github.com/vog/texcaller
       // TODO: Auslagern nach "dispatcher.js" und external action
       // "/usr/local/bin/texcaller" benutzen.
-      processLATEX_1(pRef, js);
+      ///processLATEX_1(pRef, js);
+      response.prepareError(pRef, js, 'not working!');
       break;
     // Administration
     case '_version':

@@ -89,7 +89,7 @@ exports.pad2 = function(n) {
 }
 
 /**
- * Liefert ähnlich zu parseFloat ein Float-Zahl, die der String s repräsentiert.
+ * Liefert ähnlich zu parseFloat eine Float-Zahl, die der String s repräsentiert.
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert 
  * ist also in jedem Fall eine Float-Zahl.
  * @param s die Zahl als String.
@@ -102,7 +102,7 @@ exports.getFloat = function(s, d) {
   return isNaN(x) ? _d : x;
 }
 /**
- * Liefert ähnlich zu parseInt ein Int-Zahl, die der String s repräsentiert.
+ * Liefert ähnlich zu parseInt eine Int-Zahl, die der String s repräsentiert.
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert 
  * ist also in jedem Fall eine Int-Zahl.
  * @param s die Zahl als String.

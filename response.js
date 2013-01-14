@@ -15,7 +15,7 @@ eval(tools.getFunctionCode('debug'));
 eval(tools.getFunctionCode('fdebug'));
 var inspect = tools.inspect;
 
-function _sendResponse(pRef, js, _data) {
+function sendResponse(pRef, js, _data) {
   fdebug('_data', _data);
   var ctype, data;
   if (js.OutputType == 'stream') {
@@ -29,8 +29,7 @@ function _sendResponse(pRef, js, _data) {
   }
   fdebug('ContentType', ctype);
   pRef.res.writeHead(200, {
-    'Content-Type':ctype,
-    'Access-Control-Allow-Origin':'*'});
+    'Content-Type':ctype,'Access-Control-Allow-Origin':'*'});
   pRef.res.end(data);
   pRef.req.connection.end();
 }
@@ -82,7 +81,7 @@ function prepareResult(pRef, js, data) {
     }
     ///
   }
-fdebug('jsonRes A', inspect(jsonRes));
+
   if (!jsonRes.t_start.length || !jsonRes.t_stop.length) {
     delete jsonRes.t_start;
     delete jsonRes.t_stop;
@@ -90,7 +89,7 @@ fdebug('jsonRes A', inspect(jsonRes));
     jsonRes.t_start = jsonRes.t_start[0];
     jsonRes.t_stop = jsonRes.t_stop[0];
   }
-fdebug('jsonRes B', inspect(jsonRes));  
+ 
   if ((js) && (js.PostProcessing)) {
     // Einfache Strings und String-Arrays unterstützen.
     var evalStr = (Array.isArray(js.PostProcessing)) ?
@@ -128,12 +127,12 @@ fdebug('jsonRes B', inspect(jsonRes));
   fdebug('jsonRes', inspect(jsonRes));
   if (js.OutputType == 'stream') {
     if (jsonRes.Result != undefined) {
-      _sendResponse(pRef, js, jsonRes.Result);
+      sendResponse(pRef, js, jsonRes.Result);
     } else {
-      _sendResponse(pRef, js, x);
+      sendResponse(pRef, js, x);
     }
   } else {// 'json'
-    _sendResponse(pRef, js, jsonRes);
+    sendResponse(pRef, js, jsonRes);
   }
 }
 
@@ -143,7 +142,7 @@ exports.prepareResult = prepareResult;
 function prepareError(pRef, js, data) {
   js.OutputType = 'json';
   var jsonRes = {error:data};
-  _sendResponse(pRef, js, jsonRes);
+  sendResponse(pRef, js, jsonRes);
 }
 
 exports.prepareError = prepareError;
