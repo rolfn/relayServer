@@ -2,7 +2,7 @@
 # Rolf Niepraschk, 2013-01-14, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
-VERSION = 7.0
+VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
 RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers" 
@@ -10,16 +10,17 @@ SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
 DESCRIPTION = $(SUMMARY)
 PACKAGER = "Rolf Niepraschk"
 BUILDARCH = $(shell arch)
-
 JS_SOURCE = $(wildcard *.js)
-
-### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
-### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
-
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 VXI11_SRC = vxi11
+DOC_CMD=/usr/bin/dox-foundation
+DOC_DIR=_attachments/docs
+DOC_SRC=doc_src
 ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
+
+### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
+### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
 
 rpm : spec 
 	rpmbuild --buildroot $(PWD)/$(BUILD_ROOT) -bb $(SPEC_FILE)
@@ -75,6 +76,17 @@ vxi11 : $(VXI11_SRC)/vxi11_transceiver
 $(VXI11_SRC)/vxi11_transceiver : 
 	$(MAKE) -C $(VXI11_SRC)
 
+docs : $(DOC_DIR)/index.html
+
+$(DOC_SRC) : $(JS_SOURCE)
+	@mkdir -p "$@"
+	@cp $+ $@
+
+$(DOC_DIR)/index.html : $(DOC_SRC)
+	@mkdir -p "$(DOC_DIR)"
+	$(DOC_CMD) --debug --title "$(MAIN)" --source $(DOC_SRC) --target "$(DOC_DIR)"
+	@$(RM) -r $(DOC_SRC)
+
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean
 	$(RM) $(SPEC_FILE)
@@ -95,6 +107,7 @@ arch :
 	@echo $(ARCHIVNAME)
 
 debug :
+	@echo $(VERSION)
 	@echo $(JS_SOURCE)
 
 .PHONY : dist vxi11 arch clean rpm src_rpm spec 

@@ -1,15 +1,35 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-15
 
 const MODULE = 'http';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var response = require('./response.js');
+var url = require('url');
 var request = require('/usr/lib/node_modules/request');
+                   
+function inspect() {};
+inspect = tools.inspect;
 
-eval(tools.getFunctionCode('debug'));
-eval(tools.getFunctionCode('fdebug'));
-var inspect = tools.inspect;
+/**
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * Modulname wird ebenfalls ausgegeben.
+ * @param item meist Funktionsname
+ * @param subitem spezifische Aktion innerhalb der Funktion.
+ * @param info Daten
+ * @param level
+ */
+function debug(item, subitem, info, level) {};
+debug = tools.createFunction('debug', MODULE);
+
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug(subitem, info, level) {};
+fdebug = tools.createFunction('fdebug', debug);
 
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
@@ -37,13 +57,13 @@ function call(pRef, js) {
     function (e, res, body) {
       if (!e && res.statusCode == 200) {
         fdebug('response body', inspect(body));
-        prepareResult(pRef, js, body);
+        response.prepareResult(pRef, js, body);
       } else {
         fdebug('error', e);
         var x = ((res) && (res.statusCode)) ? res.statusCode :
           'no response';
         fdebug('statusCode', x);
-        prepareError(pRef, js, x);
+        response.prepareError(pRef, js, x);
       }
     }
   );

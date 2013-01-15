@@ -1,0 +1,408 @@
+%---------------------------
+\listfiles
+\documentclass[%
+fontsize=11pt
+,paper=a4
+,twoside
+,headings=normal
+,pagesize
+]{scrartcl}
+\usepackage{hyphsubst}% Trennregeln austauschen
+\HyphSubstIfExists{ngerman-x-latest}{%
+  \HyphSubstLet{ngerman}{ngerman-x-latest}}{}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage[largesmallcaps]{kpfonts}
+\renewcommand{\sfdefault}{cmbr}
+\usepackage[scaled]{luximono}
+\usepackage{microtype}
+\DeclareMicrotypeAlias{jkp}{ppl}
+
+\usepackage[obeyspaces,spaces]{url}
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,babel=once,german=guillemets,maxlevel=3]{csquotes}%
+\defineshorthand{"`}{\openautoquote}
+\defineshorthand{"'}{\closeautoquote}
+
+%\setkomafont{minisec}{\normalfont\bfseries}
+\setkomafont{disposition}{\normalfont\bfseries}
+\setkomafont{descriptionlabel}{\normalfont\bfseries}
+
+\renewcommand*\labelitemii{$\circ$}
+
+\makeatletter
+\newcommand\Minisec[1]{\@afterindentfalse \vskip 1.5ex
+  {\parindent \z@
+    \raggedsection\normalfont\sectfont\nobreak
+    \usekomafont{minisec}#1\nobreak}\nobreak%
+  \@afterheading
+}
+\makeatother
+
+\usepackage{shortvrb}
+\MakeShortVerb{\|}
+
+\usepackage{xcolor,listings}
+\lstset{%
+     basicstyle=\footnotesize\ttfamily,
+     identifierstyle={},
+     keywordstyle=\bfseries,
+     %stringstyle=\itshape\color{DTKlstStrings},
+     commentstyle=\itshape,
+     columns=fixed,
+     tabsize=2,
+     frame=single,
+     extendedchars=true,
+     showspaces=false,
+     showstringspaces=false,
+     breaklines=true,
+     breakindent=10pt,
+     backgroundcolor=\color{black!10},
+     breakautoindent=true,
+     captionpos=t,
+     aboveskip=\medskipamount,
+     belowskip=\medskipamount,
+     xrightmargin=\fboxsep,
+     prebreak=\mbox{$\hookleftarrow$},
+     columns=fullflexible,
+     keepspaces=true
+}
+
+
+\setlength\textheight{1.08\textheight}
+
+\shorthandon{"}
+\title{Hinweise zur Benutzung des Web"=Services "`NodejsRelay"'}
+\date{2011-05-17}
+\author{Rolf Niepraschk, AG~7.54}
+\shorthandoff{"}
+
+\begin{document}
+
+\maketitle
+
+\section*{Zugriff auf den Web"=Service "`NodejsRelay"'}
+
+Mit Web"=Service "`NodejsRelay"' ist ein spezieller Web"=Service im
+Bereich der AG~7.54 gemeint. Auf den beiden zentralen Servern \url
+{a73434} und \url{a73435} (ggf. auch auf einigen oder allen
+Messrechnern) ist "`NodejsRelay"' installiert. Durch Ansprechen
+einer geeigneten http"=Adresse (URL) wird durch "`NodejsRelay"'
+jeweils ein Prozess gestartet und dessen Ergebnis zurückgeliefert.
+Der Prozess kann eine Messdatenabfrage (z.\,B. \ per
+GPIB/LAN"=Adapter), eine Auswerteprozedur (z.\,B.\ mit dem
+Statistikprogramm "`R"') oder Anderes sein. Der Zugriff auf
+"`NodejsRelay"' geschieht durch Ansprechen einer URL in der Form \url
+{http://HOST:55555}. Die Angabe der Portadresse 55555 ist zwingend.
+
+Die auszuführende Aktion wird in der gleichzeitig per |POST| oder
+|PUT| mitgeschickten JSON"=Datenstruktur (siehe nächster Abschnitt)
+angegeben. Ein testweiser Aufruf mit dem Programm "`curl"' könnte
+z.\,B.\ folgendermaßen aussehen:
+
+\medskip
+
+  \qquad \url+echo '{"Action":"RANDOM"}' | \ +
+  \par\vspace{0\baselineskip}
+  \qquad\quad \url+curl -T - -X POST http://a73434.berlin.ptb.de:55555+
+  
+\medskip
+
+\noindent Die Rückgabe erfolgt ebenfalls in Form einer
+JSON"=Datenstruktur und würde in diesem Fall ähnlich wie hier
+aussehen:
+
+\medskip
+
+\qquad |{"Result":[0.6832635675091296]}|
+
+
+
+\section*{Datenstruktur zur Steuerung des Web"=Services "`NodejsRelay"'}
+
+Zur Steuerung des Web"=Services "`NodejsRelay"' wird die folgende
+Datenstruktur (JSON) verwendet (Beispiel zur Temperaturmessung
+mit dem Multimeter "`Agilent 34970A"'):
+
+\begin{lstlisting}[language=Java]
+{
+  "Action": "/usr/local/bin/vxiTransceiver",
+  "Host":"e75481",
+  "Device":"gpib0,5",
+  "Value":"READ?",
+  "PostProcessing": [
+    "_tmp=_x.split(',');",
+    "_tmp.forEach(function(e,i,a){a[i]=parseFloat(e)});",
+    "T101=_tmp[0]",
+    "T102=_tmp[1]",
+    "T108=_tmp[2]"
+  ],
+  "DemoMode": false,
+  "DemoResponse": "23.1,23.2,23.3",
+  "Comment": "VXI-Kommunikation: T-Messung"
+}
+\end{lstlisting}
+
+\noindent Zusätzliche Einträge werden ignoriert. Mindestens muss der Eintrag
+"`|Action|"' vorhanden sein.
+
+\subsection*{Erläuterungen zu allgemeinen Eintragstypen:}
+
+\begin{description}
+
+  \item[Action] -- kennzeichnet den Prozess, der von "`NodejsRelay"'
+  gestartet wird. Es werden zwei Arten unterschieden:
+  
+  \begin{itemize}
+
+    \item Externe Prozesse: "`|Action|"' ist der absolute Pfad zu
+    einem ausführbaren Programm, welches auf dem "`NodejsRelay"'"=Server
+    gestartet werden soll. Der angegebene String muss mit dem Zeichen
+    "`|/|"' beginnen. Es sind nur
+    ausgewählte Programme erlaubt. Derzeit sind dies:
+    \begin{itemize}
+
+    \item |/usr/local/bin/vxiTransceiver| \par
+    
+      Parameter~1 gibt den Hostnamen oder die IP"=Adresse und
+      Parameter~2 den Namen des internen devices eines
+      VXI\,11"=kompatiblem Netwerkgerätes an. Ist Parameter~3 eine
+      Zahl, so gibt sie an, wie lange maximal auf Rückgabedaten
+      gewartet wird. Im anderen Fall ist es der erste Teil der zu
+      sendenden Zeichenkette, wobei dann 2000\,ms als Wartezeit
+      angenommen wird. Die explizite Angabe einer Wartezeit von 0
+      kann benutzt werden, um z.\,B. \ bei fehlerhaften
+      GPIB-Geräten einen "`timeout error"' zu vermeiden, wenn diese
+      zwar Daten aber kein korrektes Ende"=Signal senden.
+      
+    \item |/usr/bin/R|
+    \item |/bin/echo|
+
+    \end{itemize}
+
+    \item Interne Prozesse: "`|Action|"' enthält nicht das Zeichen
+    "`|/|"'. Es handelt sich um eine vom Server direkt ausführbare
+    Aktion, bei der die Angabe des Namens eines externen Programms
+    nicht notwendig ist bzw.\ es wird auf ein solches gänzlich
+    verzichtet. Beginnt "`|Action|"' mit
+    dem Zeichen "`|_|"', so kennzeichnet sie einen internen Prozess
+    zu administrativen Zwecken. Zur Zeit werden folgende interne
+    Prozesse unterstützt:
+
+    \begin{itemize}
+    
+    \item |TCP| -- Baut eine Netzwerkverbindung zu dem angegebenen
+    Rechner (Parameter |Host|) mit der angegebenen Portnummer
+    (Parameter |Port|) auf und sendet die als Parameter |Value|
+    angebene Zeichenkette.
+
+    \item |EMAIL| -- Versendet eine E"=Mail an einen oder mehrere
+    Adressaten. Näheres siehe weiter unten.
+    
+    \item |RANDOM| -- Liefert zu Testzwecken eine oder mehrere
+    Zufallszahlen.
+
+    \item |_version| -- Sendet die Versionsnummer des laufenden
+    NodejsRelay"=Services. Derzeit ist die Version |2.3j| aktuell.
+
+    \item |LaTeX| -- Liefert pdf"=Code uncodiert oder
+    base64"=codiert aufgrund von als Parameter übergebenem
+    \LaTeX"=Quellcode. Näheres siehe weiter unten.
+    
+    \end{itemize}
+    
+  \end{itemize}
+
+  Die Angabe von "`|Action|"' ist zwingend.
+
+  \item[Host] -- Gibt den Rechner, der zur Kommunikation benutzt werden
+  soll, in Form seiner IP-Adresse oder seines Namens an. (optional)
+
+  \item[Device] -- Im Falle von |vxiTransceiver| kennzeichnet diese
+  Angabe das interne VXI11-Gerät. (optional)
+
+  \item[Port] -- Im Falle von |TCP| kennzeichnet diese
+  Angabe die für die Kommunikation zu verwendende Port"=Nummer. (optional)
+
+  \item[PostProcessing] -- Bestimmt, welche Variablen mit welchen
+  Werten in der Rückgabestruktur erscheinen sollen. Es existiert
+  implizit eine Variable "`|_x|"', die die unbehandelten
+  Rückgabedaten des ausgeführten Prozesses enthält. Diese und alle
+  anderen Variablen, die mit "`|_|"' beginnen, werden als temporär
+  betrachtet und erscheinen nicht in der Rückgabestruktur. Es können
+  alle Sprachkonstrukte, die
+  der Javascript"=Interpreter "`V8"' versteht, genutzt werden können.
+  Ohne Angabe von |PostProcessing| ist die Rückgabe \par\medskip
+  \quad |{"Result":"???"}| \par\medskip
+  |???| symbolisiert die unbehandelten Rückgabedaten. (optional)
+
+  \item[DemoMode] -- Gibt an, ob Werte des Prozesses oder die in
+  "`|DemoResponse|"' angegebenen zurückgeliefert werden sollen
+  (optional, |true| oder |false|).
+
+  \item[DemoResponse] -- Rückgabewert im Falle von
+  "`|DemoMode:true|"'. Es ist sinnvoll, wenn "`|DemoResponse|"'
+  strukturell mit dem regulären Rückgabewert des Prozesses
+  übereinstimmt, da auch "`|DemoResponse|"' per "`|PostProcessing|"'
+  behandelt wird. Die aktivierte Rückgabe von "`|DemoResponse|"' ist
+  zur Validierung der gesamten Prozesskette oder für andere
+  Testzwecke sinnvoll. (optional)
+
+  \item[OutputType] -- Kennzeichnet, wie die Rückgabedaten gesendet
+  werden. Im Falle von |"OutputType":"stream"| handelt es sich um
+  unstrukturierte Daten ohne jegliches "`PostProcessing"'. Im
+  Standardfall (|"OutputType":"json"|) wird eine
+  JSON"=Datenstruktur, die ggf.\ per "`PostProcessing"' bearbeitet
+  wurde, zurückgeschickt. (optional)
+
+  \item[OutputEncoding] -- Kennzeichnet, in welcher Weise die
+  Rückgabedaten codiert sind. Standardwert ist |"utf8"|, was im
+  Falle von |"OutputType":"json"| erzwungen wird. Als Alternativen
+  existieren |"base64"| und |"binary"|, wobei letztere Angabe nur
+  intern Verwendung findet. (optional)
+
+  \item[Comment] -- Wird nicht ausgewertet, sollte aber dennoch
+  enthalten sein, um die Eigenschaften zu beschreiben.
+
+\end{description}
+
+\subsection*{Erläuterungen zu Eintragstypen für den Action"=Typ
+"`\texttt{EMAIL}"':}
+
+\begin{description}
+
+  \item[Host] -- SMPT"=Server, der die Weiterleitung der E-Mail
+  bewirkt (Standard: |"smtp-hub"|, optional).
+
+  \item[Port] -- Portadresse des SMPT"=Servers (Standard: |25|).
+
+  \item[Subject] -- (optional).
+
+  \item[From] -- Absender (zwingend).
+
+  \item[To] -- Eine oder mehrere kommaseparierte E-Mail"=Adressen
+  (zwingend).
+
+  \item[Cc, Bcc] -- Eine oder mehrere kommaseparierte
+  E-Mail"=Adressen (optional).
+
+  \item[Body] -- Zu sendender einfacher Text (optional).
+
+  \item[Html] -- Zu sendender Text im HTML"=Format (optional).
+
+  \item[Attachments] -- Ein Array von Objekten, von denen jedes eine
+  Datei kennzeichnet (optional). Ein solches Objekt verfügt über die
+  folgenden Eintragstypen:
+
+  \begin{description}
+
+    \item[Filename] -- Der Name der Datei (zwingend). 
+
+    \item[Contents] -- Der Dateiinhalt in base64"=Codierung (zwingend).
+    
+  \end{description}
+
+\end{description}
+
+\subsection*{Erläuterungen zu Eintragstypen für den Action"=Typ
+"`\texttt{LaTeX}"':}
+
+\begin{description}
+
+  \item[SrcFormat] -- Legt fest, ob es sich um \LaTeX"=Quelltext
+  (|"LaTeX"|) oder plain\TeX"=Quelltext (|"TeX"|) handelt. Ohne
+  Angabe wird |"LaTeX"| angenommen. (optional)
+
+  \item[DestFormat] -- Legt fest, ob die Rückgabe im pdf"=Format
+  (|"PDF"|) oder dvi"=Format (|"DVI"|) erfolgen soll. Ohne
+  Angabe wird |"PDF"| angenommen. (optional)
+
+  \item[Source] -- Der Quell"=Code des \LaTeX"=Dokumentes als String
+  oder als String"=Array. Der String kann base64"=codiert oder
+  uncodiert angegeben werden, wobei "`NodejsRelay"' eine vorhandene
+  Codierung selbsttätig erkennt. Im letzteren Fall ist darauf zu
+  achten, dass das Zeichen "`|\|"' doppelt angegeben wird, um zu
+  verhindern, dass es vom Javascript"=Interpreter als Sonderzeichen
+  interpretiert wird. Ohne Angabe wird die erste unter
+  |"Attachments"| angegebene Datei als \LaTeX"=Dokument verwendet.
+  (optional)
+
+  \item[MaxRuns] -- Anzahl der maximal durchgeführten \LaTeX"=Läufe
+  bis angenommen wird, dass das Ergebnis stabil ist. Ohne Angabe
+  wird "`2"' angenommen. (optional)
+
+  \item[KeepFiles] -- Legt fest, ob das temporäre Verzeichnis
+  einschließlich seines Inhaltes am Ende erhalten bleibt oder nicht.
+  Standardwert ist |"false"|. Dieser Eintrag hat nur für Testzwecke
+  eine Bedeutung. (optional)
+
+  \item[Attachments] -- Ein Array von Objekten, von denen jedes eine
+  externe Datei zur Verwendung beim \LaTeX"=Lauf kennzeichnet
+  (optional). Ein solches Objekt verfügt über die folgenden
+  Eintragstypen:
+
+  \begin{description}
+
+    \item[Filename] -- Der Name, unter dem die Datei erzeugt werden
+    soll. Es gelten die unter unix"=artigen Betriebssystemen gültigen
+    Einschränkungen.
+
+    \item[Contents] -- Der Dateiinhalt. Bezüglich der
+    Codierung gilt das zu |"Source"| Gesagte. Im Falle von
+    Binärdateien (z.\,B.\ jpeg"=Grafik) ist base64"=Codierung zwingend.
+    
+  \end{description}
+
+\end{description}
+
+\noindent Speziell beim Action"=Typ "`\texttt{LaTeX}"' kann die Zuweisung
+|"stream"| an den allgemeinen Parameter |"OutputType"| sinnvoll
+sein. In diesem Falle werden die reinen pdf"=Daten gesendet.
+
+\section*{Zu "`NodejsRelay"' gehörige Dateien}
+
+"`NodejsRelay"' erfordert, dass folgende Einzeldateien und
+Softwarepakete installiert sind (Stand: 2011-05-13):
+
+\begin{enumerate}
+
+  \item Das Paket "`|nodejs3|"':\par%\vspace{-\baselineskip}
+\begin{lstlisting}
+zypper ar \
+http://download.opensuse.org/repositories/home:/maw:/nodejs/openSUSE_11.4/home:maw:nodejs.repo
+zypper ref
+zypper in nodejs
+\end{lstlisting}
+
+  \item Das Javascript"=Programm mit der Server"=Funktionalität:
+  \par\vspace{-.25\baselineskip}
+  \path{/usr/local/bin/relay.js}
+
+  \item Das Startscript \path{/usr/local/bin/nodejsRelay}
+
+  \item Das  System"=Startscript \path{/etc/init.d/NodejsRelay} mit
+  symbolischem Link nach \path{/usr/sbin/rcNodejsRelay}
+
+  \item Script und Binärprogramm zur VXI\,11"=Kommunikation:
+  \par\vspace{-.25\baselineskip}
+  \path{/usr/local/bin/vxiTransceiver} und
+  \path{/usr/local/bin/vxi11_transceiver}
+
+\end{enumerate}
+
+\noindent Mit "`yast"' kann erreicht werden, dass der Service
+"`NodejsRelay"' in den Run"=Leveln "`3"' und "`5"' automatisch
+gestartet wird.
+
+\end{document}
+%---------------------------
+Beispiele:
+
+echo '{"Action":"TCP","Params":["a73434",5984,"GET / HTTP/1.0\n\n"]}'| \
+  curl -T - -X PUT http://i75434.berlin.ptb.de:55555
+
+echo '{"Action":"RANDOM"}' | \
+  curl -T - -X PUT http://a73434.berlin.ptb.de:55555

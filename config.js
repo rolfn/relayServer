@@ -4,7 +4,8 @@
 const MODULE = 'config';
 
 var cfg = {
-  VERSION: '7.0, 2013-01-14',
+  VERSION: '7.1',
+  DATE: '2013-01-15',
   RELAY_PORT: 55555,
   //RELAY_PORT: 61111,
   DISPATCHER_PORT: 55565,

@@ -7,7 +7,25 @@ var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
 
-eval(tools.getFunctionCode('debug'));
-eval(tools.getFunctionCode('fdebug'));
-var inspect = tools.inspect;
+function inspect() {};
+inspect = tools.inspect;
 
+/**
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * Modulname wird ebenfalls ausgegeben.
+ * @param item meist Funktionsname
+ * @param subitem spezifische Aktion innerhalb der Funktion.
+ * @param info Daten
+ * @param level
+ */
+function debug(item, subitem, info, level) {};
+debug = tools.createFunction('debug', MODULE);
+
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug(subitem, info, level) {};
+fdebug = tools.createFunction('fdebug', debug);

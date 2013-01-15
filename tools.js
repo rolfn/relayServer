@@ -1,5 +1,5 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-15
 
 const MODULE = 'tools';
 
@@ -7,11 +7,6 @@ var util = require('util');
 var fs = require('fs');
 
 var debugLevel = (process.argv[2]) ? process.argv[2] : 0; // 5, 99
-
-function fdebug(subitem, info, level) {
-  item = arguments.callee.caller.name ? arguments.callee.caller.name : '---';
-  debug(MODULE, item, subitem, info, level);
-}
 
 function isDebug(level) {
   var l = 99;
@@ -57,9 +52,9 @@ function debug(module, item, _subitem, _info, _level) {
   }
 }
 
-exports.debug = debug;
+exports.debug = debug;  // ???
 
-var functions = {
+var functionsX = {
   debug: 'function(item, subitem, info, level) {' +
          'tools.debug(MODULE, item, subitem, info, level); };',
   fdebug: 'function(subitem, info, level) {' +
@@ -68,11 +63,29 @@ var functions = {
           'debug(item, subitem, info, level); };'
 };
 
-function getFunctionCode(name) {
-  return 'var ' + name + ' = ' + functions[name];
+var functions = {
+  debug:  function(param) {
+            return function (item, subitem, info, level) {
+              debug(param, item, subitem, info, level);
+            };
+          },
+  fdebug: function(param) {
+            return function (subitem, info, level) {
+              var item = arguments.callee.caller.name ?
+                arguments.callee.caller.name : "---";
+              param(item, subitem, info, level);
+            };
+          }
 }
 
-exports.getFunctionCode = getFunctionCode;
+exports.createFunction = function(name, p1, p2, p3) {
+  return functions[name](p1, p2, p3);
+}
+
+function fdebug(subitem, info, level) {
+  item = arguments.callee.caller.name ? arguments.callee.caller.name : '---';
+  debug(MODULE, item, subitem, info, level);
+}
 
 function inspect(o) {
   return util.inspect(o, false, 2, true);
@@ -126,36 +139,52 @@ var isEmpty = function(obj) {
 
 exports.isEmpty = isEmpty;
 
-exports.getEnv = function(target, next, body) {
+/**
+ * Liefert ein Object target mit den definierten Umgebungsvariablen.
+ * @param {object} target Ergebnis (Übergabe per Referenz!)
+ * @param {function} next wird ausgeführt, wenn das Ergebnis vollständig ist.
+ * @param {string | object} param1 1. Parameter für next
+*/
+function getEnv(target, next, param1) {
+  // reicht process.env vielleicht auch aus?
   var next_args = [].slice.call(arguments, 2);
-  // Array ab 3. Parameter erzeugen [body, ..., ...]
+  // Argument-Array ab 3. Parameter erzeugen [param1, ..., ...]
   if (isEmpty(target)) {// Erster Aufruf?
-  // target muss ein Objekt sein, damit es per Referenz übergeben wird.
     var spawn = require('child_process').spawn;
     var env = spawn('/usr/bin/printenv');
     var result = null;
     env.stdout.on('data', function (data) {
       result = data;
-    });
-    env.on('exit', function (code) {
+      fdebug('data', inspect(data));
+      var e0, e;
       if (result) {
-        var e0 = result.toString().split('\n');
+        e0 = result.toString().split('\n');
         for (var i in e0) {
-          var e = e0[i].split('=');
+          e = e0[i].split('=');
           target[e[0]] = e[1];
         }
       }
-      //fdebug('e0', inspect(e0), 102);
-      if (!target.TMPDIR) target.TMPDIR = '/tmp';
+      fdebug('e0', inspect(e0), 102);
+      fdebug('e', inspect(e), 102);
+      if (!target.TMPDIR) target.TMPDIR = '/tmp'; // weil so wichtig ...
+      // Weiterführende Funktion mit allen Parametern ausführen.
       next.apply(this, next_args); 
     });
   } else {
+    // Umgebungsvariablen sind bereits bekannt.
     next.apply(this, next_args);
   }
 }
 
-// Siehe: https://github.com/ryanmcgrath/wrench-js
-exports.rmdirRecursive = function(dir, clbk){
+exports.getEnv = getEnv;
+
+/**
+ * Löscht rekursiv eine Verzeichnisstruktur.
+ * @see https://github.com/ryanmcgrath/wrench-js
+ * @param {string} dir zu löschende Verzeichnisstruktur.
+ * @param {function} clbk Aufruf bei Erfolg oder Fehler.
+*/
+function rmdirRecursive(dir, clbk){
   fs.readdir(dir, function(err, files){
     if (err) return clbk(err);
     (function rmFile(err){
@@ -180,9 +209,18 @@ exports.rmdirRecursive = function(dir, clbk){
   });
 };
 
-exports.isBASE64 = function(b) {
+exports.rmdirRecursive = rmdirRecursive;
+
+/**
+ * Analysiert BASE64-String.
+ * Test ist nicht 100%ig sicher, aber vermutlich ausreichend.
+ * @param {string} b Evtl. BASE64-kodiert.
+ * @return {boolean} 
+*/
+function isBASE64(b) {
   // Test nicht 100%ig sicher, aber vermutlich ausreichend.
   r = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
   return r.test(b);
 }
 
+exports.isBASE64 = isBASE64;

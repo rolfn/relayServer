@@ -1,6 +1,9 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
-
+/**
+ * @author <a href="mailto:Rolf.Niepraschk@ptb.de">Rolf Niepraschk</a>
+ * version: 2013-01-14
+ */
+ 
 const MODULE = 'relay';
 
 var cfg = require('./config.js');
@@ -10,35 +13,37 @@ var internal = require('./internal.js');
 var external = require('./external.js');
 var response = require('./response.js');
 
+function inspect() {};
+inspect = tools.inspect;
+
 /**
  * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
  * Modulname wird ebenfalls ausgegeben.
- * -->  function debug(item, subitem, info, level)
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
  * @param info Daten
  * @param level
  */
-eval(tools.getFunctionCode('debug'));
+function debug(item, subitem, info, level) {};
+debug = tools.createFunction('debug', MODULE);
 
 /**
  * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * -->  function fdebug(subitem, info, level)
  * @param subitem
  * @param info
  * @param level
  */
-eval(tools.getFunctionCode('fdebug'));
-
-var inspect = tools.inspect;
+function fdebug(subitem, info, level) {};
+fdebug = tools.createFunction('fdebug', debug);
 
 /**
- * Analysiert den Action-Typ.
- * @param str Action-String.
- * @returns -1 --> "internal action",
- *           0 --> "invalid external action",
- *           1 --> "valid external action"
- */
+ * Analysiert den Action-Typ. Rückgabe:
+ * -1: "internal action",
+ *  0: "invalid external action",
+ *  1: "valid external action"
+ * @param {string} str Action-String.
+ * @return {number} Action-Typ
+*/
 function getActionType(str) {
   var ret = str.indexOf('/');
   if (ret > -1) {
@@ -96,7 +101,7 @@ function analyzeActions_2(pRef, js) {
   }
 }
 
-function analyzeActions_1(data, pRef) {
+function analyzeActions_1(pRef, data) {
   var js = {};
   if (data) {
     try{
@@ -119,9 +124,10 @@ exports.start = function start(_req, _res) {
   var body = '';
   _req.on('data', function (chunk) {
     body += chunk;
+    fdebug('data / body', inspect(body));
   }); 
   _req.on('end', function () {
-    tools.getEnv(cfg.env, analyzeActions_1, body, pRef);
+    tools.getEnv(cfg.env, analyzeActions_1, pRef, body);
   });
   _res.connection.on('close', function () {
     debug('close connection', 'time', '' + new Date().getTime(), 1);

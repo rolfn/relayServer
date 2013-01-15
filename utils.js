@@ -6,32 +6,51 @@ const MODULE = 'utils';
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 
-eval(tools.getFunctionCode('debug'));
-eval(tools.getFunctionCode('fdebug'));
-var inspect = tools.inspect;
+function inspect() {};
+inspect = tools.inspect;
+
+/**
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * Modulname wird ebenfalls ausgegeben.
+ * @param item meist Funktionsname
+ * @param subitem spezifische Aktion innerhalb der Funktion.
+ * @param info Daten
+ * @param level
+ */
+function debug(item, subitem, info, level) {};
+debug = tools.createFunction('debug', MODULE);
+
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug(subitem, info, level) {};
+fdebug = tools.createFunction('fdebug', debug);
 
 /**
  * Wiederholtes Aufrufen der Funktion ``exec''.
- * @param number Anzahl der Aufrufe.
- * @param wait Wartezeit zwischen zwei Aufrufen in ms.
- * @param exec Aufzurufende Funktion, die die Daten beschafft. Ihr erster
- * Parameter muss eine Array-Variable sein. In ihr werden die Daten pro
- * Durchgang abgelegt. Der zweite Parameter ist eine Funktion, die aufgerufen
+ * Parameter "exec" muss eine Array-Variable sein. In ihr werden die Daten pro
+ * Durchgang abgelegt. Der Parameter "ready" ist eine Funktion, die aufgerufen
  * werden muss, nachdem Daten gespeichert wurden (oft innerhalb von
  * callback-Funktion).
- *
+ * <pre>
  * |#######|<----- Wait ----->|#######|<----- Wait ----->|
  * start1                     stop1
  *                            start2                     stop2/Response
- * 
+ * </pre>
+ * @param number Anzahl der Aufrufe.
+ * @param wait Wartezeit zwischen zwei Aufrufen in ms.
+ * @param exec Aufzurufende Funktion, die die Daten beschafft. Ihr erster
  * @param ready Funktion, die nach dem letzten Aufruf von ``exec''
- *  aufgerufen wird. Ihr Parameter ist ein Array aller Rückgabe-Strings
- *  der einzelnen exec-Aufrufe.
+ *   aufgerufen wird. Ihr Parameter ist ein Array aller Rückgabe-Strings
+ *   der einzelnen exec-Aufrufe.
  * @param pRef Object, speziell wegen "jobId" zum Kennzeichnen des
- *  Repeat-Prozesses und zum vorzeitigen Beenden.
+ *   Repeat-Prozesses und zum vorzeitigen Beenden.
  * @param js Object, das allgemeine Datenobjekt.
- * @param _buf String-Array; darf beim ersten Aufruf nicht angegeben
- *  werden (nur interne Verwendung).
+ * @param _buf {String[]} [buffer] darf beim ersten Aufruf nicht angegeben
+ *   werden (nur interne Verwendung).
  */
 function repeat_A(number, wait, exec, ready, pRef, js, _buf) {
   function repeat_A1() {

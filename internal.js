@@ -13,9 +13,28 @@ var _email = require('./email.js');
 // npm install buffertools -g ; npm install ldapjs -g
 // var _latex = require('./latex.js');
 
-eval(tools.getFunctionCode('debug'));
-eval(tools.getFunctionCode('fdebug'));
-var inspect = tools.inspect;
+function inspect() {};
+inspect = tools.inspect;
+
+/**
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * Modulname wird ebenfalls ausgegeben.
+ * @param item meist Funktionsname
+ * @param subitem spezifische Aktion innerhalb der Funktion.
+ * @param info Daten
+ * @param level
+ */
+function debug(item, subitem, info, level) {};
+debug = tools.createFunction('debug', MODULE);
+
+/**
+ * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
+ * @param subitem
+ * @param info
+ * @param level
+ */
+function fdebug(subitem, info, level) {};
+fdebug = tools.createFunction('fdebug', debug);
 
 function call(pRef, js) {
   fdebug('js', inspect(js));
@@ -64,7 +83,7 @@ function call(pRef, js) {
       break;
     // Administration
     case '_version':
-      response.prepareResult(pRef, js, cfg.VERSION);
+      response.prepareResult(pRef, js, cfg.VERSION + ', ' + cfg.DATE);
       break;
     case '_environment':
       response.prepareResult(pRef, js, cfg.env);

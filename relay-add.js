@@ -1,4 +1,3 @@
-exports.helloWorld ="Hello World";
 
 fm3CalQsp = function(psoll,pist,Vopen){
 
@@ -217,10 +216,12 @@ exports.slope = slope;
  * Vorzeichen bei Mantisse oder Exponent enthalten. Pre- und Postfix können
  * auch leer sein. Im Fehlerfall wird Number.NaN geliefert. Siehe auch:
  *    http://www.regular-expressions.info/floatingpoint.html
+ * <pre>
  * Beispiele: "MEASURING     -1.13E-3 BLAFASEL" --> -0.00113
  *            "MEASURING .4711"                 -->  0.4711
+ * </pre>
  * @param str String mit Zahl.
- * @returns number.
+ * @return number.
  */
 extractValue = function(s) {
     var regex = /^(\w*\s*)([-+]?[0-9]*\.?[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
