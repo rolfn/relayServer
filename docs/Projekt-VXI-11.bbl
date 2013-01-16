@@ -1,0 +1,205 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \sortlist{entry}{nyt}
+    \entry{bloomer:rpc}{book}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=38785be6b5dfd1d09c455d50865ed957}{Bloomer}{B\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=38785be6b5dfd1d09c455d50865ed957}{Bloomer}{B\bibinitperiod}{John}{J\bibinitperiod}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Sebastopol}%
+      }
+      \list{publisher}{1}{%
+        {O'Reilly \& Associates, Inc.}%
+      }
+      \strng{namehash}{38785be6b5dfd1d09c455d50865ed957}
+      \strng{fullhash}{38785be6b5dfd1d09c455d50865ed957}
+      \field{sortinit}{B}
+      \field{labelyear}{1991}
+      \field{labeltitle}{Power Programming with RPC}
+      \field{addendum}{im Vakuumlabor verfügbar}
+      \field{title}{Power Programming with RPC}
+      \field{year}{1991}
+    \endentry
+    \entry{marshall:rpc}{online}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=d9b0a68e4531b5a2c7139e7aac58cdbd}{Marshall}{M\bibinitperiod}{A.\bibnamedelimi D.}{A\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=d9b0a68e4531b5a2c7139e7aac58cdbd}{Marshall}{M\bibinitperiod}{A.\bibnamedelimi D.}{A\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{d9b0a68e4531b5a2c7139e7aac58cdbd}
+      \strng{fullhash}{d9b0a68e4531b5a2c7139e7aac58cdbd}
+      \field{sortinit}{M}
+      \field{labelyear}{1994\bibdatedash 2005}
+      \field{labeltitle}{UNIX System Calls and Subroutines using C}
+      \field{endyear}{2005}
+      \field{subtitle}{Remote Procedure Calls (RPC)}
+      \field{title}{UNIX System Calls and Subroutines using C}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{1994}
+      \verb{url}
+      \verb http://www.cs.cf.ac.uk/Dave/C/node33.html
+      \endverb
+    \endentry
+    \entry{nodejs:modules}{online}{}
+      \field{sortinit}{n}
+      \field{labelyear}{2012}
+      \field{labeltitle}{Modules · joyent/node Wiki}
+      \field{addendum}{umfangreiche Liste zu Node.js-Modulen, darunter auch zu JSON-RPC und XML-RPC}
+      \field{title}{Modules · joyent/node Wiki}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{2012}
+      \verb{url}
+      \verb http://nodejs.org/
+      \endverb
+    \endentry
+    \entry{nodejs}{online}{}
+      \field{sortinit}{n}
+      \field{labelyear}{2012}
+      \field{labeltitle}{node.js}
+      \field{title}{node.js}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{2012}
+      \verb{url}
+      \verb http://nodejs.org/
+      \endverb
+    \endentry
+    \entry{python:vxi-11}{online}{}
+      \field{sortinit}{P}
+      \field{labelyear}{2011}
+      \field{labeltitle}{Python Laboratory Operations Toolkit}
+      \field{day}{07}
+      \field{month}{04}
+      \field{title}{Python Laboratory Operations Toolkit}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{2011}
+      \verb{url}
+      \verb http://sourceforge.net/projects/pythonlabtools/
+      \endverb
+    \endentry
+    \entry{sharples:vxi-11}{online}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=c941b8866d061ef238491be18a01df9e}{Sharples}{S\bibinitperiod}{Steve\bibnamedelima D.}{S\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \name{author}{1}{}{%
+        {{uniquename=0,hash=c941b8866d061ef238491be18a01df9e}{Sharples}{S\bibinitperiod}{Steve\bibnamedelima D.}{S\bibinitperiod\bibinitdelim D\bibinitperiod}{}{}{}{}}%
+      }
+      \strng{namehash}{c941b8866d061ef238491be18a01df9e}
+      \strng{fullhash}{c941b8866d061ef238491be18a01df9e}
+      \field{sortinit}{S}
+      \field{labelyear}{2010}
+      \field{labeltitle}{VXI11 Ethernet Protocol for Linux}
+      \field{addendum}{auf dem C-Code von Steve~D. Sharples beruht die derzeitige Lösung im Vakuumlabor}
+      \field{day}{09}
+      \field{month}{09}
+      \field{subtitle}{How to talk to your LXI-Compliant Agilent, LeCroy or Tektronix Scope from Linux over LAN}
+      \field{title}{VXI11 Ethernet Protocol for Linux}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{2010}
+      \verb{url}
+      \verb http://optics.eee.nottingham.ac.uk/vxi11/
+      \endverb
+    \endentry
+    \entry{rpcgen:programming.guide}{online}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=12458c7205eacc940c24503fb7db9b56}{{University\bibnamedelimb of\bibnamedelimb California}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \name{editor}{1}{}{%
+        {{uniquename=0,hash=12458c7205eacc940c24503fb7db9b56}{{University\bibnamedelimb of\bibnamedelimb California}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Berkeley}%
+      }
+      \strng{namehash}{12458c7205eacc940c24503fb7db9b56}
+      \strng{fullhash}{12458c7205eacc940c24503fb7db9b56}
+      \field{sortinit}{U}
+      \field{extrayear}{1}
+      \field{labelyear}{1991}
+      \field{labeltitle}{PSD:22}
+      \field{subtitle}{RPCGEN Programming Guide}
+      \field{title}{PSD:22}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{1991}
+      \verb{url}
+      \verb http://docs.freebsd.org/44doc/psd/22.rpcgen/paper.pdf
+      \endverb
+    \endentry
+    \entry{rpc:programming.guide}{online}{}
+      \name{labelname}{1}{}{%
+        {{uniquename=0,hash=12458c7205eacc940c24503fb7db9b56}{{University\bibnamedelimb of\bibnamedelimb California}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \name{editor}{1}{}{%
+        {{uniquename=0,hash=12458c7205eacc940c24503fb7db9b56}{{University\bibnamedelimb of\bibnamedelimb California}}{U\bibinitperiod}{}{}{}{}{}{}}%
+      }
+      \list{location}{1}{%
+        {Berkeley}%
+      }
+      \strng{namehash}{12458c7205eacc940c24503fb7db9b56}
+      \strng{fullhash}{12458c7205eacc940c24503fb7db9b56}
+      \field{sortinit}{U}
+      \field{extrayear}{2}
+      \field{labelyear}{1991}
+      \field{labeltitle}{PSD:23}
+      \field{subtitle}{Remote Procedure Call Programming Guide}
+      \field{title}{PSD:23}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{1991}
+      \verb{url}
+      \verb http://docs.freebsd.org/44doc/psd/23.rpc/paper.pdf
+      \endverb
+    \endentry
+    \entry{vxibus:vxi-11}{online}{}
+      \field{sortinit}{V}
+      \field{labelyear}{1995}
+      \field{labeltitle}{VXI 11}
+      \field{day}{07}
+      \field{month}{17}
+      \field{subtitle}{TCP/IP Instrument Protocol Specification}
+      \field{title}{VXI 11}
+      \field{urlday}{29}
+      \field{urlmonth}{11}
+      \field{urlyear}{2012}
+      \field{year}{1995}
+      \verb{url}
+      \verb http://www.vxibus.org/files/VXI_Specs/VXI-11.zip
+      \endverb
+    \endentry
+  \endsortlist
+\endrefsection
+\endinput
+
