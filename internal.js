@@ -86,7 +86,8 @@ function call(pRef, js) {
       response.prepareResult(pRef, js, cfg.VERSION + ', ' + cfg.DATE);
       break;
     case '_environment':
-      response.prepareResult(pRef, js, cfg.env);
+      ///response.prepareResult(pRef, js, cfg.env);
+        response.prepareResult(pRef, js, process.env);
       break;
     case '_killRepeats':
       for (var key in cfg.theRepeats) {

@@ -79,7 +79,7 @@ function call(pRef, js, postFunc) {
   execOpt.timeout = (js.TimeOut) ? js.TimeOut : cfg.DEFAULT_EXEC_TIMEOUT;
   execOpt.maxBuffer = (js.MaxBuffer) ? js.MaxBuffer : cfg.DEFAULT_EXEC_MAXBUFFER;
   if (js.WorkingDir != undefined) execOpt.cwd = js.WorkingDir;
-  execOpt.env = (js.ENV != undefined) ? js.ENV : process.env;
+  //execOpt.env = (js.ENV != undefined) ? js.ENV : process.env;
   if (js.OutputEncoding == 'binary') execOpt.encoding = 'binary';
 
   fdebug('execOpt', inspect(execOpt), 102);

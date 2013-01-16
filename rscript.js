@@ -1,5 +1,5 @@
 
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
+// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-16
 
 const MODULE = 'rscript';
 
@@ -43,7 +43,7 @@ function call(pRef, js) {
     js.KeepFiles = false;
   var params = [];
   var Rfile = 'cmd.R';
-  js.WorkingDir = cfg.env.TMPDIR + '/' + pRef.jobId;
+  js.WorkingDir = tools.getTempDir() + '/' + pRef.jobId;
   params.push(Rfile);
   if (js.Value != undefined) {
     if (Array.isArray(js.Value)) {

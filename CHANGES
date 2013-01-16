@@ -1,6 +1,10 @@
+* Wed Jan 16 2013 Rolf.Niepraschk@ptb.de
+- "getEnv" durch "process.env" ersetzt. "ldap" wegen "undefined symbol"
+  (buffertools) entfernt. Dokumentation der Funktionen begonnen (dox). 
+
 * Mon Jan 14 2013 Rolf.Niepraschk@ptb.de
 - Aufteilung auf Module, Versionsnummer des rpm-Paketes identisch zu der von
-  nodejsServers.
+  nodejsServers. Angabe zu "%changelog" aus eigener Datei CHANGES.
 
 * Fri Jan 11 2013 Rolf.Niepraschk@ptb.de
 - Änderungen zu t_start und t_stop (erste Tests)

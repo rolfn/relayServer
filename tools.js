@@ -101,13 +101,19 @@ exports.pad2 = function(n) {
   return n<10 ? '0'+n : n
 }
 
+function getTempDir() {
+  return process.env.TMPDIR ? process.env.TMPDIR : '/tmp'
+}
+
+exports.getTempDir = getTempDir;
+
 /**
  * Liefert ähnlich zu parseFloat eine Float-Zahl, die der String s repräsentiert.
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert 
  * ist also in jedem Fall eine Float-Zahl.
  * @param s die Zahl als String.
- * @param d default-Wert (ohne Angabe 0.0).
- * @returns Float-Zahl
+ * @param {number} d default-Wert (ohne Angabe 0.0).
+ * @return {number} Float-Zahl
  */
 exports.getFloat = function(s, d) {
   var _d = d == undefined ? 0.0 : d;
@@ -119,8 +125,8 @@ exports.getFloat = function(s, d) {
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert 
  * ist also in jedem Fall eine Int-Zahl.
  * @param s die Zahl als String.
- * @param d default-Wert (ohne Angabe 0).
- * @returns Float-Zahl
+ * @param {number} d default-Wert (ohne Angabe 0).
+ * @return {number} Int-Zahl
  */
 exports.getInt = function(s, d) {
   var _d = d == undefined ? 0 : d;
@@ -130,8 +136,8 @@ exports.getInt = function(s, d) {
 
 /**
  * Testet, ob das übergebene Objekt leer ist.
- * @param obj 
- * @returns true oder false
+ * @param {object} obj 
+ * @return {boolean} true oder false
  */
 var isEmpty = function(obj) {
   return Object.keys(obj).length === 0;
@@ -210,6 +216,21 @@ function rmdirRecursive(dir, clbk){
 };
 
 exports.rmdirRecursive = rmdirRecursive;
+
+/**
+ * Schreibt in einem temporären Verzeichnis eine Datei.
+ * @param {string} dir Temporäres Verzeichnis
+ * @param {string} name Name der Datei
+ * @param {Buffer} content Inhalt der Datei
+ * @param {function} error Aufruf im Fehlerfall
+ * @param {function} success Aufruf bei Erfolg
+*/
+function createTempFile(dir, name, content, error, success) {
+
+}
+
+exports.createTempFile = createTempFile;
+
 
 /**
  * Analysiert BASE64-String.
