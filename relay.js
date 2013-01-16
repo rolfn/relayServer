@@ -1,7 +1,7 @@
 
 /**
- * @author <a href="mailto:Rolf.Niepraschk@ptb.de">Rolf Niepraschk</a>
- * version: 2013-01-14
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-16
  */
  
 const MODULE = 'relay';
@@ -13,16 +13,22 @@ var internal = require('./internal.js');
 var external = require('./external.js');
 var response = require('./response.js');
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
  * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
  * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
+ * @param {string} item meist Funktionsname
+ * @param {string} subitem spezifische Aktion innerhalb der Funktion.
+ * @param {string} info Daten
+ * @param {number} level
  */
 function debug(item, subitem, info, level) {};
 debug = tools.createFunction('debug', MODULE);
@@ -38,9 +44,11 @@ fdebug = tools.createFunction('fdebug', debug);
 
 /**
  * Analysiert den Action-Typ. Rückgabe:
+ * <pre>
  * -1: "internal action",
  *  0: "invalid external action",
  *  1: "valid external action"
+ * </pre>
  * @param {string} str Action-String.
  * @return {number} Action-Typ
 */
@@ -57,6 +65,13 @@ function getActionType(str) {
   return ret;
 }
 
+/**
+ * Default-Werte ergänzen;
+ * Wenn 'DemoMode', dann sofort 'DemoResponse' zurücksenden, sonst
+ * Analyse von "Action" und entsprechende Verzweigung
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ */
 function analyzeActions_3(pRef, js) {
   fdebug('js', inspect(js));
   js.Repeat = tools.getInt(js.Repeat, 1);
@@ -72,7 +87,6 @@ function analyzeActions_3(pRef, js) {
     utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
       response.prepareResult(pRef, js, repeatResult);
     }, pRef, js);    
-    //prepareResult(pRef, js, js.DemoResponse); // Hier auch _repeat?
   } else if ('Action' in js) {
     var aType = getActionType(js.Action);
     fdebug('aType', '' + aType);
@@ -86,6 +100,13 @@ function analyzeActions_3(pRef, js) {
   } else response.prepareError(pRef, js, 'action not found');
 }
 
+/**
+ * Enthält die empfangene JSON-Struktur das Schlüsselwort "Passwd", so wird
+ * der zugeordnete Wert verschlüsselt, damit er in nachfolgenden debug-Ausgaben
+ * nicht lesbar ist.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ */
 function analyzeActions_2(pRef, js) {
   if (js.Passwd != undefined) {
     zlib.deflate(js.Passwd, function(err, buf) {
@@ -101,6 +122,11 @@ function analyzeActions_2(pRef, js) {
   }
 }
 
+/**
+ * Parsen der empfangene Daten zu JS-Objekt.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {string} data empfangene Daten
+ */
 function analyzeActions_1(pRef, data) {
   var js = {};
   if (data) {
@@ -115,7 +141,12 @@ function analyzeActions_1(pRef, data) {
   }
 }
 
-exports.start = function start(_req, _res) {
+/**
+ * Interne Serverdaten (req, res, ...) für später speichern, Daten empfangen.
+ * @param {object} _req request-Objekt
+ * @param {object} _res response-Objekt
+ */
+function start(_req, _res) {
   fdebug('time', '' + new Date().getTime(), 1);
   var pRef = {req:_req, res:_res, jobId:'NJS'+new Date().getTime()};
   fdebug('_req', inspect(_req), 102);
@@ -124,7 +155,6 @@ exports.start = function start(_req, _res) {
   var body = '';
   _req.on('data', function (chunk) {
     body += chunk;
-    fdebug('data / body', inspect(body));
   }); 
   _req.on('end', function () {
     analyzeActions_1(pRef, body);
@@ -134,3 +164,5 @@ exports.start = function start(_req, _res) {
     debug('close connection');
   });
 };
+
+exports.start = start;

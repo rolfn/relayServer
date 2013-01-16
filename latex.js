@@ -7,7 +7,13 @@ var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
@@ -29,3 +35,7 @@ debug = tools.createFunction('debug', MODULE);
  */
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
+
+/**
+ * TODO: Code vom Vorgänger übernehmen und anpassen.
+ */

@@ -42,7 +42,6 @@ echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
 echo '{"Action":"LaTeX","Source":"\\documentclass{article}\\begin{document}
   Hello world!!!\\end{document}","OutputType":"stream"}' | \
     curl -T - -X PUT http://localhost:55556 > zz.pdf
-
 </pre>
 
 R.N., 2013-01-16

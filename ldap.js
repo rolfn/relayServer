@@ -10,7 +10,13 @@ var response = require('./response.js');
 var ldap = require('/usr/lib/node_modules/ldapjs');
 var zlib = require('zlib');
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**

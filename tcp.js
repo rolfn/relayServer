@@ -1,4 +1,7 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-10
+ */
 
 const MODULE = 'tcp';
 
@@ -8,7 +11,13 @@ var utils = require('./utils.js');
 var response = require('./response.js');
 var net = require('net');
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
@@ -31,8 +40,13 @@ debug = tools.createFunction('debug', MODULE);
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
+/**
+ * Konfiguration der nötigen Datenstrukturen und Aufnahme der TCP-Kommunikation.
+ * Wait/Repeat wird unterstützt.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ */
 function call(pRef, js) {
-
   function doIt(b, next) {
     var result = [], host = js.Host, port = tools.getInt(js.Port),
       cmd = (js.Value) ? js.Value : '';
@@ -47,7 +61,7 @@ function call(pRef, js) {
     });
     conn.addListener('end', function () {
       fdebug('result 1', JSON.stringify(result));
-      for (var i=0; i<result.length;i++) {
+      for (var i=0; i < result.length;i++) {
         if ((result[i] == '\r\n') || (result[i] == '\n') ||
           (result[i] == '\r')) {
           fdebug('result 2', JSON.stringify(result));  

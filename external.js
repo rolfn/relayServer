@@ -1,4 +1,7 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-14
+ */
 
 const MODULE = 'external';
 
@@ -9,7 +12,13 @@ var utils = require('./utils.js');
 var rscript = require('./rscript.js');
 var response = require('./response.js');
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
@@ -32,6 +41,12 @@ debug = tools.createFunction('debug', MODULE);
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
+/**
+ * Konfiguration je nach externem Action-Typ; Ausführung des externen Programmaufrufs
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ * @param {function} Aufruf nach Beendigung des externen Programmaufrufs 
+ */
 function call(pRef, js, postFunc) {
   var execStr = '';
   fdebug('Action', js.Action);
@@ -53,15 +68,15 @@ function call(pRef, js, postFunc) {
           // Kehrt später noch mal zu dieser Funktion zurück.
           return;
         }
+        // TODO: LaTeX ähnlich wie RSCRIPT handhaben. (???)
         break
-      // TODO: LaTeX ähnlich wie RSCRIPT handhaben.
       default:
         break;
     }
 
     if (js.Value != undefined) {
       if (Array.isArray(js.Value)) {
-        for (var i=0;i<js.Value.length;i++) {
+        for (var i=0; i < js.Value.length; i++) {
           execStr = execStr + ' "' + js.Value[i] + '"';
         }
       } else {

@@ -1,8 +1,13 @@
-
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-16
+ */
 
 const MODULE = 'config';
 
+/**
+ * Datenstruktur mit Default-Werten
+ */
 var cfg = {
   VERSION: '7.2',
   DATE: '2013-01-16',

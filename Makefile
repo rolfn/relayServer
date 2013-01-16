@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2013-01-14, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-01-16, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -15,9 +15,12 @@ BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 VXI11_SRC = vxi11
 DOC_CMD=/usr/bin/dox-foundation
-DOC_DIR=_attachments/docs
+DOC_DIR=_attachments
 DOC_SRC=doc_src
+DOC_DB=vaclab_doc
+DOC_SERVER=a73434.berlin.ptb.de
 ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
+COMPACT=curl -H "Content-Type: application/json" -X POST
 
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
@@ -87,6 +90,11 @@ $(DOC_DIR)/index.html : $(DOC_SRC)
 	$(DOC_CMD) --debug --title "$(MAIN)" --source $(DOC_SRC) --target "$(DOC_DIR)"
 	@$(RM) -r $(DOC_SRC)
 
+docs-install : docs
+	echo $(MAIN) > _id
+	erica -v --docid $(MAIN) push http://$(DOC_SERVER):5984/$(DOC_DB)
+	$(COMPACT) http://$(DOC_SERVER):5984/$(DOC_DB)/_compact
+  
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean
 	$(RM) $(SPEC_FILE)

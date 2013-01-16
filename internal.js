@@ -1,4 +1,7 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-16
+ */
 
 const MODULE = 'internal';
 
@@ -9,11 +12,18 @@ var response = require('./response.js');
 var _tcp = require('./tcp.js');
 var _http = require('./http.js');
 var _email = require('./email.js');
-//var _ldap = require('./ldap.js'); // derzeit (2013-01-14) Probleme (buffertools)!
-// npm install buffertools -g ; npm install ldapjs -g
-// var _latex = require('./latex.js');
+//var _ldap = require('./ldap.js');
+//    derzeit (2013-01-14) Probleme (buffertools)!
+//    npm install buffertools -g ; npm install ldapjs -g
+//var _latex = require('./latex.js'); // TODO: Überarbeiten!
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
@@ -36,6 +46,13 @@ debug = tools.createFunction('debug', MODULE);
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
+/**
+ * Verzweigung bzw. Ausführung je nach internem Action-Typ. Ist es sinnvoll,
+ * dass Wait/Repeat wirksam werden sollen, so ist die Funktion "doIt" zu
+ * definieren.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ */
 function call(pRef, js) {
   fdebug('js', inspect(js));
   var doIt = null;
@@ -49,8 +66,8 @@ function call(pRef, js) {
     case 'TIME':
       doIt = function(b, next) {
         var d = new Date();
-        var s = tools.pad2(d.getHours()) + ':' + tools.pad2(d.getMinutes()) + ':' +
-          tools.pad2(d.getSeconds());
+        var s = tools.pad2(d.getHours()) + ':' +
+          tools.pad2(d.getMinutes()) + ':' + tools.pad2(d.getSeconds());
         b.push(s);
         next();
       };
@@ -77,7 +94,7 @@ function call(pRef, js) {
       // http://www.profv.de/texcaller/index.html
       // https://github.com/vog/texcaller
       // TODO: Auslagern nach "dispatcher.js" und external action
-      // "/usr/local/bin/texcaller" benutzen.
+      // "/usr/local/bin/texcaller" benutzen. (???)
       ///processLATEX_1(pRef, js);
       response.prepareError(pRef, js, 'not working!');
       break;
@@ -86,8 +103,7 @@ function call(pRef, js) {
       response.prepareResult(pRef, js, cfg.VERSION + ', ' + cfg.DATE);
       break;
     case '_environment':
-      ///response.prepareResult(pRef, js, cfg.env);
-        response.prepareResult(pRef, js, process.env);
+      response.prepareResult(pRef, js, process.env);
       break;
     case '_killRepeats':
       for (var key in cfg.theRepeats) {
@@ -95,9 +111,9 @@ function call(pRef, js) {
       }
       response.prepareResult(pRef, js, 'OK');
       break;
+    // TODO: Evtl. Ausgabe von "process.memoryUsage()" !?  process.uptime() !?
     default: response.prepareError(pRef, js, 'unknown internal action');
   }
-  // Wiederholte Funtionsaufrufe, falls gewünscht.
   if (doIt) {
     utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
       response.prepareResult(pRef, js, repeatResult);

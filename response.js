@@ -1,17 +1,29 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-10
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-16
+ */
 
 const MODULE = 'response';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
-
 var addon = null;
+  
+/**
+ * Wenn vorhanden, Datei "relay-add.js" laden.
+ */
 try {
   addon = require('./relay-add.js');
 } catch(e) {
 }
 
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
@@ -34,13 +46,19 @@ debug = tools.createFunction('debug', MODULE);
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
+/**
+ * Aufbereitung der zu sendenden Daten; html-Header erzeugen; Daten senden.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ * @param {object} _data zu sendende Daten
+ */
 function sendResponse(pRef, js, _data) {
   fdebug('_data', _data);
   var ctype, data;
   if (js.OutputType == 'stream') {
     ctype = ((js.ContentType != undefined) ? js.ContentType :
       'application/octet-stream') + ';charset=ISO-8859-1';
-    // 8-Bit-Charset nötig!
+    // Hier 8-Bit-Charset nötig!
     data = _data;
   } else {
     ctype = 'application/json';
@@ -53,7 +71,12 @@ function sendResponse(pRef, js, _data) {
   pRef.req.connection.end();
 }
 
-// Ergebnis an den Aufrufer zurücksenden.
+/**
+ * Aufbereitung der zu sendenden Daten im Erfolgsfall, Postprocessing.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ * @param {object} data zu sendende Daten
+ */
 function prepareResult(pRef, js, data) {
   var x = data;
   var jsonRes = {};
@@ -68,26 +91,29 @@ function prepareResult(pRef, js, data) {
       Der oder die gelieferten Strings haben am Anfang und am Ende
       einen Zeitstempel (ms seit 1.1.1970). Diese müssen entfernt, aber
       gerettet werden.
+      <pre>
       Beispiel: "1348578392026|MEASURING  -1.17E-3|1348578392032"
                  t_start       GPIB-Response       t_stop
+      </pre>
     */
     var a;
-    /// Zum Vergleich der Zeiten ///
+    /// Zum Vergleich der Zeiten vom vxi-Programm mit denen
+    /// der hier erzeugten
     jsonRes.t__start = [];
-    for (var i=0;i<js.t_start.length;i++) {
+    for (var i=0;i < js.t_start.length;i++) {
       jsonRes.t__start[i] = js.t_start[i];
     }
     jsonRes.t__stop = [];
-    for (var i=0;i<js.t_stop.length;i++) {
+    for (var i=0;i < js.t_stop.length;i++) {
       jsonRes.t__stop[i] = js.t_stop[i];
     }
-    /// //////////////////////////////
+    /// TODO: Ist Start- und Stoppzeit im vxi-Programm weiter nötig?
     if (!Array.isArray(x)) x = [x];
     jsonRes.t_start = [], jsonRes.t_stop = [];
-    for (var i=0;i<x.length;i++) {
+    for (var i=0;i < x.length;i++) {
       a = x[i].split('|');
-      jsonRes.t_start.push(parseInt(a.shift())); // erstes Element ist Startzeit
-      jsonRes.t_stop.push(parseInt(a.pop()));    // letztes Element ist Stoppzeit
+      jsonRes.t_start.push(parseInt(a.shift()));// erstes Element ist Startzeit
+      jsonRes.t_stop.push(parseInt(a.pop()));  // letztes Element ist Stoppzeit
       x[i] = a.join('|'); // Falls vorher mehr als zwei "|" enthalten waren.
     }
     ///
@@ -133,7 +159,7 @@ function prepareResult(pRef, js, data) {
     }
     // sandbox-Variablen der Rückgabe-Struktur zuweisen.
     for (var key in sandbox) {
-      // "runInNewContext" bringt ggf. Funktion "gc" mit. Schwer wegzubekommen!
+      // "runInNewContext" bringt Funktion "gc" mit. 
       if (key != 'gc') {
         fdebug('sandbox[' + key + ']', inspect(sandbox[key]));
         // temporäre Variablen ignorieren
@@ -157,7 +183,12 @@ function prepareResult(pRef, js, data) {
 
 exports.prepareResult = prepareResult;
 
-// Fehlermeldung an den Aufrufer zurücksenden.
+/**
+ * Aufbereitung der zu sendenden Daten im Fehlerfall.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ * @param {object} data zu sendende Daten
+ */
 function prepareError(pRef, js, data) {
   js.OutputType = 'json';
   var jsonRes = {error:data};

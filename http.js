@@ -1,4 +1,7 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-15
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-01-15
+ */
 
 const MODULE = 'http';
 
@@ -8,7 +11,13 @@ var response = require('./response.js');
 var url = require('url');
 var request = require('/usr/lib/node_modules/request');
                    
-function inspect() {};
+/**
+ * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
+ * (Rekursion bis Ebene 2, coloriert)
+ * @param {object} o Zu untersuchende JS-Variable.
+ * @return {string}  String-Repräsentation
+ */
+function inspect(o) {};
 inspect = tools.inspect;
 
 /**
@@ -31,6 +40,13 @@ debug = tools.createFunction('debug', MODULE);
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
+/**
+ * Konfiguration der nötigen Datenstrukturen und Aufnahme der HTTP-Kommunikation.
+ * Wait/Repeat wird derzeit nicht unterstützt. Die Umgebungsvariablen proxy und
+ * no_proxy werden berücksichtigt.
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ */
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
   var method = (js.Body) ? 'POST' : 'GET';
