@@ -127,7 +127,6 @@ exports.start = function start(_req, _res) {
     fdebug('data / body', inspect(body));
   }); 
   _req.on('end', function () {
-    //tools.getEnv(cfg.env, analyzeActions_1, pRef, body);
     analyzeActions_1(pRef, body);
   });
   _res.connection.on('close', function () {

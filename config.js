@@ -4,8 +4,8 @@
 const MODULE = 'config';
 
 var cfg = {
-  VERSION: '7.1',
-  DATE: '2013-01-15',
+  VERSION: '7.2',
+  DATE: '2013-01-16',
   RELAY_PORT: 55555,
   //RELAY_PORT: 61111,
   DISPATCHER_PORT: 55565,
@@ -27,7 +27,6 @@ var cfg = {
     TEXCALLER: '/usr/local/bin/texcaller',
     WHICH: '/usr/bin/which'
   },
-  env: {},
   theRepeats: {}
 }
 

@@ -146,45 +146,6 @@ var isEmpty = function(obj) {
 exports.isEmpty = isEmpty;
 
 /**
- * Liefert ein Object target mit den definierten Umgebungsvariablen.
- * @param {object} target Ergebnis (Übergabe per Referenz!)
- * @param {function} next wird ausgeführt, wenn das Ergebnis vollständig ist.
- * @param {string | object} param1 1. Parameter für next
-*/
-function getEnv(target, next, param1) {
-  // reicht process.env vielleicht auch aus?
-  var next_args = [].slice.call(arguments, 2);
-  // Argument-Array ab 3. Parameter erzeugen [param1, ..., ...]
-  if (isEmpty(target)) {// Erster Aufruf?
-    var spawn = require('child_process').spawn;
-    var env = spawn('/usr/bin/printenv');
-    var result = null;
-    env.stdout.on('data', function (data) {
-      result = data;
-      fdebug('data', inspect(data));
-      var e0, e;
-      if (result) {
-        e0 = result.toString().split('\n');
-        for (var i in e0) {
-          e = e0[i].split('=');
-          target[e[0]] = e[1];
-        }
-      }
-      fdebug('e0', inspect(e0), 102);
-      fdebug('e', inspect(e), 102);
-      if (!target.TMPDIR) target.TMPDIR = '/tmp'; // weil so wichtig ...
-      // Weiterführende Funktion mit allen Parametern ausführen.
-      next.apply(this, next_args); 
-    });
-  } else {
-    // Umgebungsvariablen sind bereits bekannt.
-    next.apply(this, next_args);
-  }
-}
-
-exports.getEnv = getEnv;
-
-/**
  * Löscht rekursiv eine Verzeichnisstruktur.
  * @see https://github.com/ryanmcgrath/wrench-js
  * @param {string} dir zu löschende Verzeichnisstruktur.
