@@ -7,12 +7,9 @@ Version soll hier in größerem Maße auf Modularität Wert gelegt werden.
 
 ### Beispiele zur Kommunikation mit dem Relay-Server (Port 55555)
 
-```javascript
+<pre>
 echo '{"Action":"HTTP","Url":"http://a73434.berlin.ptb.de"}' | \
   curl -T - -X PUT http://localhost:55555
-```
-    echo '{"Action":"HTTP","Url":"http://a73434.berlin.ptb.de"}' | \
-      curl -T - -X PUT http://localhost:55555
-
+</pre>
 
 R.N.
