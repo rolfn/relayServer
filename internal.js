@@ -111,7 +111,8 @@ function call(pRef, js) {
       }
       response.prepareResult(pRef, js, 'OK');
       break;
-    // TODO: Evtl. Ausgabe von "process.memoryUsage()" !?  process.uptime() !?
+    // TODO: Evtl. Ausgabe von "process.memoryUsage()" !?
+    //                         "process.uptime()" !?
     default: response.prepareError(pRef, js, 'unknown internal action');
   }
   if (doIt) {

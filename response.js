@@ -112,9 +112,12 @@ function prepareResult(pRef, js, data) {
     jsonRes.t_start = [], jsonRes.t_stop = [];
     for (var i=0;i < x.length;i++) {
       a = x[i].split('|');
-      jsonRes.t_start.push(parseInt(a.shift()));// erstes Element ist Startzeit
-      jsonRes.t_stop.push(parseInt(a.pop()));  // letztes Element ist Stoppzeit
-      x[i] = a.join('|'); // Falls vorher mehr als zwei "|" enthalten waren.
+      // erstes Element ist Startzeit
+      jsonRes.t_start.push(parseInt(a.shift()));
+      // letztes Element ist Stoppzeit
+      jsonRes.t_stop.push(parseInt(a.pop()));
+      // Falls vorher mehr als zwei "|" enthalten waren. 
+      x[i] = a.join('|'); 
     }
     ///
     if (!jsonRes.t__start.length || !jsonRes.t__stop.length) {

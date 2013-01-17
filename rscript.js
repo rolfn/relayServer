@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-16
+ * version: 2013-01-17
  */
 
 const MODULE = 'rscript';
@@ -40,8 +40,8 @@ function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
 /**
- * Schreibt Inhalt von js.Body in temporäre Datei und ergänzt js.Body 
- * (R-Parameter) durch Namen und Pfad der temporären Datei: Zum Schluss wird
+ * Schreibt Inhalt von js.Body in temporäre Datei und ergänzt js.Value 
+ * (R-Parameter) durch Namen und Pfad dieser temporären Datei. Zum Schluss wird
  * js.Body beseitigt und per external.call das Programm Rscript aufgerufen.
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
@@ -49,17 +49,16 @@ fdebug = tools.createFunction('fdebug', debug);
 function call(pRef, js) {
   var cleanUp = function(pRef, js) {
     if (!js.KeepFiles) {
-      tools.rmdirRecursive(js.WorkingDir, function (error) {
-        fdebug('remove working directory', (error) ? error : js.WorkingDir);
+      tools.rmdirRecursive(js.WorkingDir, function (e) {
+        fdebug('remove working directory', (e) ? e : js.WorkingDir);
       });
     }
   };
   if ((js.KeepFiles == undefined) || (js.KeepFiles != true))
     js.KeepFiles = false;
   var params = [];
-  var Rfile = 'cmd.R';
   js.WorkingDir = tools.getTempDir() + '/' + pRef.jobId;
-  params.push(Rfile);
+  params.push(cfg.R_FILE);
   if (js.Value != undefined) {
     if (Array.isArray(js.Value)) {
       params = params.concat(js.Value); 
@@ -67,50 +66,25 @@ function call(pRef, js) {
       params = params.concat(js.Value.split(' ')); 
     }
   }
-  // Alte Parameter zuvorderst ergänzt durch `Rfile'.
+  // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.R_FILE".
   js.Value = params;
-  // Für `js.Body' String oder String-Array unterstützen.
-  var content = (Array.isArray(js.Body)) ? new Buffer(js.Body.join('\n')) :
-    new Buffer(js.Body);
-  // `js.WorkingDir' anlegen und `js.Body' in Datei `Rfile' schreiben.
-  // TODO: Allgemeingültig nach "tools" auslagern.
-  //  tools.createTempFile(tempDir, tempFile, content)
-  fs.mkdir(js.WorkingDir, '700', function (error) {
-    if (error) {
-      fdebug('create working directory', error);
+  // "fs.write" erfordert Buffer! "string" und "string[]" unterstützen.
+  var content = (Array.isArray(js.Body)) ? new Buffer(js.Body.join('\n'))
+    : new Buffer(js.Body);
+    
+  // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
+  //  schreiben, zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
+  tools.createTempFile(js.WorkingDir, cfg.R_FILE, content,
+    function (error) {
       prepareError(pRef, js, error);
-    } else {
-      fdebug('create working directory', js.WorkingDir);
-      fs.open(js.WorkingDir + '/' + Rfile, 'w', '600', function(e, fd) {
-        if (e) {
-          fdebug('file open', e);
-          prepareError(pRef, js, e);
-        } else {
-          fdebug('file open', Rfile);
-          fs.write(fd, content, 0, content.length, null, function(e, nb, buf){
-            if (e) {
-              fdebug('write', e);
-              prepareError(pRef, js, e);
-            } else {
-              fdebug('write', nb + ' Bytes');
-              fs.close(fd, function(e){
-                if (e) {
-                  fdebug('file close', e);
-                  prepareError(pRef, js, e);
-                } else {
-                  fdebug('file close', Rfile);
-                  delete js.Body;
-                  // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
-                  fdebug('2nd "external.call"', e);
-                  external.call(pRef, js, cleanUp);                      
-                }
-              });
-            }
-          });
-        }
-      });         
+    },
+    function() {
+      delete js.Body;
+      // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
+      fdebug('2nd "external.call"');
+      external.call(pRef, js, cleanUp); 
     }
-  });
+  );
 }
 
 exports.call = call;

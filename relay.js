@@ -72,7 +72,7 @@ function getActionType(str) {
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
-function analyzeActions_3(pRef, js) {
+function analyzeActions3(pRef, js) {
   fdebug('js', inspect(js));
   js.Repeat = tools.getInt(js.Repeat, 1);
   js.Wait = tools.getInt(js.Wait, 0);
@@ -107,18 +107,18 @@ function analyzeActions_3(pRef, js) {
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
-function analyzeActions_2(pRef, js) {
+function analyzeActions2(pRef, js) {
   if (js.Passwd != undefined) {
     zlib.deflate(js.Passwd, function(err, buf) {
       if (err) {
         response.prepareError(pRef, js, 'internal error');
       } else {
         js.Passwd = buf;
-        analyzeActions_3(pRef, js);
+        analyzeActions3(pRef, js);
       }
     });      
   } else {
-    analyzeActions_3(pRef, js);
+    analyzeActions3(pRef, js);
   }
 }
 
@@ -127,7 +127,7 @@ function analyzeActions_2(pRef, js) {
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {string} data empfangene Daten
  */
-function analyzeActions_1(pRef, data) {
+function analyzeActions1(pRef, data) {
   var js = {};
   if (data) {
     try{
@@ -135,7 +135,7 @@ function analyzeActions_1(pRef, data) {
     } catch(err) {
       response.prepareError(pRef, js, 'data error');
     }
-    analyzeActions_2(pRef, js);
+    analyzeActions2(pRef, js);
   } else {
     response.prepareError(pRef, js, 'no data');
   }
@@ -157,7 +157,7 @@ function start(_req, _res) {
     body += chunk;
   }); 
   _req.on('end', function () {
-    analyzeActions_1(pRef, body);
+    analyzeActions1(pRef, body);
   });
   _res.connection.on('close', function () {
     debug('close connection', 'time', '' + new Date().getTime(), 1);

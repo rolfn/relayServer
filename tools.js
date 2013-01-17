@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-16
+ * version: 2013-01-17
  */
 
 const MODULE = 'tools';
@@ -10,9 +10,9 @@ var fs = require('fs');
 
 /**
  * Kommandozeilenwert zur Steuerung der debug-Ausgabe ermitteln. Ohne
- * Angabe wird "0" verwendet.
+ * Angabe wird 0 (keine Ausgabe) verwendet.
  */
-var debugLevel = (process.argv[2]) ? process.argv[2] : 0; // 5, 99
+var debugLevel = process.argv[2] ? process.argv[2] : 0;
 
 /**
  * Liefert true, wenn level kleiner oder gleich dem Wert, der auf der
@@ -44,7 +44,6 @@ const RESET = 0;
 
 /**
  * Erzeugt ESC-Code ("Select Graphic Rendition")
- * (Rekursion bis Ebene 2, coloriert)
  * @param {number} code Farb-/Schriftkonstante
  * @return {string} ESC-Code 
  */
@@ -246,14 +245,42 @@ exports.rmdirRecursive = rmdirRecursive;
 
 /**
  * Erzeugt in einem temporären Verzeichnis eine Datei mit Inhalt.
- * @param {string} dir Temporäres Verzeichnis
+ * @param {string} dir temporäres Verzeichnis
  * @param {string} name Name der Datei
- * @param {Buffer} content Inhalt der Datei
+ * @param {Buffer} buf Inhalt der Datei
  * @param {function} error Aufruf im Fehlerfall
  * @param {function} success Aufruf bei Erfolg
 */
-function createTempFile(dir, name, content, error, success) {
-  // TODO: von "rscript.js" in allg. Form übernehmen!
+function createTempFile(dir, name, buf, error, success) {
+  fs.mkdir(dir, '700', function (e) {
+    fdebug('create working directory', e ? e : dir);
+    if (e) {
+      error(e);
+    } else {
+      fs.open(dir + '/' + name, 'w', '600', function(e, fd) {
+        fdebug('file open', e ? e : name);
+        if (e) {
+          error(e);
+        } else {
+          fs.write(fd, buf, 0, buf.length, null, function(e, nb, buf){
+            fdebug('file write', e ? e : nb + ' Bytes');
+            if (e) {
+              error(e);
+            } else {
+              fs.close(fd, function(e){
+                fdebug('file close', e ? e : ' --> next step');
+                if (e) {
+                  error(e);
+                } else {
+                  success();                      
+                }
+              });
+            }
+          });
+        }
+      });         
+    }
+  });
 }
 
 exports.createTempFile = createTempFile;

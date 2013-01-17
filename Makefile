@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2013-01-16, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-01-17, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -19,6 +19,8 @@ DOC_DIR=_attachments
 DOC_SRC=doc_src
 DOC_DB=vaclab_doc
 DOC_SERVER=a73434.berlin.ptb.de
+DOC_SERVER_PORT=5984
+DOC_DB_URL=http://$(DOC_SERVER):$(DOC_SERVER_PORT)/$(DOC_DB)
 ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
 COMPACT=curl -H "Content-Type: application/json" -X POST
 
@@ -81,19 +83,22 @@ $(VXI11_SRC)/vxi11_transceiver :
 
 docs : $(DOC_DIR)/index.html
 
+# Umkopieren, damit Rekursion von "dox-foundation" unschädlich ist.
 $(DOC_SRC) : $(JS_SOURCE)
 	@mkdir -p "$@"
 	@cp $+ $@
 
 $(DOC_DIR)/index.html : $(DOC_SRC)
 	@mkdir -p "$(DOC_DIR)"
-	$(DOC_CMD) --debug --title "$(MAIN)" --source $(DOC_SRC) --target "$(DOC_DIR)"
+	@$(RM) $(DOC_DIR)/*.js.html 
+	$(DOC_CMD) --debug --title "$(MAIN) (ver. $(VERSION))" --source $(DOC_SRC) \
+	  --target "$(DOC_DIR)"
 	@$(RM) -r $(DOC_SRC)
 
 docs-install : docs
 	echo $(MAIN) > _id
-	erica -v --docid $(MAIN) push http://$(DOC_SERVER):5984/$(DOC_DB)
-	$(COMPACT) http://$(DOC_SERVER):5984/$(DOC_DB)/_compact
+	erica -v --docid $(MAIN) push $(DOC_DB_URL)
+	$(COMPACT) $(DOC_DB_URL)/_compact
   
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean

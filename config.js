@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-16
+ * version: 2013-01-17
  */
 
 const MODULE = 'config';
@@ -9,10 +9,9 @@ const MODULE = 'config';
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '7.2',
-  DATE: '2013-01-16',
+  VERSION: '7.3',
+  DATE: '2013-01-17',
   RELAY_PORT: 55555,
-  //RELAY_PORT: 61111,
   DISPATCHER_PORT: 55565,
   DEFAULT_EXEC_TIMEOUT: 10000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
@@ -23,6 +22,7 @@ var cfg = {
   DEFAULT_TEX_MAXRUNS: 5,
   DEFAULT_TEX_SRCFMT: 'LaTeX',
   DEFAULT_TEX_DESTFMT: 'PDF',
+  R_FILE: 'cmd.R',
   bin: {
     VXITRANSCEIVER: '/usr/local/bin/vxiTransceiver',
     RSCRIPT: '/usr/bin/Rscript',

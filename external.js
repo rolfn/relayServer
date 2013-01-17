@@ -42,7 +42,7 @@ function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
 /**
- * Konfiguration je nach externem Action-Typ; Ausführung des externen Programmaufrufs
+ * Konfiguration je nach externem Action-Typ; Ausführung des externen Programms
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  * @param {function} Aufruf nach Beendigung des externen Programmaufrufs 
@@ -109,7 +109,6 @@ function call(pRef, js, postFunc) {
           b.push(s);
         } else {
           fdebug('time_success', '' + new Date().getTime(), 1);
-          fdebug('success', stdout.length + ' Bytes');
           var res;
 
           if (js.OutputEncoding == 'binary') {
@@ -118,7 +117,7 @@ function call(pRef, js, postFunc) {
             res = stdout;
           }
           
-          fdebug('res', typeof res + '//' + res.length + ' Bytes');
+          fdebug('res', typeof res + ' (' + res.length + ' Bytes)');
           fdebug('OutputType', js.OutputType);
           fdebug('OutputEncoding', js.OutputEncoding);
           b.push(res);

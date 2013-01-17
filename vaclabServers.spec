@@ -1,6 +1,6 @@
 Summary: Nodejs-basierte http-Server für Messaufgaben
 Name: vaclabServers
-Version: 7.2
+Version: 7.3
 Release: 1 
 License: ???
 Group: Productivity/Networking/Web/Servers 
@@ -819,6 +819,10 @@ Nodejs-basierte http-Server für Messaufgaben
 /usr/sbin/rcNodejsServers
 
 %changelog
+* Thu Jan 17 2013 Rolf.Niepraschk@ptb.de
+- js-Code weitgehend dokumentiert und formatiert.
+- Erzeugung von temporärer Datei ausgelagert ("tools.createTempFile")
+
 * Wed Jan 16 2013 Rolf.Niepraschk@ptb.de
 - "getEnv" durch "process.env" ersetzt. "ldap" wegen "undefined symbol"
   (buffertools) entfernt. Dokumentation der Funktionen begonnen (dox). 
