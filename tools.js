@@ -212,6 +212,19 @@ var isEmpty = function(obj) {
 exports.isEmpty = isEmpty;
 
 /**
+ * Analysiert übergebenen String, ob es sich um BASE64-Code handelt.
+ * (Test ist nicht 100%ig sicher, aber vermutlich ausreichend.)
+ * @param {string} b 
+ * @return {boolean} true, wenn  BASE64-Code
+*/
+function isBASE64(b) {
+  r = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+  return r.test(b);
+}
+
+exports.isBASE64 = isBASE64;
+
+/**
  * Löscht rekursiv eine Verzeichnisstruktur (siehe: <a href="https://github.com/ryanmcgrath/wrench-js" target="_blank">wrench-js</a>).
  * @param {string} dir zu löschende Verzeichnisstruktur.
  * @param {function} clbk Aufruf bei Erfolg oder Fehler.
@@ -284,17 +297,3 @@ function createTempFile(dir, name, buf, error, success) {
 }
 
 exports.createTempFile = createTempFile;
-
-
-/**
- * Analysiert übergebenen String, ob es sich um BASE64-Code handelt.
- * (Test ist nicht 100%ig sicher, aber vermutlich ausreichend.)
- * @param {string} b 
- * @return {boolean} true, wenn  BASE64-Code
-*/
-function isBASE64(b) {
-  r = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
-  return r.test(b);
-}
-
-exports.isBASE64 = isBASE64;

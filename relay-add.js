@@ -1,9 +1,9 @@
 /**
  * @author Thomas Bock (Thomas.Bock@ptb.de)
- * version: 2013-01-14
+ * version: 2013-01-18
  */
  
-function fm3CalQsp(psoll, pist, Vopen) {
+function fm3CalQsp(psoll, pist, Vopen) { 
   if (psoll && pist && typeof Vopen == "boolean") {
     var ret = {},
     pfill_ok = false, // Fülldruck ok
@@ -22,7 +22,8 @@ function fm3CalQsp(psoll, pist, Vopen) {
         if (q && q < 2) {
           ret.sp1 = q;
           ret.sp2 = 0;
-        } else {
+        }
+        else {
           ret.sp1 = q / 100;
           ret.sp2 = q;
         }
@@ -33,7 +34,8 @@ function fm3CalQsp(psoll, pist, Vopen) {
         if (q * f && q * f < 2) {
           ret.sp1 = q * f;
           ret.sp2 = q * f / 100;
-        } else {
+        }
+        else {
           ret.sp1 = q * f / 100;
           ret.sp2 = q * f;
         }
@@ -79,7 +81,8 @@ function checkNumArr(arr) {
     arr.map(function(v, i) {
       if (isNumber(v)) {
         res.Arr.push(v);
-      } else {
+      }
+      else {
         res.Skip.push(i);
       }
     });
@@ -199,6 +202,24 @@ function extractValue(s) {
   return parseFloat(s.replace(regex, "$2$3"));
 }
 exports.extractValue = extractValue;
+
+function extractF250(s) {
+  var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/
+  return parseFloat(s.replace(regex, "$2"));
+}
+exports.extractF250 = extractF250
+
+function extractAtmion(s) {
+  var regex = /^(0,\t)([0-9]{1}\.?[0-9]{4}[Ee][-+][0-9]{2})(\r)$/
+  return parseFloat(s.replace(regex, "$2"));
+}
+exports.extractAtmion = extractAtmion
+
+function extractKeithley(s) {
+  var regex = /^([0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})/
+  return parseFloat(s.replace(regex, "$1"));
+}
+exports.extractKeithley = extractKeithley
 
 /**
  * Testet, ob sich der übergebene Parameter in eine Zahl wandeln lässt. Siehe auch:
