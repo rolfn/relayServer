@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-17
+ * version: 2013-01-18
  */
 
 const MODULE = 'config';
@@ -9,8 +9,8 @@ const MODULE = 'config';
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '7.3',
-  DATE: '2013-01-17',
+  VERSION: '7.4',
+  DATE: '2013-01-18',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   DEFAULT_EXEC_TIMEOUT: 10000, // msec

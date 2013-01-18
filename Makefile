@@ -10,7 +10,9 @@ SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
 DESCRIPTION = $(SUMMARY)
 PACKAGER = "Rolf Niepraschk"
 BUILDARCH = $(shell arch)
+JS_TEST = relay-add-test.js relay-add.spec.js
 JS_SOURCE = $(wildcard *.js)
+JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 VXI11_SRC = vxi11
@@ -85,9 +87,9 @@ $(VXI11_SRC)/vxi11_transceiver :
 docs : $(DOC_DIR)/index.html
 
 # Umkopieren, damit Rekursion von "dox-foundation" unschädlich ist.
-$(DOC_SRC) : $(JS_SOURCE)
+$(DOC_SRC) : $(JS_SOURCE) $(JS_TEST)
 	@mkdir -p "$@"
-	@cp $+ $@
+	cp $+ $@
 
 $(DOC_DIR)/index.html : $(DOC_SRC)
 	@mkdir -p "$(DOC_DIR)"

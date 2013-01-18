@@ -1,12 +1,13 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-16
+ * version: 2013-01-18
  */
 
 const MODULE = 'response';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+var vm = require('vm');
 var addon = null;
   
 /**
