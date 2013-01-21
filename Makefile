@@ -92,8 +92,8 @@ $(DOC_SRC) : $(JS_SOURCE) $(JS_TEST)
 	cp $+ $@
 
 $(DOC_DIR)/index.html : $(DOC_SRC)
+	echo "###############################################"
 	@mkdir -p "$(DOC_DIR)"
-	@$(RM) $(DOC_DIR)/*.js.html 
 	$(DOC_CMD) --debug --title "$(MAIN) (ver. $(VERSION))" --source $(DOC_SRC) \
 	  --target "$(DOC_DIR)"
 	@$(RM) -r $(DOC_SRC)
@@ -102,6 +102,7 @@ docs-install : docs
 	echo $(MAIN) > _id
 	erica -v --docid $(MAIN) push $(DOC_DB_URL)
 	$(COMPACT) $(DOC_DB_URL)/_compact
+	$(RM) $(DOC_DIR)/*.js.html $(DOC_DIR)/index.html
   
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean

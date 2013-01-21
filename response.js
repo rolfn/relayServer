@@ -88,7 +88,8 @@ function prepareResult(pRef, js, data) {
   if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;    
   
   if (js.Action == cfg.bin.VXITRANSCEIVER) {
-    /*
+    jsonRes.t__start = [];
+    /**
       Der oder die gelieferten Strings haben am Anfang und am Ende
       einen Zeitstempel (ms seit 1.1.1970). Diese müssen entfernt, aber
       gerettet werden.
@@ -97,10 +98,6 @@ function prepareResult(pRef, js, data) {
                  t_start       GPIB-Response       t_stop
       </pre>
     */
-    var a;
-    /// Zum Vergleich der Zeiten vom vxi-Programm mit denen
-    /// der hier erzeugten
-    jsonRes.t__start = [];
     for (var i=0;i < js.t_start.length;i++) {
       jsonRes.t__start[i] = js.t_start[i];
     }
@@ -108,8 +105,11 @@ function prepareResult(pRef, js, data) {
     for (var i=0;i < js.t_stop.length;i++) {
       jsonRes.t__stop[i] = js.t_stop[i];
     }
+    /// Zum Vergleich der Zeiten vom vxi-Programm mit denen
+    /// der hier erzeugten    
     /// TODO: Ist Start- und Stoppzeit im vxi-Programm weiter nötig?
     if (!Array.isArray(x)) x = [x];
+    var a;
     jsonRes.t_start = [], jsonRes.t_stop = [];
     for (var i=0;i < x.length;i++) {
       a = x[i].split('|');
