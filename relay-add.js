@@ -11,6 +11,9 @@
  *
  * @author wactbprot (thsteinbock@web.de)
  */
+
+const MODULE = 'relay-add';
+const VERSION = '1.0a';
  
 /**
  * Liefert die Version des Moduls "relay-add"
@@ -18,7 +21,7 @@
  * @return {string}  Version
  */
 function getVersion() {
-  return "1.0a";
+  return VERSION;
 }
 
 exports.getVersion = getVersion;

@@ -102,6 +102,9 @@ function call(pRef, js) {
     case '_version':
       response.prepareResult(pRef, js, cfg.VERSION + ', ' + cfg.DATE);
       break;
+    case '_nodesVersion':
+      response.prepareResult(pRef, js, process.version);
+      break;
     case '_environment':
       response.prepareResult(pRef, js, process.env);
       break;
