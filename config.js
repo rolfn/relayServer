@@ -9,7 +9,7 @@ const MODULE = 'config';
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '7.6',
+  VERSION: '7.5.99',
   DATE: '2013-02-14',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,

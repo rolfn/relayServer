@@ -73,19 +73,22 @@ function call(pRef, js) {
       next();
     });
     conn.addListener('error', function (e) {
-      conn.destroy();
       //response.prepareError(pRef, js, e.toString());
       var s = 'error:' + e.toString();
+      fdebug('error', s);
       b.push(s);
+      conn.end();
     });
     conn.addListener('timeout', function () {
-      conn.destroy();
+      fdebug('timeout');
       //response.prepareError(pRef, js, 'timeout');
       var s = 'error:timeout';
       b.push(s);
+      conn.end();
     });
     conn.addListener('data', function(data){
       result.push(data);
+      fdebug('data', data);
       conn.end(); // Half-closes the stream.
     });
   }
