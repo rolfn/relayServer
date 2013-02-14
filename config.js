@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-18
+ * version: 2013-02-14
  */
 
 const MODULE = 'config';
@@ -17,6 +17,7 @@ var cfg = {
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
   MIN_TCP_WAIT: 250, // msec // ???
+  DEFAULT_TCP_TIMEOUT: 2000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
   DEFAULT_TEX_MAXRUNS: 5,

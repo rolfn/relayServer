@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-10
+ * version: 2013-02-14
  */
 
 const MODULE = 'tcp';
@@ -51,7 +51,8 @@ function call(pRef, js) {
     var result = [], host = js.Host, port = tools.getInt(js.Port),
       cmd = (js.Value) ? js.Value : '';
     var conn = net.createConnection(port, host);
-    conn.setTimeout(2000); // ???
+    var timeout = (js.TimeOut) ? js.TimeOut : cfg.DEFAULT_TCP_TIMEOUT;
+    conn.setTimeout(timeout);
     conn.setEncoding('ascii');
     conn.addListener('connect', function(){ 
       conn.write(cmd);
@@ -76,14 +77,16 @@ function call(pRef, js) {
       //response.prepareError(pRef, js, e.toString());
       var s = 'error:' + e.toString();
       fdebug('error', s);
-      b.push(s);
+      //b.push(s);
+      result.push(s);
       conn.end();
     });
     conn.addListener('timeout', function () {
       fdebug('timeout');
       //response.prepareError(pRef, js, 'timeout');
       var s = 'error:timeout';
-      b.push(s);
+      //b.push(s);
+      result.push(s);
       conn.end();
     });
     conn.addListener('data', function(data){
