@@ -11,7 +11,18 @@
  *
  * @author wactbprot (thsteinbock@web.de)
  */
+ 
+/**
+ * Liefert die Version des Moduls "relay-add"
+ *
+ * @return {string}  Version
+ */
+function getVersion() {
+  return "1.0a";
+}
 
+exports.getVersion = getVersion;
+  
 /**
  * Berechnet, in Abhängigkeit von Ziel- und Istdruck
  * den aktuellen Sollfluß für die FM3 Fülldruckeinstellung.

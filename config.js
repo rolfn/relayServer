@@ -9,8 +9,8 @@ const MODULE = 'config';
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '7.4',
-  DATE: '2013-01-18',
+  VERSION: '7.6',
+  DATE: '2013-02-14',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   DEFAULT_EXEC_TIMEOUT: 10000, // msec

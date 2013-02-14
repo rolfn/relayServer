@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-18
+ * version: 2013-02-14
  */
 
 const MODULE = 'response';
@@ -9,14 +9,6 @@ var cfg = require('./config.js');
 var tools = require('./tools.js');
 var vm = require('vm');
 var addon = null;
-  
-/**
- * Wenn vorhanden, Datei "relay-add.js" laden.
- */
-try {
-  addon = require('./relay-add.js');
-} catch(e) {
-}
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -46,6 +38,16 @@ debug = tools.createFunction('debug', MODULE);
  */
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
+
+/**
+ * Wenn vorhanden, Datei "relay-add.js" laden.
+ */
+try {
+  addon = require('./relay-add.js');
+  debug('"relay-add.js" loaded');
+} catch(e) {
+  debug('"relay-add.js" not found');
+}
 
 /**
  * Aufbereitung der zu sendenden Daten; html-Header erzeugen; Daten senden.
@@ -155,6 +157,7 @@ function prepareResult(pRef, js, data) {
       delete jsonRes.t_stop;
     }
     if (addon != undefined) sandbox._ = addon;
+    fdebug('addon', inspect(addon));
     try{
       // Benutzer-JS-Anweisungen innerhalb der sandbox ausführen.
       vm.runInNewContext(evalStr, sandbox);

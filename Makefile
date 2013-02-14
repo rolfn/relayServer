@@ -1,16 +1,16 @@
 
-# Rolf Niepraschk, 2013-01-18, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-01-24, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 2 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers" 
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
 DESCRIPTION = $(SUMMARY)
 PACKAGER = "Rolf Niepraschk"
 BUILDARCH = $(shell arch)
-JS_TEST = relay-add-test.js relay-add.spec.js
+JS_TEST = relay-add-test.js 
 JS_SOURCE = $(wildcard *.js)
 JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
 BUILD_ROOT = dist
