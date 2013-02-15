@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-02-14
+ * version: 2013-02-15
  */
 
 const MODULE = 'tcp';
@@ -51,7 +51,7 @@ function call(pRef, js) {
     var result = [], host = js.Host, port = tools.getInt(js.Port),
       cmd = (js.Value) ? js.Value : '';
     var conn = net.createConnection(port, host);
-    var timeout = (js.TimeOut) ? js.TimeOut : cfg.DEFAULT_TCP_TIMEOUT;
+    var timeout = tools.getInt(js.Timeout, cfg.DEFAULT_TCP_TIMEOUT);
     conn.setTimeout(timeout);
     conn.setEncoding('ascii');
     conn.addListener('connect', function(){ 
@@ -66,7 +66,7 @@ function call(pRef, js) {
         if ((result[i] == '\r\n') || (result[i] == '\n') ||
           (result[i] == '\r')) {
           fdebug('result 2', JSON.stringify(result));  
-          result.splice(i,1); // Leerzeilen beseitigen.
+          result.splice(i,1); // Leerzeile beseitigen.
         }
       }
       result = result.join('\n');
@@ -77,7 +77,6 @@ function call(pRef, js) {
       //response.prepareError(pRef, js, e.toString());
       var s = 'error:' + e.toString();
       fdebug('error', s);
-      //b.push(s);
       result.push(s);
       conn.end();
     });
@@ -85,7 +84,6 @@ function call(pRef, js) {
       fdebug('timeout');
       //response.prepareError(pRef, js, 'timeout');
       var s = 'error:timeout';
-      //b.push(s);
       result.push(s);
       conn.end();
     });

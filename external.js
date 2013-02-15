@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-14
+ * version: 2013-01-15
  */
 
 const MODULE = 'external';
@@ -91,8 +91,8 @@ function call(pRef, js, postFunc) {
   fdebug('execStr', execStr);
 
   var execOpt = {};
-  execOpt.timeout = (js.TimeOut) ? js.TimeOut : cfg.DEFAULT_EXEC_TIMEOUT;
-  execOpt.maxBuffer = (js.MaxBuffer) ? js.MaxBuffer : cfg.DEFAULT_EXEC_MAXBUFFER;
+  execOpt.timeout = tools.getInt(js.Timeout, cfg.DEFAULT_EXEC_TIMEOUT);
+  execOpt.maxBuffer = tools.getInt(js.MaxBuffer, cfg.DEFAULT_EXEC_MAXBUFFER);
   if (js.WorkingDir != undefined) execOpt.cwd = js.WorkingDir;
   //execOpt.env = (js.ENV != undefined) ? js.ENV : process.env;
   if (js.OutputEncoding == 'binary') execOpt.encoding = 'binary';
