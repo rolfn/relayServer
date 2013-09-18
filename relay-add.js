@@ -10,81 +10,78 @@
  * im Postprocessing ausgeführt werden.
  *
  * @author wactbprot (thsteinbock@web.de)
+ * version: 2013-06-07
  */
 
-const MODULE = 'relay-add';
-const VERSION = '1.0a';
- 
-/**
- * Liefert die Version des Moduls "relay-add"
- *
- * @return {string}  Version
- */
-function getVersion() {
-  return VERSION;
-}
-
-exports.getVersion = getVersion;
-  
 /**
  * Berechnet, in Abhängigkeit von Ziel- und Istdruck
- * den aktuellen Sollfluß für die FM3 Fülldruckeinstellung.
+ * den aktuellen Sollfluß für die SE1/FM3 Fülldruckeinstellung.
  *
  *
- *
+ * @author wactbprot
  * @param psoll Number Solldruck in mbar
  * @param psoll Number Istdruck in mbar
  * @param Vopen Number kleines oder großes Volumen
  * @return Object Zielfluß bzw Setpoint für Regler 1&2
  */
-function fm3CalQsp(psoll, pist, Vopen) {
-    if (psoll && pist && typeof Vopen == "boolean") {
-        var ret = {},
-        pfill_ok = false,               // Fülldruck ok
-        mq = Vopen ? 0.0133 : 0.0155, // experimentall best. Steigungen
-        ts = 10,                      // Sollzeit
-        bord = 0.8,                   // Start Regelung rel. Abw. von psoll
-        sscbord = 2,                  // Start 2. Regler
-        eps = 0.005                   // Ende Regelung rel. Abw. von psoll
-        md = 1,                       // Dämpf./verst. der Regel.
-        ret.dp = Math.abs(psoll / pist - 1);
-        q = psoll / ts / mq;
-        f = md * ret.dp / bord;
-        if (typeof ret.dp == "number") {
-            // Gas
-            if (ret.dp > bord) {
-                if (q && q < 2) {
-                    ret.sp1 = q;
-                    ret.sp2 = 0;
-                }
-                else {
-                    ret.sp1 = q / 100;
-                    ret.sp2 = q;
-                }
-            };
-            // Kupplung
-            if (ret.dp <= bord) {
-                ret.pfill_ok = false;
-                if (q * f && q * f < 2) {
-                    ret.sp1 = q * f;
-                    ret.sp2 = q * f / 100;
-                }
-                else {
-                    ret.sp1 = q * f / 100;
-                    ret.sp2 = q * f;
-                }
-            };
-            // Bremse
-            if (ret.dp < eps || pist > psoll) {
-                ret.pfill_ok = true,
-                ret.sp1 = 0;
-                ret.sp2 = 0;
-            }
-            return ret;
+function calQsp(psoll, pist, mq){
+
+  if (psoll                    &&
+      pist                     &&
+      typeof psoll == "number" &&
+      typeof pist  == "number"   ){
+    mq      = mq || 0.018; // [mq] = mbar/s/sccm 0.018 passt ~ für SE1 und FM3
+    // FM3 war:  mq = Vopen ? 0.0133 : 0.0155,
+    var ret     = {},
+        ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
+        bord    = 0.7,         // Start Regelung rel. Abw. von psoll
+        sscbord = 2.0,        // Start 2. Regler
+        eps     = 0.005,        // Ende Regelung rel. Abw. von psoll
+        md      = 1;           // Dämpf./verst. der Regel.
+
+    // genauere Einstellung durch psoll * (1 + eps)
+    ret.dp       = Math.abs(psoll * (1 + eps)/ pist - 1);
+    ret.pfill_ok = false;
+    // es dauert theor. ts sec bis psoll erreicht wird,
+    // wenn der Druck mit mq ansteigt
+    var q        = psoll / ts / mq,
+        f        = md * ret.dp / bord;
+
+    if (typeof ret.dp == "number") {
+      // Gas
+      if (ret.dp > bord) {
+        if (q && q < sscbord) {
+	  ret.sp1 = q;
+	  ret.sp2 = 0;
         }
+        if (q && q > sscbord){
+	  ret.sp1 = q / 100;
+	  ret.sp2 = q;
+        }
+      };
+      // Kupplung
+      if (ret.dp <= bord) {
+        ret.pfill_ok = false;
+        if (q * f && q * f < sscbord) {
+	  ret.sp1 = q * f;
+	  ret.sp2 = q * f / 100;
+        }
+        if (q * f && q * f > sscbord) {
+	  ret.sp1 = q * f / 100;
+	  ret.sp2 = q * f;
+        }
+      };
+      // Bremse
+      if (ret.dp < eps || pist > psoll) {
+        ret.pfill_ok = true,
+        ret.sp1 = 0;
+        ret.sp2 = 0;
+      }
+      return ret;
     }
+  }
 }
-exports.fm3CalQsp = fm3CalQsp;
+exports.calQsp = calQsp;
 
 
 /**
@@ -92,28 +89,28 @@ exports.fm3CalQsp = fm3CalQsp;
  * eines gegebenen Vectors (bzw. Arrays).
  *
  *
- *
+ * @author wactbprot
  * @param x Array Datenreihe
  * @return res Object   res.mv (Mittelwert) res.sd (Standardabweichung) und re.N (Länge)
  */
 function vlStat(x) {
-    if (x && x.length > 2) {
-        var res = {},
-        mv = 0,
-        sdhelp = 0,
-        n = x.length;
-        mv = x.reduce(function(a, b) {
-            return a + b;
-        }) / n;
-        res.mv = mv;
-        res.N = n;
-        x.map(function(i) {
-            sdhelp += Math.pow((i - mv), 2);
-        });
-        sd = Math.sqrt(1 / (n - 1) * sdhelp);
-        res.sd = sd
-        return res;
-    }
+  if (x && x.length > 2) {
+    var res = {},
+    mv = 0,
+      sdhelp = 0,
+      n = x.length;
+    mv = x.reduce(function(a, b) {
+      return a + b;
+    }) / n;
+    res.mv = mv;
+    res.N = n;
+    x.map(function(i) {
+      sdhelp += Math.pow((i - mv), 2);
+    });
+    sd = Math.sqrt(1 / (n - 1) * sdhelp);
+    res.sd = sd
+    return res;
+  }
 };
 exports.vlStat = vlStat;
 
@@ -122,25 +119,25 @@ exports.vlStat = vlStat;
  * Testet Array auf numerische Einträge und sortiert ggf. aus
  *
  *
- *
+ * @author wactbprot
  * @param arr Array Datenreihe
  * @return res Object   res.Arr "sauberes" Array, res.Skip Indizes der verworfenen Einträge
  */
 function checkNumArr(arr) {
-    if (arr && Array.isArray(arr)) {
-        var res = {};
-        res.Arr = [],
-        res.Skip = [];
-        arr.map(function(v, i) {
-            if (isNumber(v)) {
-                res.Arr.push(v);
-            }
-            else {
-                res.Skip.push(i);
-            }
-        });
-        return res;
-    }
+  if (arr && Array.isArray(arr)) {
+    var res = {};
+    res.Arr = [],
+    res.Skip = [];
+    arr.map(function(v, i) {
+      if (isNumber(v)) {
+        res.Arr.push(v);
+      }
+      else {
+        res.Skip.push(i);
+      }
+    });
+    return res;
+  }
 };
 exports.checkNumArr = checkNumArr;
 
@@ -148,16 +145,16 @@ exports.checkNumArr = checkNumArr;
  * Entfernt Einträge aus einer Datenreihe.
  *
  *
- *
+ * @author wactbprot
  * @param arr Array Datenreihe
  * @param arr Integer "skip" Index
  * @return res Array resultierendes Array
  */
 function rmByIndex(Arr, Idx) {
-    Idx.map(function(i) {
-        Arr.splice(i, 1);
-    });
-    return Arr
+  Idx.map(function(i) {
+    Arr.splice(i, 1);
+  });
+  return Arr
 }
 exports.rmByIndex = rmByIndex;
 
@@ -173,41 +170,41 @@ exports.rmByIndex = rmByIndex;
  *    von der Geraden weg liegen
  *
  *
- *
+ * @author wactbprot
  * @param vec Array Datenreihe
  * @param tstart Array Startzeiten
  * @param tstop  Array Stopzeiten
  * @return res Object Ausgabe der slope Function
  */
 function vlSlope(vec, tstart, tstop) {
-    var t = [],
+  var t = [],
     rel_diff = [],
     iter_N = 5,
     again = true,
     d_border = 0.6;
-    for (var k = 0; k < tstart.length; k++) {
-        t.push((tstart[k] + tstop[k]) / 2)
-    }
-    var hs = slope(vec, t),
+  for (var k = 0; k < tstart.length; k++) {
+    t.push((tstart[k] + tstop[k]) / 2)
+  }
+  var hs = slope(vec, t),
     vlm = hs.bx,
     vlc = hs.Cx;
-    for (var m = 0; m < iter_N; m++) {
-        if (again) {
-            again = false;
-            for (var l = 0; l < t.length; l++) {
-                var predict_val = vlm * t[l] + vlc;
-                if (Math.abs((vec[l] - predict_val) / predict_val) > d_border) {
-                    vec = rmByIndex(vec, [l]);
-                    t = rmByIndex(t, [l]);
-                    hs = slope(vec, t);
-                    vlm = hs.bx;
-                    vlc = hs.Cx;
-                    again = true;
-                }
-            } // l
-        } //again
-    } //m
-    return slope(vec, t);
+  for (var m = 0; m < iter_N; m++) {
+    if (again) {
+      again = false;
+      for (var l = 0; l < t.length; l++) {
+        var predict_val = vlm * t[l] + vlc;
+        if (Math.abs((vec[l] - predict_val) / predict_val) > d_border) {
+          vec = rmByIndex(vec, [l]);
+          t = rmByIndex(t, [l]);
+          hs = slope(vec, t);
+          vlm = hs.bx;
+          vlc = hs.Cx;
+          again = true;
+        }
+      } // l
+    } //again
+  } //m
+  return slope(vec, t);
 };
 exports.vlSlope = vlSlope;
 
@@ -215,47 +212,47 @@ exports.vlSlope = vlSlope;
  * Reine Statistikfunktion zur Berechnung der Parameter der
  * linearen Regression x~y.
  *
- *
+ * @author wactbprot
  * @param y Array y-Werte (z.B. Spannung, Druck)
  * @param x Array x-Werte (z.B. Zeit)
  * @return ret Object mit  Mittelwert X, Mittelwert Y, Korrelationskoeff R, Achsenabschnitt Cx, Steigungen bx, by
  */
 function slope(y, x) {
-    if (x.length == y.length) {
-        var ret = {},
-        sumX = 0,
-        XArr = [],
-        sumY = 0,
-        YArr = [],
-        remainN = 0,
-        SSxy = 0,
-        SSxx = 0,
-        SSyy = 0;
-        for (var i = 0; i < y.length; i++) {
-            if (isNumber(y[i]) && isNumber(x[i])) {
-                sumX = sumX + x[i];
-                XArr.push(x[i]);
-                sumY = sumY + y[i];
-                YArr.push(y[i]);
-                remainN++;
-            };
-        };
-        mvX = sumX / remainN;
-        mvY = sumY / remainN;
-        for (var j = 0; j < YArr.length; j++) {
-            SSxy = SSxy + (XArr[j] - mvX) * (YArr[j] - mvY);
-            SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
-            SSyy = SSyy + Math.pow(YArr[j] - mvY, 2);
-        };
-        ret.remainN = remainN
-        ret.mvX = mvX
-        ret.mvY = mvY
-        ret.bx = SSxy / SSxx;
-        ret.by = SSxy / SSyy;
-        ret.R = (SSxy * SSxy) / (SSxx * SSyy);
-        ret.Cx = mvY - ret.bx * mvX
-        return ret
-    }
+  if (x.length == y.length) {
+    var ret = {},
+    sumX = 0,
+      XArr = [],
+      sumY = 0,
+      YArr = [],
+      remainN = 0,
+      SSxy = 0,
+      SSxx = 0,
+      SSyy = 0;
+    for (var i = 0; i < y.length; i++) {
+      if (isNumber(y[i]) && isNumber(x[i])) {
+        sumX = sumX + x[i];
+        XArr.push(x[i]);
+        sumY = sumY + y[i];
+        YArr.push(y[i]);
+        remainN++;
+      };
+    };
+    mvX = sumX / remainN;
+    mvY = sumY / remainN;
+    for (var j = 0; j < YArr.length; j++) {
+      SSxy = SSxy + (XArr[j] - mvX) * (YArr[j] - mvY);
+      SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
+      SSyy = SSyy + Math.pow(YArr[j] - mvY, 2);
+    };
+    ret.remainN = remainN
+    ret.mvX = mvX
+    ret.mvY = mvY
+    ret.bx = SSxy / SSxx;
+    ret.by = SSxy / SSyy;
+    ret.R = (SSxy * SSxy) / (SSxx * SSyy);
+    ret.Cx = mvY - ret.bx * mvX
+    return ret
+  }
 }
 exports.slope = slope;
 
@@ -274,62 +271,92 @@ exports.slope = slope;
  * @return Number Zahl.
  */
 function extractValue(s) {
-    var regex = /^(\w*\s*)([-+]?[0-9]*\.?[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
-    return parseFloat(s.replace(regex, "$2$3"));
+  var regex = /^(\w*\s*)([-+]?[0-9]*\.?[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
+  return parseFloat(s.replace(regex, "$2$3"));
 }
 exports.extractValue = extractValue;
 
 /**
  * Extrahiert Float-Zahl aus String s.relay-add-test.js.
  *
- *
+ * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
 function extractF250(s) {
-    var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/
-        return parseFloat(s.replace(regex, "$2"));
+  var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/
+  return parseFloat(s.replace(regex, "$2"));
 }
 exports.extractF250 = extractF250
 
 /**
  * Extrahiert Float-Zahl aus String s.relay-add-test.js.
  *
- *
+ * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
 
 function extractAtmion(s) {
-    var regex = /^(0,\t)([0-9]{1}\.?[0-9]{4}[Ee][-+][0-9]{2})(\r)$/
-        return parseFloat(s.replace(regex, "$2"));
+  var regex = /^(0,\t)([0-9]{1}\.?[0-9]{4}[Ee][-+][0-9]{2})(\r)$/
+  return parseFloat(s.replace(regex, "$2"));
 }
 exports.extractAtmion = extractAtmion
 
 /**
  * Extrahiert Float-Zahl aus String s.relay-add-test.js.
  *
- *
+ * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
 
 function extractKeithley(s) {
-    var regex = /^([0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})/
-        return parseFloat(s.replace(regex, "$1"));
+  var regex = /^([0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})/
+  return parseFloat(s.replace(regex, "$1"));
 }
 exports.extractKeithley = extractKeithley
+
+/**
+ * Extrahiert Float-Zahl aus AxTRAN Antwort
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+
+function extractAxtran(s) {
+  var regex = /^([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})/
+  return parseFloat(s.replace(regex, "$1"));
+}
+exports.extractAxtran = extractAxtran
+
+/**
+ * Extrahiert Float-Zahl aus IM540 Antwort
+ * Achtung: IM540 im IM520 Mode betreiben
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+
+function extractIm540(s) {
+  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/
+  return parseFloat(s.replace(regex, "$2"));
+}
+exports.extractIm540 = extractIm540
+
 
 /**
  * Testet, ob sich der übergebene Parameter in eine Zahl wandeln lässt. Siehe auch:
  * http://stackoverflow.com/questions/18082/validate-numbers-in-javascript-isnumeric
  *
- *
+ * @author wactbprot
  * @param n String Zahlen-String
  * @return Boolean true, wenn Wandlung in Zahl erfolgreich war.
  */
 function isNumber(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
+  return !isNaN(parseFloat(n)) && isFinite(n);
 };
 exports.isNumber = isNumber
 
@@ -338,7 +365,7 @@ exports.isNumber = isNumber
  * Funktion erzeugt die üblich gewordene
  * Type-,  Value-, Unit- (Comment-) Struktur.
  *
- *
+ * @author wactbprot
  * @param t String  Type
  * @param v Number|Array  Value
  * @param u String  Unit
@@ -347,15 +374,15 @@ exports.isNumber = isNumber
  *
  */
 function vlRes(t, v, u, c) {
-    res = {
-        'Type': t,
-        'Value': v,
-        'Unit': u
-    }
-    if (c) {
-        res.Comment = c
-    }
-    return res
+  res = {
+    'Type': t,
+    'Value': v,
+    'Unit': u
+  }
+  if (c) {
+    res.Comment = c
+  }
+  return res
 };
 exports.vlRes = vlRes;
 
@@ -367,7 +394,7 @@ exports.vlRes = vlRes;
  * 100000000000000000000000000000000) damit V[pos]
  * sicher funktioniert (pos ändert sich bei führenden 0en).
  *
- *
+ * @author wactbprot
  * @param hexstr String Ventilrückmeldung
  * @param valve String Ventilbezeichnung
  * @return Object mit {'Valve_closed': true| false}
@@ -381,13 +408,13 @@ function se1ValveClosed(hexStr,valve) {
        V4:5,
        V3:6,
        V2:7,
-       V1:8,
+       V1:8
       },
     num = parseInt(hexStr,16) + BN,
     pat = num.toString(2).split('');
 
     return {'Valve_closed': pat[V[valve]] == '1',
-            'Valve_opened': pat[V[valve]] == '0' };
+	    'Valve_opened': pat[V[valve]] == '0' };
 
 };
 exports.se1ValveClosed = se1ValveClosed;
