@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-17
+ * version: 2013-09-18
  */
 
 const MODULE = 'tools';
@@ -18,8 +18,8 @@ var debugLevel = process.argv[2] ? process.argv[2] : 0;
  * Liefert true, wenn level kleiner oder gleich dem Wert, der auf der
  * Kommandozeile übergeben wurde, ist. Ohne Kommandozeilenwert wird "99"
  * angenommen.
- * @param {number} level 
- * @return {boolean} 
+ * @param {number} level
+ * @return {boolean}
  */
 function isDebug(level) {
   var l = 99;
@@ -45,14 +45,14 @@ const RESET = 0;
 /**
  * Erzeugt ESC-Code ("Select Graphic Rendition")
  * @param {number} code Farb-/Schriftkonstante
- * @return {string} ESC-Code 
+ * @return {string} ESC-Code
  */
 function sgr(code) {// Select Graphic Rendition
   return '\u001b[' + code + 'm';
 }
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen nach stderr. 
+ * In Abhängigkeit von "level" Ausgabe von Informationen nach stderr.
  * @param {string} module meist Modulname
  * @param {string} item meist Funktionsname
  * @param {string} _subitem spezifische Aktion innerhalb der Funktion.
@@ -63,7 +63,7 @@ function debug(module, item, _subitem, _info, _level) {
   var info = '';
   var level = 99;
   if (isDebug(_level)) {
-    
+
     if (typeof _info == 'number') {
       level = _info;
     } else if (_info != undefined) {
@@ -71,12 +71,12 @@ function debug(module, item, _subitem, _info, _level) {
       if (typeof _level == 'number') {
         level = _level;
       }
-    } 
+    }
     var subitem = ((_subitem != undefined) && (_subitem != '')) ? ',' +
       sgr(BOLD + ';' + (COLOR + RED)) + _subitem + sgr(RESET) : '';
 
     process.stderr.write('[' + module + ',' +
-      sgr(BOLD + ';' + (COLOR + BLUE)) + item + sgr(RESET) + 
+      sgr(BOLD + ';' + (COLOR + BLUE)) + item + sgr(RESET) +
         subitem + ']' + info + '\n');
   }
 }
@@ -105,7 +105,7 @@ var functions = {
  * Erzeugt aufgrund von Eintrag name in "functions" eine Funktion und
  * liefert diese zurück. Die Funktion kann aufgrund von maximal 3 Parametern
  * statisch konfiguriert werden.
- * @param {string} name Schlüsselwort für "functions" 
+ * @param {string} name Schlüsselwort für "functions"
  * @param {???} p1 Konfigurationsparameter
  * @param {???} p2 Konfigurationsparameter
  * @param {???} p3 Konfigurationsparameter
@@ -118,7 +118,7 @@ function createFunction(name, p1, p2, p3) {
 exports.createFunction = createFunction;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname und Funktionsname wird ebenfalls ausgegeben.
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
@@ -145,7 +145,7 @@ exports.inspect = inspect;
 
 /**
  * Beseitigt am Anfang und am Ende eines Strings "whitespaces".
- * @return {string} 
+ * @return {string}
  */
 String.prototype.trim = function() {
   return this.replace(/^\s+|\s+$/g,"");
@@ -175,7 +175,7 @@ exports.getTempDir = getTempDir;
 
 /**
  * Liefert ähnlich zu parseFloat eine Float-Zahl, die der String s repräsentiert.
- * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert 
+ * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert
  * ist also in jedem Fall eine Float-Zahl.
  * @param {string} s die Zahl als String.
  * @param {number} d default-Wert (ohne Angabe 0.0).
@@ -188,7 +188,7 @@ exports.getFloat = function(s, d) {
 }
 /**
  * Liefert ähnlich zu parseInt eine Int-Zahl, die der String s repräsentiert.
- * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert 
+ * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert
  * ist also in jedem Fall eine Int-Zahl.
  * @param {string} s die Zahl als String.
  * @param {number} d default-Wert (ohne Angabe 0).
@@ -202,7 +202,7 @@ exports.getInt = function(s, d) {
 
 /**
  * Testet, ob das übergebene Objekt leer ist.
- * @param {object} obj 
+ * @param {object} obj
  * @return {boolean} true, wenn leeres Objekt
  */
 var isEmpty = function(obj) {
@@ -214,7 +214,7 @@ exports.isEmpty = isEmpty;
 /**
  * Analysiert übergebenen String, ob es sich um BASE64-Code handelt.
  * (Test ist nicht 100%ig sicher, aber vermutlich ausreichend.)
- * @param {string} b 
+ * @param {string} b
  * @return {boolean} true, wenn  BASE64-Code
 */
 function isBASE64(b) {
@@ -261,10 +261,10 @@ exports.rmdirRecursive = rmdirRecursive;
  * @param {string} dir temporäres Verzeichnis
  * @param {string} name Name der Datei
  * @param {Buffer} buf Inhalt der Datei
- * @param {function} error Aufruf im Fehlerfall
  * @param {function} success Aufruf bei Erfolg
+ * @param {function} error Aufruf im Fehlerfall
 */
-function createTempFile(dir, name, buf, error, success) {
+function createTempFile(dir, name, buf, success, error) {
   fs.mkdir(dir, '700', function (e) {
     fdebug('create working directory', e ? e : dir);
     if (e) {
@@ -285,13 +285,13 @@ function createTempFile(dir, name, buf, error, success) {
                 if (e) {
                   error(e);
                 } else {
-                  success();                      
+                  success();
                 }
               });
             }
           });
         }
-      });         
+      });
     }
   });
 }

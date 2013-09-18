@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-17
+ * version: 2013-09-18
  */
 
 const MODULE = 'rscript';
@@ -20,7 +20,7 @@ function inspect(o) {};
 inspect = tools.inspect;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname wird ebenfalls ausgegeben.
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
@@ -40,7 +40,7 @@ function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
 
 /**
- * Schreibt Inhalt von js.Body in temporäre Datei und ergänzt js.Value 
+ * Schreibt Inhalt von js.Body in temporäre Datei und ergänzt js.Value
  * (R-Parameter) durch Namen und Pfad dieser temporären Datei. Zum Schluss wird
  * js.Body beseitigt und per external.call das Programm Rscript aufgerufen.
  * @param {object} pRef interne Serverdaten (req, res, ...)
@@ -61,9 +61,9 @@ function call(pRef, js) {
   params.push(cfg.R_FILE);
   if (js.Value != undefined) {
     if (Array.isArray(js.Value)) {
-      params = params.concat(js.Value); 
+      params = params.concat(js.Value);
     } else {
-      params = params.concat(js.Value.split(' ')); 
+      params = params.concat(js.Value.split(' '));
     }
   }
   // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.R_FILE".
@@ -71,18 +71,18 @@ function call(pRef, js) {
   // "fs.write" erfordert Buffer! "string" und "string[]" unterstützen.
   var content = (Array.isArray(js.Body)) ? new Buffer(js.Body.join('\n'))
     : new Buffer(js.Body);
-    
+
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
   //  schreiben, zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
   tools.createTempFile(js.WorkingDir, cfg.R_FILE, content,
-    function (error) {
-      prepareError(pRef, js, error);
-    },
     function() {
       delete js.Body;
       // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
       fdebug('2nd "external.call"');
-      external.call(pRef, js, cleanUp); 
+      external.call(pRef, js, cleanUp);
+    },
+    function (error) {
+      prepareError(pRef, js, error);
     }
   );
 }

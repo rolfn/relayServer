@@ -1,10 +1,11 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-16
+ * version: 2013-09-18
  */
 
 const MODULE = 'internal';
 
+var fs = require('fs');
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
@@ -27,7 +28,7 @@ function inspect(o) {};
 inspect = tools.inspect;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname wird ebenfalls ausgegeben.
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
@@ -45,6 +46,61 @@ debug = tools.createFunction('debug', MODULE);
  */
 function fdebug(subitem, info, level) {};
 fdebug = tools.createFunction('fdebug', debug);
+
+/**
+ * Liefert Angaben zum Betriebssystem
+ * (siehe: http://www.freedesktop.org/software/systemd/man/os-release.html)
+ * @param {string|[string]} fname release-Dateien (kompletter Dateiname)
+ * @param {function} success Aufruf bei Erfolg
+ * @param {function} error Aufruf im Fehlerfall
+*/
+function getOSrelease(_file, success, error) {
+  var files = Array.isArray(_file) ? _file : [_file];
+  var ret = null, i = 0;
+  function _getOSrelease(idx) {
+    if (idx == files.length && !ret) {
+      error('can\'t read os informations');
+    } else {
+      fs.readFile(files[idx], function (err, data) {
+        if (err) {
+          _getOSrelease(++idx);
+        } else {
+          ret = {};
+          var lines = data.toString().split(/\r\n|\r|\n/);
+          var isSUSE = false;
+          for (var i=0; i<lines.length; i++) {
+            var x = lines[i].trim().split('=');
+            var key = '', val = '';
+            if (x.length == 1) {
+              if (i==0) {// 'SuSE-release'
+                isSUSE = true;
+                key = 'NAME';
+                if (lines[i].indexOf('SUSE Linux Enterprise') > -1) {
+                  val = 'SLE';
+                } else {
+                  val = lines[i].split(/\s/g)[0];
+                }
+              }
+            } else if (x.length > 1) {
+              key = x[0].trim();
+              val = x[1].trim();
+            }
+            if (isSUSE && key == 'VERSION') {
+              key = 'VERSION_ID';
+            }
+            val = val.replace(/"/g, '');
+            if (key != '' &&
+              ((isSUSE && (key == 'NAME' || key == 'VERSION_ID') || !isSUSE))) {
+              ret[key] = val;
+            }
+          }
+          success(ret);
+        }
+      });
+    }
+  }
+  _getOSrelease(i);
+}
 
 /**
  * Verzweigung bzw. Ausführung je nach internem Action-Typ. Ist es sinnvoll,
@@ -77,7 +133,7 @@ function call(pRef, js) {
       break;
     case 'HTTP':
       _http.call(pRef, js);
-      break;  
+      break;
     case 'EMAIL':
       _email.call(pRef, js);
       break;
@@ -108,6 +164,16 @@ function call(pRef, js) {
     case '_environment':
       response.prepareResult(pRef, js, process.env);
       break;
+    case '_os_release':
+      getOSrelease(cfg.RELEASE_FILES,
+        function (d) {
+          response.prepareResult(pRef, js, d);
+        },
+        function (e) {
+          response.prepareError(pRef, js, e);
+        }
+      );
+      break;
     case '_killRepeats':
       for (var key in cfg.theRepeats) {
         delete cfg.theRepeats[key];
@@ -122,7 +188,7 @@ function call(pRef, js) {
     utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
       response.prepareResult(pRef, js, repeatResult);
     }, pRef, js);
-  } 
+  }
 }
 
 exports.call = call;
