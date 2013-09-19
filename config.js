@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-02-14
+ * version: 2013-09-19
  */
 
 const MODULE = 'config';
@@ -9,7 +9,7 @@ const MODULE = 'config';
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '7.6a',
+  VERSION: '7.6b',
   DATE: '2013-09-18',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
@@ -17,14 +17,17 @@ var cfg = {
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
   MIN_TCP_WAIT: 250, // msec // ???
-  DEFAULT_TCP_TIMEOUT: 100, // msec
+  DEFAULT_TCP_TIMEOUT: 2000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
   DEFAULT_TEX_MAXRUNS: 5,
   DEFAULT_TEX_SRCFMT: 'LaTeX',
   DEFAULT_TEX_DESTFMT: 'PDF',
   R_FILE: 'cmd.R',
-  RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release'],
+  // Reihenfolge bestimmt Wichtigkeit
+  RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
+    '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
+    '/etc/release'],
   bin: {
     VXITRANSCEIVER: '/usr/local/bin/vxiTransceiver',
     RSCRIPT: '/usr/bin/Rscript',

@@ -69,7 +69,7 @@ function getOSrelease(_file, success, error) {
           var lines = data.toString().split(/\r\n|\r|\n/);
           var isSUSE = false;
           for (var i=0; i<lines.length; i++) {
-            var x = lines[i].trim().split('=');
+            var x = lines[i].split('=');
             var key = '', val = '';
             if (x.length == 1) {
               if (i==0) {// 'SuSE-release'

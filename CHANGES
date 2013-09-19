@@ -1,3 +1,6 @@
+* Thu Sep 19 2013 Rolf.Niepraschk@ptb.de
+- Änderung von DEFAULT_TCP_TIMEOUT rückgängig (2000ms)
+
 * Wed Sep 18 2013 Rolf.Niepraschk@ptb.de
 - Neue intere "action" "_os_release"
 
