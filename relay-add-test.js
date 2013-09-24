@@ -1,11 +1,29 @@
 #!/usr/bin/env node
+
 var add =require("./relay-add.js");
 
+/**
+ * Test der extractKeithleyTemp  function
+ */
+s = [
+   "+1.13830698E+00VDC,1.13830698E+00+9.9E37SECS,+9571748RDNG#\n",
+   "+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n",
+   "+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n",
+   "+2.37435799E+01,2.37435799E+01+9.9E37SECS,+9571750RDNG#\n",
+   "+2.37435799E+01,2.37435799E+01+9.9E37SECS,+9571750RDNG#\n",
+   "+2.37483959E+01,2.37483959E+01+9.9E37SECS,+9571751RDNG#\n",
+   "+2.37483959E+01,2.37483959E+01+9.9E37SECS,+9571751RDNG#\n",
+   "+2.37514629E+01,2.37514629E+01+9.9E37SECS,+9571752RDNG#\n",
+   "+2.37514629E+01,2.37514629E+01+9.9E37SECS,+9571752RDNG#\n",
+   "+2.37530746E+01,2.37530746E+01+9.9E37SECS,+9571753RDNG#\n"
+];
+console.log("---------------extractKeithleyTemp-------------");
+console.log(s.map(add.extractKeithleyTemp));
 
 /**
- * Test der extractKeithley  function
+ * Test der extractKeithleyVolt  function
  */
-var s = [ '-1.77311995E-05VDC,+1210.560SECS,+09883RDNG#\n',
+var s = [ '-1.77311995E-05,+1210.560SECS,+09883RDNG#\n',
 	  '-1.80353454E-05VDC,+1210.666SECS,+09884RDNG#\n',
 	  '-1.80762017E-05VDC,+1210.878SECS,+09886RDNG#\n',
 	  '-1.82509721E-05VDC,+1210.985SECS,+09887RDNG#\n',
@@ -26,15 +44,14 @@ var s = [ '-1.77311995E-05VDC,+1210.560SECS,+09883RDNG#\n',
 	  '-1.72182336E-05VDC,+1212.895SECS,+09903RDNG#\n',
 	  '-1.81261366E-05VDC,+1213.002SECS,+09904RDNG#\n' ];
 
-console.log("extractKeithley");
-console.log(s.map(add.extractKeithley));
-
+console.log("---------------extractKeithleyVolt-------------");
+console.log(s.map(add.extractKeithleyVolt));
 
 /**
  * Test der extractF250  function
  */
 var s = ["A 23.234C\r\n","A 23.23C\r\n", "A23.45C","A 23.23"];
-
+console.log("---------------extractF250-------------");
 console.log(s.map(add.extractF250));
 
 /**
@@ -61,6 +78,7 @@ var s = ['0,\t1.9600E-09\r',
   '0,\t1.9600E-09\r',
   '0,\t1.9600E-09\r' ];
 var _vec = s.map(add.extractAtmion);
+console.log("---------------extractAtmion-------------");
 console.log(_vec);
 _ret =add.checkNumArr(_vec);
 console.log(_ret);
@@ -78,8 +96,8 @@ var arr =  [1.14223873,
             -1.53945684 ,
             1.77889768,
             -1.39850969,
-            -0.24774159]
-
+            -0.24774159];
+console.log("---------------vlStat-------------");
 console.log(add.vlStat(arr));
 
 
@@ -92,10 +110,10 @@ var arr =  [1.14223873,
             'c' ,
             1.77889768,
             -1.39850969,
-            -0.24774159]
+            -0.24774159];
 
 console.log(arr);
-console.log(add.checkNumArr(arr))
+console.log(add.checkNumArr(arr));
 
 
 /**
@@ -121,8 +139,8 @@ console.log(add.checkNumArr(arr))
 
 var raw_vec = [ 'MEASURING  290.64E-3',
 		'MEASURIN3',
-		'MEASURING  290.67E-3',
-		'MEASURING  290.64E-3',
+		'MEASURING 290.67E-3',
+		'MEASURING  290',
 		'MEASURING  290.65E-3',
 		'MEASURING  90.64E-3',
 		'MEASURING  290.63E-3',
@@ -180,10 +198,12 @@ t_stop = [ 1348666058399,
 	   1348666076145,
 	   1348666077140 ];
 
- var vec = raw_vec.map(add.extractValue);
-
-console.log(add.vlSlope(vec,t_start,t_stop))
-
+console.log("-------- extractMKSCDG -----------");
+ var vec = raw_vec.map(add.extractMKSCDG);
+console.log(vec);
+console.log("---------------vlslope-------------");
+console.log(add.vlSlope(vec,t_start,t_stop));
+console.log("---------------------------------");
 
 var v6zu  = '00310EFE0E\r';
 var v6auf = '00112EFE2E\r';

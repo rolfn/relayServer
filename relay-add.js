@@ -108,7 +108,7 @@ function vlStat(x) {
       sdhelp += Math.pow((i - mv), 2);
     });
     sd = Math.sqrt(1 / (n - 1) * sdhelp);
-    res.sd = sd
+    res.sd = sd;
     return res;
   }
 };
@@ -154,7 +154,7 @@ function rmByIndex(Arr, Idx) {
   Idx.map(function(i) {
     Arr.splice(i, 1);
   });
-  return Arr
+  return Arr;
 }
 exports.rmByIndex = rmByIndex;
 
@@ -183,7 +183,7 @@ function vlSlope(vec, tstart, tstop) {
     again = true,
     d_border = 0.6;
   for (var k = 0; k < tstart.length; k++) {
-    t.push((tstart[k] + tstop[k]) / 2)
+    t.push((tstart[k] + tstop[k]) / 2);
   }
   var hs = slope(vec, t),
     vlm = hs.bx,
@@ -244,78 +244,110 @@ function slope(y, x) {
       SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
       SSyy = SSyy + Math.pow(YArr[j] - mvY, 2);
     };
-    ret.remainN = remainN
-    ret.mvX = mvX
-    ret.mvY = mvY
+    ret.remainN = remainN;
+    ret.mvX = mvX;
+    ret.mvY = mvY;
     ret.bx = SSxy / SSxx;
     ret.by = SSxy / SSyy;
     ret.R = (SSxy * SSxy) / (SSxx * SSyy);
-    ret.Cx = mvY - ret.bx * mvX
-    return ret
+    ret.Cx = mvY - ret.bx * mvX;
+    return ret;
   }
 }
 exports.slope = slope;
 
 /**
- * Extrahiert Float-Zahl aus String mit Pre- und Postfix. Die Float-Zahl kann
- * Vorzeichen bei Mantisse oder Exponent enthalten. Pre- und Postfix können
- * auch leer sein. Im Fehlerfall wird Number.NaN geliefert. Siehe auch:
- *    http://www.regular-expressions.info/floatingpoint.html
- * <pre>
- * Beispiele: "MEASURING     -1.13E-3 BLAFASEL" --> -0.00113
- *            "MEASURING .4711"                 -->  0.4711
- * </pre>
+ * Extrahiert Float-Zahl aus String welcher von den MKS CDGs
+ * geliefert wird
  *
- * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
-function extractValue(s) {
-  var regex = /^(\w*\s*)([-+]?[0-9]*\.?[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
-  return parseFloat(s.replace(regex, "$2$3"));
+function extractMKSCDG(s) {
+
+    var regex = /^(\w*\s\s)([-+]?[0-9]*\.[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
+    numStr    = regex.exec(s);   
+
+    if(numStr && numStr.length > 1){
+	var res = parseFloat(numStr[2] + numStr[3]);
+    }else{
+	var res = NaN;
+    }
+    
+    return res;
 }
-exports.extractValue = extractValue;
+exports.extractMKSCDG = extractMKSCDG;
 
 /**
- * Extrahiert Float-Zahl aus String s.relay-add-test.js.
+ * Extrahiert Float-Zahl aus String welcher vom Temperaturnormal
+ * F250 geliefert wird
  *
  * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
 function extractF250(s) {
-  var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/
+  var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/;
   return parseFloat(s.replace(regex, "$2"));
 }
-exports.extractF250 = extractF250
+exports.extractF250 = extractF250;
 
 /**
- * Extrahiert Float-Zahl aus String s.relay-add-test.js.
+ * Extrahiert Float-Zahl aus String wie von 
+ * Atmion IG (z.B. SE1) gesendet
  *
  * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
-
 function extractAtmion(s) {
-  var regex = /^(0,\t)([0-9]{1}\.?[0-9]{4}[Ee][-+][0-9]{2})(\r)$/
+  var regex = /^(0,\t)([0-9]{1}\.?[0-9]{4}[Ee][-+][0-9]{2})(\r)$/;
   return parseFloat(s.replace(regex, "$2"));
 }
-exports.extractAtmion = extractAtmion
+exports.extractAtmion = extractAtmion;
 
 /**
- * Extrahiert Float-Zahl aus String s.relay-add-test.js.
+ * Extrahiert Float-Zahl aus String 
+ * z.B. SE1 CDG 10, 100, 1000
  *
  * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
-
-function extractKeithley(s) {
-  var regex = /^([0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})/
-  return parseFloat(s.replace(regex, "$1"));
+function extractKeithleyVolt(s) {
+    var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(VDC)/,
+    numStr    = regex.exec(s);
+  
+    if(numStr && numStr.length > 1){
+	var res = parseFloat(numStr[1]);
+    }else{
+	var res = NaN;
+    }
+    return res;
 }
-exports.extractKeithley = extractKeithley
+exports.extractKeithleyVolt = extractKeithleyVolt;
+
+/**
+ * Extrahiert Float-Zahl aus String 
+ * z.B. SE1  Temperatursensoren
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractKeithleyTemp(s) {    
+var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(,)/,
+    numStr    = regex.exec(s);
+  
+    if(numStr && numStr.length > 1){
+	var res = parseFloat(numStr[1]);
+    }else{
+	var res = NaN;
+    }
+    return res;
+}
+exports.extractKeithleyTemp = extractKeithleyTemp;
 
 /**
  * Extrahiert Float-Zahl aus AxTRAN Antwort
@@ -326,10 +358,10 @@ exports.extractKeithley = extractKeithley
  */
 
 function extractAxtran(s) {
-  var regex = /^([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})/
+  var regex = /^([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})/;
   return parseFloat(s.replace(regex, "$1"));
 }
-exports.extractAxtran = extractAxtran
+exports.extractAxtran = extractAxtran;
 
 /**
  * Extrahiert Float-Zahl aus IM540 Antwort
@@ -341,10 +373,10 @@ exports.extractAxtran = extractAxtran
  */
 
 function extractIm540(s) {
-  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/
+  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
   return parseFloat(s.replace(regex, "$2"));
 }
-exports.extractIm540 = extractIm540
+exports.extractIm540 = extractIm540;
 
 
 /**
@@ -358,7 +390,7 @@ exports.extractIm540 = extractIm540
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
 };
-exports.isNumber = isNumber
+exports.isNumber = isNumber;
 
 /**
  *
@@ -374,15 +406,15 @@ exports.isNumber = isNumber
  *
  */
 function vlRes(t, v, u, c) {
-  res = {
-    'Type': t,
-    'Value': v,
-    'Unit': u
-  }
-  if (c) {
-    res.Comment = c
-  }
-  return res
+    var res = {
+	'Type': t,
+	'Value': v,
+	'Unit': u
+    };
+    if (c) {
+	res.Comment = c;
+    }
+    return res;
 };
 exports.vlRes = vlRes;
 
