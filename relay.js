@@ -1,9 +1,9 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-16
+ * version: 2013-10-08
  */
- 
+
 const MODULE = 'relay';
 
 var cfg = require('./config.js');
@@ -23,13 +23,14 @@ function inspect(o) {};
 inspect = tools.inspect;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname wird ebenfalls ausgegeben.
  * @param {string} item meist Funktionsname
  * @param {string} subitem spezifische Aktion innerhalb der Funktion.
  * @param {string} info Daten
  * @param {number} level
  */
+// TODO: Hier und anderswo auf "winston" umsteigen.
 function debug(item, subitem, info, level) {};
 debug = tools.createFunction('debug', MODULE);
 
@@ -86,7 +87,7 @@ function analyzeActions3(pRef, js) {
     };
     utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
       response.prepareResult(pRef, js, repeatResult);
-    }, pRef, js);    
+    }, pRef, js);
   } else if ('Action' in js) {
     var aType = getActionType(js.Action);
     fdebug('aType', '' + aType);
@@ -116,7 +117,7 @@ function analyzeActions2(pRef, js) {
         js.Passwd = buf;
         analyzeActions3(pRef, js);
       }
-    });      
+    });
   } else {
     analyzeActions3(pRef, js);
   }
@@ -151,11 +152,11 @@ function start(_req, _res) {
   var pRef = {req:_req, res:_res, jobId:'NJS'+new Date().getTime()};
   fdebug('_req', inspect(_req), 102);
   _req.setEncoding('utf8');
-  _req.socket.setTimeout(0); 
+  _req.socket.setTimeout(0);
   var body = '';
   _req.on('data', function (chunk) {
     body += chunk;
-  }); 
+  });
   _req.on('end', function () {
     analyzeActions1(pRef, body);
   });

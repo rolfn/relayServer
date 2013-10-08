@@ -9,8 +9,8 @@ var cfg = require('./config.js');
 var tools = require('./tools.js');
 var response = require('./response.js');
 var url = require('url');
-var request = require('/usr/lib/node_modules/request');
-                   
+var request = require('request');
+
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
  * (Rekursion bis Ebene 2, coloriert)
@@ -21,7 +21,7 @@ function inspect(o) {};
 inspect = tools.inspect;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname wird ebenfalls ausgegeben.
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.

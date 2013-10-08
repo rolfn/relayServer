@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-09-19
+ * version: 2013-10-08
  */
 
 const MODULE = 'config';
@@ -9,10 +9,12 @@ const MODULE = 'config';
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '7.6b',
+  VERSION: '8.0b',
   DATE: '2013-09-18',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
+  GITLABHOOK_PORT: 3420,
+  GITLABHOOK_HOST: '0.0.0.0',
   DEFAULT_EXEC_TIMEOUT: 10000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???

@@ -8,8 +8,8 @@ const MODULE = 'email';
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var response = require('./response.js');
-var mailer = require('/usr/lib/node_modules/nodemailer');
-// npm install nodemailer -g
+var mailer = require('nodemailer');
+// npm install nodemailer
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -21,7 +21,7 @@ function inspect(o) {};
 inspect = tools.inspect;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname wird ebenfalls ausgegeben.
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.

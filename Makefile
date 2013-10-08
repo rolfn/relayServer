@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2013-09-18, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-10-08, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 3 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -13,6 +13,8 @@ BUILDARCH = $(shell arch)
 JS_TEST = relay-add-test.js
 JS_SOURCE = $(wildcard *.js)
 JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
+JS_SOURCE := $(JS_SOURCE) gitlabhook.conf
+NODE_MODULES = node_modules
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 VXI11_SRC = vxi11
@@ -63,6 +65,7 @@ spec : dist
 
 # texcaller dazu?
 dist : rm_buildroot vxi11
+	npm install request nodemailer gitlabhook
 	mkdir -p $(BUILD_ROOT)/etc/init.d
 	mkdir -p $(BUILD_ROOT)/usr/local/bin
 	mkdir -p $(BUILD_ROOT)/usr/sbin
@@ -71,11 +74,12 @@ dist : rm_buildroot vxi11
 	cp -p nodejsServers vxiTransceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
+	cp -pr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
-	cp -pr /usr/lib/node_modules/request $(BUILD_ROOT)/usr/lib/node_modules/
+##	cp -pr /usr/lib/node_modules/request $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/ldapjs $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/buffertools $(BUILD_ROOT)/usr/lib/node_modules/
-	cp -pr /usr/lib/node_modules/nodemailer $(BUILD_ROOT)/usr/lib/node_modules/
+##	cp -pr /usr/lib/node_modules/nodemailer $(BUILD_ROOT)/usr/lib/node_modules/
 	cd $(BUILD_ROOT)/usr/sbin/ && \
     ln -sf ../../etc/init.d/NodejsServers rcNodejsServers
 
