@@ -52,9 +52,9 @@ echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
 ```
 ##  GitLab-Webhook-Server
 
-Dieser Server ist über die URL http://xxx.yyy:3240 erreichbar. Diese URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben werden können, ausgeführt. Enthält diese Datei keinen gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe [node-gitlab-hook](node-gitlab-hook).
+Dieser Server ist über die http: auf dem Port 3240 erreichbar. Die URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien des betreffenden Repositoriums auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben werden können, ausgeführt. Enthält diese Datei keinen gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe [rolf.niepraschk/node-gitlab-hook](node-gitlab-hook).
 
-### Beispiel des Inhaltes einer Konfigurationsdatei `gitlabhook.conf`
+### Beispiel des Inhaltes der Konfigurationsdatei
 
 
 
