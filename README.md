@@ -52,9 +52,28 @@ echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
 ```
 ##  GitLab-Webhook-Server
 
-Dieser Server ist über die http: auf dem Port 3240 erreichbar. Die URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien des betreffenden Repositoriums auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben werden können, ausgeführt. Enthält diese Datei keinen gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe [node-gitlab-hook](rolf.niepraschk/node-gitlab-hook).
+Dieser Server ist über die http: auf dem Port 3240 erreichbar. Die URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien des betreffenden Repositoriums auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben werden können, ausgeführt. Enthält diese Datei keinen gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe: [node-gitlab-hook](../../../../rolf.niepraschk/node-gitlab-hook/blob/master/README.md).
 
 ### Beispiel des Inhaltes der Konfigurationsdatei
+
+Die Datei `gitlabhook.conf` wird geladen, wenn sie sich im Hauptverzeichnis dieses Projektes befindet (alternativ in `/etc/gitlabhook/` oder `/usr/local/etc/gitlabhook/`). Der folgende Inhalt einer solchen Datei zeigt als Beispiel, wie die zur home-page des Vakuumlabors gehörenden Dateien automaisch nach Änderungen an ihren Bestimmungsort kopiert werden:
+```javascript
+{
+  "tasks": {
+    "myRepo": "/usr/local/bin/myDeploy %g",
+         "*": ["echo \"GitLab Server %s\"",
+               "echo \"Repository: %r\"",
+               "echo \"User: %u\"",
+               "echo \"Branch: %b\"",
+               "echo \"Git Url: %g\"",
+               "echo \"Last Commit: %i\"",
+               "echo \"\tMessage: %m\"",
+               "echo \"\tTime: %t\""]
+  }
+}
+```
+
+
 
 
 
