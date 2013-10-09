@@ -56,25 +56,23 @@ Dieser Server ist über http auf dem Port 3240 erreichbar (Beispiel: `http://a73
 
 ### Beispiel des Inhaltes der Konfigurationsdatei
 
-Die Datei `gitlabhook.conf` wird geladen, wenn sie sich im Hauptverzeichnis dieses Projektes befindet (alternativ in `/etc/gitlabhook/` oder `/usr/local/etc/gitlabhook/`). Der folgende Inhalt einer solchen Datei zeigt als Beispiel, wie die zur home-page des Vakuumlabors gehörenden Dateien automaisch nach Änderungen an ihren Bestimmungsort kopiert werden:
+Die Datei `gitlabhook.conf` wird geladen, wenn sie sich im Hauptverzeichnis dieses Projektes befindet (alternativ in `/etc/gitlabhook/` oder `/usr/local/etc/gitlabhook/`). Der folgende Inhalt einer solchen Datei zeigt als Beispiel, wie die zur home-page des Vakuumlabors gehörenden Dateien automatisch nach einem erfolgten `git push` an ihren Bestimmungsort kopiert werden:
 
 ```javascript
 {
   "tasks": {
-    "myRepo": "/usr/local/bin/myDeploy %g",
-         "*": ["echo \"GitLab Server %s\"",
-               "echo \"Repository: %r\"",
-               "echo \"User: %u\"",
-               "echo \"Branch: %b\"",
-               "echo \"Git Url: %g\"",
-               "echo \"Last Commit: %i\"",
-               "echo \"\tMessage: %m\"",
-               "echo \"\tTime: %t\""]
+    "vaclabpage": [
+      "exec 1>/dev/null",
+      "exec 2>/dev/null",
+      "git clone %h",
+      "cd %r",
+      "cp -p --parents `git ls-files` /srv/www/htdocs/vaclabpage/"
+    ]
   }
 }
 ```
 
-
+Anmerkung: Da der als Dämon gestartete NodejsServers-Prozess unter dem Nutzer "wwwrun" und der Gruppe "www" läuft, muss das zu beschreibene Zielverzeichnis der Gruppe "www" gehören und zumindest für diese Gruppe Schreibrechte besitzen (`chmod g+w /srv/www/htdocs/vaclabpage`).
 
 
 
