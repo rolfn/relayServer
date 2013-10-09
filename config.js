@@ -10,7 +10,7 @@ const MODULE = 'config';
  */
 var cfg = {
   VERSION: '8.0b',
-  DATE: '2013-09-18',
+  DATE: '2013-10-08',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,

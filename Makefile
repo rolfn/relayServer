@@ -3,7 +3,7 @@
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -13,7 +13,7 @@ BUILDARCH = $(shell arch)
 JS_TEST = relay-add-test.js
 JS_SOURCE = $(wildcard *.js)
 JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
-JS_SOURCE := $(JS_SOURCE) gitlabhook.conf
+CONFIG = gitlabhook.conf
 NODE_MODULES = node_modules
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
@@ -59,13 +59,16 @@ spec : dist
     >> $(SPEC_FILE)
 	@find $(BUILD_ROOT) -type l -name '*' -print | sed 's/^$(BUILD_ROOT)//' \
     >> $(SPEC_FILE)
+	@echo -n "%config " >> $(SPEC_FILE)
+	@find $(BUILD_ROOT) -type f -name "$(CONFIG)" | sed 's/^$(BUILD_ROOT)//' \
+    >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%changelog" >> $(SPEC_FILE)
 	@cat CHANGES >> $(SPEC_FILE)
 
 # texcaller dazu?
 dist : rm_buildroot vxi11
-	npm install request nodemailer gitlabhook
+#	npm install request nodemailer gitlabhook
 	mkdir -p $(BUILD_ROOT)/etc/init.d
 	mkdir -p $(BUILD_ROOT)/usr/local/bin
 	mkdir -p $(BUILD_ROOT)/usr/sbin
@@ -75,6 +78,7 @@ dist : rm_buildroot vxi11
 	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -pr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
+	cp -p $(CONFIG) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
 ##	cp -pr /usr/lib/node_modules/request $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/ldapjs $(BUILD_ROOT)/usr/lib/node_modules/

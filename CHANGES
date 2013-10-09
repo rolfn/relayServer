@@ -1,5 +1,8 @@
+* Tue Oct 08 2013 Rolf.Niepraschk@ptb.de
+- GitLab-Webhook-Server (Port 3420) zugefügt.
+
 * Thu Sep 19 2013 Rolf.Niepraschk@ptb.de
-- �nderung von DEFAULT_TCP_TIMEOUT r�ckg�ngig (2000ms)
+- Änderung von DEFAULT_TCP_TIMEOUT rückgängig (2000ms)
 
 * Wed Sep 18 2013 Rolf.Niepraschk@ptb.de
 - Neue intere "action" "_os_release"
@@ -13,7 +16,7 @@
 
 * Wed Jan 16 2013 Rolf.Niepraschk@ptb.de
 - "getEnv" durch "process.env" ersetzt. "ldap" wegen "undefined symbol"
-  (buffertools) entfernt. Dokumentation der Funktionen begonnen (dox). 
+  (buffertools) entfernt. Dokumentation der Funktionen begonnen (dox).
 
 * Mon Jan 14 2013 Rolf.Niepraschk@ptb.de
 - Aufteilung auf Module, Versionsnummer des rpm-Paketes identisch zu der von
@@ -22,7 +25,7 @@
 * Fri Jan 11 2013 Rolf.Niepraschk@ptb.de
 - Änderungen zu t_start und t_stop (erste Tests)
 
-* Fri Dec 14 2012 Rolf.Niepraschk@ptb.de 
+* Fri Dec 14 2012 Rolf.Niepraschk@ptb.de
 - Korrekte Wandlung String nach Int/Float
 
 * Thu Sep 27 2012 Rolf.Niepraschk@ptb.de
@@ -34,7 +37,7 @@
 * Tue Sep 25 2012 Rolf.Niepraschk@ptb.de
 - timestamps für VXITRANSCEIVER
 
-* Fri Aug 31 2012 Rolf.Niepraschk@ptb.de 
+* Fri Aug 31 2012 Rolf.Niepraschk@ptb.de
 - Korrekturen zu filelist
 
 * Thu Aug 30 2012 Rolf.Niepraschk@ptb.de

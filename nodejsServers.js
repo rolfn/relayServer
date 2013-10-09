@@ -35,7 +35,7 @@ var glh = {
   port: cfg.GITLABHOOK_PORT,
   host: cfg.GITLABHOOK_HOST,
   logger: logger,
-  configPathes: ['/etc/gitlabhook', '/usr/local/etc/gitlabhook/', __dirname]
+  configPathes: [__dirname, '/etc/gitlabhook', '/usr/local/etc/gitlabhook/']
 };
 
 var server3 = require('gitlabhook')(glh);
