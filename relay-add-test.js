@@ -5,7 +5,7 @@ var add =require("./relay-add.js");
 /**
  * Test der extractKeithleyTemp  function
  */
-s = [
+var s = [
    "+1.13830698E+00VDC,1.13830698E+00+9.9E37SECS,+9571748RDNG#\n",
    "+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n",
    "+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n",
@@ -23,7 +23,7 @@ console.log(s.map(add.extractKeithleyTemp));
 /**
  * Test der extractKeithleyVolt  function
  */
-var s = [ '-1.77311995E-05,+1210.560SECS,+09883RDNG#\n',
+    s = [ '-1.77311995E-05,+1210.560SECS,+09883RDNG#\n',
 	  '-1.80353454E-05VDC,+1210.666SECS,+09884RDNG#\n',
 	  '-1.80762017E-05VDC,+1210.878SECS,+09886RDNG#\n',
 	  '-1.82509721E-05VDC,+1210.985SECS,+09887RDNG#\n',
@@ -46,6 +46,14 @@ var s = [ '-1.77311995E-05,+1210.560SECS,+09883RDNG#\n',
 
 console.log("---------------extractKeithleyVolt-------------");
 console.log(s.map(add.extractKeithleyVolt));
+
+
+s = [ ' DCR  +3.4540E-05\n',
+      ' DCR  +3.4492E-05\n' ]
+
+console.log("--------------- extractVM212DCR -------------");
+console.log(s.map(add.extractVM212DCR));
+
 
 /**
  * Test der extractF250  function
