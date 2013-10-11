@@ -257,6 +257,55 @@ function slope(y, x) {
 exports.slope = slope;
 
 /**
+ * Das Ergebnis von regexpr.exec sieht so aus:
+ *
+ * ```
+ *   s = "A 23.234C\r\n"
+ *  'A 23.234C\r\n'
+ *  >  var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/;
+ *  > regex.exec(s)
+ *  [ 'A 23.234C\r\n',
+ *    'A ',
+ *    '23.234',
+ *    'C\r\n',
+ *    index: 0,
+ *    input: 'A 23.234C\r\n' ]
+ *  > regex.exec(s)[2]
+ *  '23.234'
+ * ```
+ * D.h. die 0te position ist der Eingangsstring und
+ * erst dann kommen die Gruppen.
+ *
+ */
+
+var strToNum = function(numStr, pos){
+
+    if(numStr && numStr.length > pos){
+	var res = parseFloat(numStr[pos]);
+    }else{
+	var res = NaN;
+    }
+    return res;
+}
+
+
+/**
+ * Extrahiert Float-Zahl aus String welcher von
+ * den Leybold SRG- Kontrollern VM212 geliefert wird
+ * Es wird auch auf DCR getestet
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractVM212DCR(s) {
+  var regex = /^(\sDCR\s\s)([+-][0-9]{1}\.?[0-9]{4}[E][-][0-9]{2})/;
+
+  return strToNum(regex.exec(s), 2);
+}
+exports.extractVM212DCR =  extractVM212DCR;
+
+/**
  * Extrahiert Float-Zahl aus String welcher von den MKS CDGs
  * geliefert wird
  *
@@ -266,16 +315,8 @@ exports.slope = slope;
  */
 function extractMKSCDG(s) {
 
-    var regex = /^(\w*\s\s)([-+]?[0-9]*\.[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
-    numStr    = regex.exec(s);   
-
-    if(numStr && numStr.length > 1){
-	var res = parseFloat(numStr[2] + numStr[3]);
-    }else{
-	var res = NaN;
-    }
-    
-    return res;
+  var regex = /^(\w*\s\s)([-+]?[0-9]*\.[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
+    return strToNum(regex.exec(s), 2);
 }
 exports.extractMKSCDG = extractMKSCDG;
 
@@ -289,12 +330,13 @@ exports.extractMKSCDG = extractMKSCDG;
  */
 function extractF250(s) {
   var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/;
-  return parseFloat(s.replace(regex, "$2"));
+
+  return strToNum(regex.exec(s),2);
 }
 exports.extractF250 = extractF250;
 
 /**
- * Extrahiert Float-Zahl aus String wie von 
+ * Extrahiert Float-Zahl aus String wie von
  * Atmion IG (z.B. SE1) gesendet
  *
  * @author wactbprot
@@ -303,12 +345,13 @@ exports.extractF250 = extractF250;
  */
 function extractAtmion(s) {
   var regex = /^(0,\t)([0-9]{1}\.?[0-9]{4}[Ee][-+][0-9]{2})(\r)$/;
-  return parseFloat(s.replace(regex, "$2"));
+
+  return strToNum(regex.exec(s), 2);
 }
 exports.extractAtmion = extractAtmion;
 
 /**
- * Extrahiert Float-Zahl aus String 
+ * Extrahiert Float-Zahl aus String
  * z.B. SE1 CDG 10, 100, 1000
  *
  * @author wactbprot
@@ -316,36 +359,26 @@ exports.extractAtmion = extractAtmion;
  * @return Number Zahl.
  */
 function extractKeithleyVolt(s) {
-    var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(VDC)/,
-    numStr    = regex.exec(s);
-  
-    if(numStr && numStr.length > 1){
-	var res = parseFloat(numStr[1]);
-    }else{
-	var res = NaN;
-    }
-    return res;
+  var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(VDC)/;
+
+  return strToNum(regex.exec(s), 1);
+
 }
 exports.extractKeithleyVolt = extractKeithleyVolt;
 
 /**
- * Extrahiert Float-Zahl aus String 
+ * Extrahiert Float-Zahl aus String
  * z.B. SE1  Temperatursensoren
  *
  * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
-function extractKeithleyTemp(s) {    
-var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(,)/,
-    numStr    = regex.exec(s);
-  
-    if(numStr && numStr.length > 1){
-	var res = parseFloat(numStr[1]);
-    }else{
-	var res = NaN;
-    }
-    return res;
+function extractKeithleyTemp(s) {
+var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(,)/;
+
+  return strToNum(regex.exec(s), 1);
+
 }
 exports.extractKeithleyTemp = extractKeithleyTemp;
 
@@ -359,7 +392,9 @@ exports.extractKeithleyTemp = extractKeithleyTemp;
 
 function extractAxtran(s) {
   var regex = /^([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})/;
-  return parseFloat(s.replace(regex, "$1"));
+
+  return strToNum(regex.exec(s), 1);
+
 }
 exports.extractAxtran = extractAxtran;
 
@@ -374,7 +409,9 @@ exports.extractAxtran = extractAxtran;
 
 function extractIm540(s) {
   var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
-  return parseFloat(s.replace(regex, "$2"));
+
+  return strToNum(regex.exec(s), 2);
+
 }
 exports.extractIm540 = extractIm540;
 
