@@ -49,7 +49,12 @@ console.log(s.map(add.extractKeithleyVolt));
 
 
 s = [ ' DCR  +3.4540E-05\n',
-      ' DCR  +3.4492E-05\n' ]
+      ' DCR  +3.4492E-05\n',
+      ' MBAR +3.4492E-05\n',
+      ' DCR  +3.44E-05\n',
+      '+3.4492E-05\n',
+      ' DCR  +3.4540E05\n',
+      ' DCR  +3.4540E-05\n']
 
 console.log("--------------- extractVM212DCR -------------");
 console.log(s.map(add.extractVM212DCR));
@@ -58,7 +63,7 @@ console.log(s.map(add.extractVM212DCR));
 /**
  * Test der extractF250  function
  */
-var s = ["A 23.234C\r\n","A 23.23C\r\n", "A23.45C","A 23.23"];
+s = ["A 23.234C\r\n","A 23.23C\r\n", "A23.45C","A 23.23"];
 console.log("---------------extractF250-------------");
 console.log(s.map(add.extractF250));
 
