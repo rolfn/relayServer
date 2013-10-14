@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2013-10-08, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-10-09, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 2 # >0!
+RELEASE = 3 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -59,7 +59,7 @@ spec : dist
     >> $(SPEC_FILE)
 	@find $(BUILD_ROOT) -type l -name '*' -print | sed 's/^$(BUILD_ROOT)//' \
     >> $(SPEC_FILE)
-	@echo -n "%config " >> $(SPEC_FILE)
+	@echo -n "%config(noreplace) " >> $(SPEC_FILE)
 	@find $(BUILD_ROOT) -type f -name "$(CONFIG)" | sed 's/^$(BUILD_ROOT)//' \
     >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)

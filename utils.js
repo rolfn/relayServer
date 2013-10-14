@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-14
+ * version: 2013-10-10
  */
 
 const MODULE = 'utils';
@@ -18,7 +18,7 @@ function inspect(o) {};
 inspect = tools.inspect;
 
 /**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
+ * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
  * Modulname wird ebenfalls ausgegeben.
  * @param item meist Funktionsname
  * @param subitem spezifische Aktion innerhalb der Funktion.
@@ -49,40 +49,42 @@ fdebug = tools.createFunction('fdebug', debug);
  * start1                     stop1
  *                            start2                     stop2/Response
  * </pre>
- * @param {number} number Anzahl der Aufrufe.
+ * @param {number} nb Anzahl der Aufrufe.
  * @param {number} wait Wartezeit zwischen zwei Aufrufen in ms.
  * @param {function} exec zu wiederholende Funktion
- * @param {function} ready Aufruf nach Ende von ``exec''
+ * @param {function} ready Aufruf am Ende von ``repeat''
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  * @param {String[]} _buf aufgesammelte Daten.
  */
 function repeat(nb, wait, exec, ready, pRef, js, _buf) {
-  function repeat1() {
-    fdebug('buf', ' (_nb:' + _nb + ') ' + inspect(_buf));
-    setTimeout(function() {
+  if (!_buf) {// Erster Aufruf
+    var _buf = [];
+    cfg.theRepeats[pRef.jobId] = { running:true };
+  }
+  var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
+  // Solange kein "killRepeats" passiert ist bzw. nicht letzter Durchgang:
+  // "exec" ausführen und Ergebnis in Array _buf speichern und ggf. nach
+  // Wartezeit sich selbst erneut aufrufen.
+  if (running) {
+    js.t_start.push(new Date().getTime());
+    fdebug('t_start.push', '' + js.t_start[js.t_start.length-1]);
+    exec(_buf, function() {
       js.t_stop.push(new Date().getTime());
       fdebug('t_stop.push', '' + js.t_stop[js.t_stop.length-1]);
-      //fdebug('js', inspect(js));
-      repeat(_nb, wait, exec, ready, pRef, js, _buf);
-    }, wait);
-  }
-  if (!_buf) {// Erster Aufruf
-    var _buf = [], _nb;
-    cfg.theRepeats[pRef.jobId] = { running:true }; 
-  }
-  _nb = nb;
-  fdebug('cfg.theRepeats 1', inspect(cfg.theRepeats));
-  var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
-  // Solange _nb > 0 und kein "killRepeats" passiert ist: Ergebnis in
-  // Array _buf speichern und nach Wartezeit sich selbst erneut aufrufen.
-  if (_nb-- && running) {
-    js.t_start.push(new Date().getTime());
-    fdebug('t_start.push', '' + js.t_start[js.t_start.length-1]); 
-    exec(_buf, repeat1);
+      fdebug('buf', ' (nb:' + nb + ') ' + inspect(_buf));
+      if (--nb) {
+        setTimeout(function() {
+          repeat(nb, wait, exec, ready, pRef, js, _buf);
+        }, wait);
+      } else {
+        delete cfg.theRepeats[pRef.jobId];
+        // Gleich Ende
+        repeat(nb, wait, exec, ready, pRef, js, _buf);
+      }
+    });
   } else {
-    delete cfg.theRepeats[pRef.jobId];
-    fdebug('cfg.theRepeats 2', inspect(cfg.theRepeats));
+    // Ende
     ready(_buf.length == 1 ? _buf[0] : _buf);// Ergebnis weiterleiten
   }
 }
