@@ -114,7 +114,7 @@ console.log("---------------vlStat-------------");
 console.log(add.vlStat(arr));
 
 
-var arr =  [1.14223873,
+arr =  [1.14223873,
             '',
             -0.45056385,
             1.17646101,
@@ -169,7 +169,7 @@ var raw_vec = [ 'MEASURING  290.64E-3',
 		'MEASURING  290.63E-3',
 		'MEASURING  290.67E-3',
 		'MEASURING  290.69E-3',
-		'MEASURING  290.69E-3' ],
+	        'MEASURING  .05'],
 t_start = [ 1348666058346,
 	    1348666059342,
 	    1348666060345,

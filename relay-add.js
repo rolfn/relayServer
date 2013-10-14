@@ -315,7 +315,7 @@ exports.extractVM212DCR =  extractVM212DCR;
  */
 function extractMKSCDG(s) {
 
-  var regex = /^(\w*\s\s)([-+]?[0-9]*\.[0-9]+)([eE][-+]?[0-9]+)?(\s*\w*)$/;
+  var regex = /^(\w*\s\s)([-+]?[0-9]*\.[0-9]{1,5}[eE]*[-+]*[0-9]*)/;
     return strToNum(regex.exec(s), 2);
 }
 exports.extractMKSCDG = extractMKSCDG;
