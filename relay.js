@@ -1,10 +1,10 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-08
+ * version: 2013-10-18
  */
 
-const MODULE = 'relay';
+const MODULE = 'relay'; // TODO: Überall wegnehmen.
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
@@ -13,35 +13,7 @@ var internal = require('./internal.js');
 var external = require('./external.js');
 var response = require('./response.js');
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname wird ebenfalls ausgegeben.
- * @param {string} item meist Funktionsname
- * @param {string} subitem spezifische Aktion innerhalb der Funktion.
- * @param {string} info Daten
- * @param {number} level
- */
-// TODO: Hier und anderswo auf "winston" umsteigen.
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 /**
  * Analysiert den Action-Typ. Rückgabe:
@@ -74,7 +46,7 @@ function getActionType(str) {
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function analyzeActions3(pRef, js) {
-  fdebug('js', inspect(js));
+  logger.debug(js);
   js.Repeat = tools.getInt(js.Repeat, 1);
   js.Wait = tools.getInt(js.Wait, 0);
   if (js.OutputType == undefined) js.OutputType = 'json';
@@ -90,7 +62,7 @@ function analyzeActions3(pRef, js) {
     }, pRef, js);
   } else if ('Action' in js) {
     var aType = getActionType(js.Action);
-    fdebug('aType', '' + aType);
+    logger.info('aType: %s', aType);
     if (aType == -1) {
       internal.call(pRef, js);
     } else if (aType == 1) {
@@ -148,9 +120,8 @@ function analyzeActions1(pRef, data) {
  * @param {object} _res response-Objekt
  */
 function start(_req, _res) {
-  fdebug('time', '' + new Date().getTime(), 1);
   var pRef = {req:_req, res:_res, jobId:'NJS'+new Date().getTime()};
-  fdebug('_req', inspect(_req), 102);
+  logger.info('open connection: %d', new Date().getTime());
   _req.setEncoding('utf8');
   _req.socket.setTimeout(0);
   var body = '';
@@ -161,8 +132,7 @@ function start(_req, _res) {
     analyzeActions1(pRef, body);
   });
   _res.connection.on('close', function () {
-    debug('close connection', 'time', '' + new Date().getTime(), 1);
-    debug('close connection');
+    logger.info('close connection: %d', new Date().getTime());
   });
 };
 

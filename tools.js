@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-09-18
+ * version: 2013-10-18
  */
 
 const MODULE = 'tools';
@@ -14,122 +14,7 @@ var fs = require('fs');
  */
 var debugLevel = process.argv[2] ? process.argv[2] : 0;
 
-/**
- * Liefert true, wenn level kleiner oder gleich dem Wert, der auf der
- * Kommandozeile übergeben wurde, ist. Ohne Kommandozeilenwert wird "99"
- * angenommen.
- * @param {number} level
- * @return {boolean}
- */
-function isDebug(level) {
-  var l = 99;
-  if (level != undefined){
-    l = level;
-  }
-  return (l <= debugLevel);
-}
-
-exports.isDebug = isDebug;
-
-/**
- * Konstanten für SGR-Code
- */
-const BOLD = 1;
-const DEFCOLOR = 39;
-const UNBOLD = 22;
-const COLOR = 30;
-const RED = 1;
-const BLUE = 4;
-const RESET = 0;
-
-/**
- * Erzeugt ESC-Code ("Select Graphic Rendition")
- * @param {number} code Farb-/Schriftkonstante
- * @return {string} ESC-Code
- */
-function sgr(code) {// Select Graphic Rendition
-  return '\u001b[' + code + 'm';
-}
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen nach stderr.
- * @param {string} module meist Modulname
- * @param {string} item meist Funktionsname
- * @param {string} _subitem spezifische Aktion innerhalb der Funktion.
- * @param {string} _info Daten
- * @param {number} _level
- */
-function debug(module, item, _subitem, _info, _level) {
-  var info = '';
-  var level = 99;
-  if (isDebug(_level)) {
-
-    if (typeof _info == 'number') {
-      level = _info;
-    } else if (_info != undefined) {
-      info = ': ' + _info;
-      if (typeof _level == 'number') {
-        level = _level;
-      }
-    }
-    var subitem = ((_subitem != undefined) && (_subitem != '')) ? ',' +
-      sgr(BOLD + ';' + (COLOR + RED)) + _subitem + sgr(RESET) : '';
-
-    process.stderr.write('[' + module + ',' +
-      sgr(BOLD + ';' + (COLOR + BLUE)) + item + sgr(RESET) +
-        subitem + ']' + info + '\n');
-  }
-}
-
-exports.debug = debug;
-
-/**
- * Datenstruktur mit zu konfigurierenden Funktionen @see createFunction
- */
-var functions = {
-  debug:  function(param) {
-            return function (item, subitem, info, level) {
-              debug(param, item, subitem, info, level);
-            };
-          },
-  fdebug: function(param) {
-            return function (subitem, info, level) {
-              var item = arguments.callee.caller.name ?
-                arguments.callee.caller.name : "---";
-              param(item, subitem, info, level);
-            };
-          }
-}
-
-/**
- * Erzeugt aufgrund von Eintrag name in "functions" eine Funktion und
- * liefert diese zurück. Die Funktion kann aufgrund von maximal 3 Parametern
- * statisch konfiguriert werden.
- * @param {string} name Schlüsselwort für "functions"
- * @param {???} p1 Konfigurationsparameter
- * @param {???} p2 Konfigurationsparameter
- * @param {???} p3 Konfigurationsparameter
- * @return {function} Konfigurierte Funktion
- */
-function createFunction(name, p1, p2, p3) {
-  return functions[name](p1, p2, p3);
-}
-
-exports.createFunction = createFunction;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname und Funktionsname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function fdebug(subitem, info, level) {
-  item = arguments.callee.caller.name ?
-    arguments.callee.caller.name : '---';
-  debug(MODULE, item, subitem, info, level);
-}
+exports.isDebug = debugLevel != 0;
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -171,7 +56,7 @@ function getTempDir() {
   return process.env.TMPDIR ? process.env.TMPDIR : '/tmp'
 }
 
-exports.getTempDir = getTempDir;
+exports.getTempDir = getTempDir;  // TODO: Modul "tmp" verwenden.
 
 /**
  * Liefert ähnlich zu parseFloat eine Float-Zahl, die der String s repräsentiert.

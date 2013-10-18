@@ -2,44 +2,51 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-08
+ * version: 2013-10-18
  */
 
 const MODULE = 'nodejsServers';
 
 var http = require('http');
 var cfg = require('./config.js');
+var logger = cfg.logger = require('vlogger')();
 var relay = require('./relay.js');
 // var dispatcher = require('./dispatcher.js');
 
+logger.add(require('winston').transports.Console, {
+  level: 'debug',
+  handleExceptions: true,
+  colorize: true,
+  prettyPrint: true,
+  json: false
+});
+
 var server1 = http.createServer(relay.start);
 server1.listen(cfg.RELAY_PORT);
+logger.info('relay server listen (%d)', cfg.RELAY_PORT);
 
 // TODO: Nachdenken, ob das Konzept eines zweiten vorgelagerten Servers
 //       sinnvoll ist.
 // var server2 = http.createServer(dispatcher.start);
 // server2.listen(exports.DISPATCHER_PORT);
 
-
-var tools = require('./tools.js');
-debug = tools.createFunction('debug', 'GITLABHOOK');
-
-var logger = {
-  log:  function(s){debug('', '', s)},
-  error:function(s){debug('', '', s)}
+var lg = {
+  log:   logger.info,
+  error: logger.error
 }
 
-logger = undefined;
+lg = undefined;
 
 var glh = {
   port: cfg.GITLABHOOK_PORT,
   host: cfg.GITLABHOOK_HOST,
-  logger: logger,
+  logger: lg,
   configPathes: [__dirname, '/etc/gitlabhook', '/usr/local/etc/gitlabhook/']
 };
 
 var server3 = require('gitlabhook')(glh);
 server3.listen();
+if (server3.server) logger.info('webhook server listen (%d)', cfg.GITLABHOOK_PORT);
 
 /**
 <h4> Beispiele zur Kommunikation mit dem Relay-Server</h4>

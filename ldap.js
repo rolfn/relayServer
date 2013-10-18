@@ -1,4 +1,7 @@
-// Rolf Niepraschk, Rolf.Niepraschk@ptb.de, 2013-01-14
+/**
+ * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2013-10-18
+ */
 
 // noch ungetestet in der modularen Variante!
 
@@ -10,46 +13,18 @@ var response = require('./response.js');
 var ldap = require('/usr/lib/node_modules/ldapjs');
 var zlib = require('zlib');
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 function end(pRef, js) {
-  fdebug();
   prepareResult(pRef, js, {Success:js.Success,Data:js.Data});
 }
 
 function unbind(pRef, js) {
   js.client.unbind(function(e) {
     if (e) {
-      fdebug('error', e);
+      logger.error('error', e);
     } else {
-      fdebug('success');
+      logger.debug('success');
     }
     end(pRef, js);
   });
@@ -57,7 +32,7 @@ function unbind(pRef, js) {
 
 function search2(pRef, js, last) {
   var opts = {
-    filter:js.Filter, 
+    filter:js.Filter,
     attributes:js.Attributes,
     scope: 'sub'
   }; // base=???
@@ -66,37 +41,38 @@ function search2(pRef, js, last) {
     js.client.search('', opts, function(e, res) {
       js.Data = '???';
       if (e) {
-        fdebug('search', e);
+        logger.error('search: ', e);
         js.Data = e.message;
         unbind(pRef, js);
       } else {
-        fdebug('search', 'SUCCESS');
+        logger.debug('search: %s', 'SUCCESS');
         res.on('searchEntry', function(entry) {
           js.Data = JSON.stringify(entry.object);
           js.DN = entry.dn;
-          fdebug('entry', js.Data);
+          logger.debug('searchEntry', js.Data);
         });
         res.on('error', function(e) {
           js.Data = e.message;
-          fdebug('error', js.Data);
+          logger.error('error: ', js.Data);
         });
         res.on('end', function(result) {
-          fdebug('status', result.status);
+           logger.debug('status: %s', result.status);
           if (last == undefined) {
             js.Success = true;
             unbind(pRef, js);
           } else {
             fdebug('last', last);
+            logger.debug('last: ', last);
             last(pRef, js);
           }
         });
-      }  
-    });  
+      }
+    });
   } catch(e) {
     js.Data = e.toString();
     unbind(pRef, js);
   }
-  
+
 }
 
 function search1(pRef, js, last) {
@@ -105,13 +81,13 @@ function search1(pRef, js, last) {
   js.client.bind('', '', function(err, res) {// Connection-Test
     if (err) {
       js.Data = err;
-      fdebug(err);
+      logger.error('error', err);
       end(pRef, js); // kein "unbind"!
     } else {
-      fdebug('SUCCESS');
+      logger.debug('%s', 'SUCCESS');
       search2(pRef, js, last);
     }
-  });   
+  });
 }
 
 function auth3(pRef, js) {
@@ -125,10 +101,9 @@ function auth3(pRef, js) {
     if (!js.Name) js.Name = '';
     js.client.bind(js.DN, js.Passwd, function(err, res) {
       if (err) {
-        fdebug('error', err);
-        js.Data = ('Wrong password');
+        logger.error('wrong password', err);
       } else {
-        fdebug('success');
+        logger.debug('%s', 'SUCCESS');
         js.Success = true;
       }
       unbind(pRef, js);
@@ -137,7 +112,6 @@ function auth3(pRef, js) {
 }
 
 function auth2(pRef, js) {
-  fdebug();
   zlib.inflate(js.Passwd, function(err, buf) {
     if (err) {
       prepareError(pRef, js, 'internal error');
@@ -153,7 +127,6 @@ function auth1(pRef, js) {
   // Später nach vollständigem DN für "CN=username" suchen.
   js.Filter = 'cn=' + js.Name;
   js.Attributes = '';
-  debug();
   search1(pRef, js, auth2);
 }
 

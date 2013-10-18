@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-15
+ * version: 2013-10-18
  */
 
 const MODULE = 'external';
@@ -12,48 +12,21 @@ var utils = require('./utils.js');
 var rscript = require('./rscript.js');
 var response = require('./response.js');
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 /**
  * Konfiguration je nach externem Action-Typ; Ausführung des externen Programms
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
- * @param {function} Aufruf nach Beendigung des externen Programmaufrufs 
+ * @param {function} Aufruf nach Beendigung des externen Programmaufrufs
  */
 function call(pRef, js, postFunc) {
   var execStr = '';
-  fdebug('Action', js.Action);
+  logger.debug('Action: %s', js.Action);
   if (js.execStr == undefined) {
 
     execStr = js.Action;
-  
+
     switch (js.Action) {// Spezifische Ergänzungen der Aufrufe
       case cfg.bin.VXITRANSCEIVER:
         execStr = execStr + ' "' + js.Host + '" "' + js.Device + '"' +
@@ -88,7 +61,7 @@ function call(pRef, js, postFunc) {
     execStr = js.execStr;
   }
 
-  fdebug('execStr', execStr);
+  logger.info('execStr: %s', execStr);
 
   var execOpt = {};
   execOpt.timeout = tools.getInt(js.Timeout, cfg.DEFAULT_EXEC_TIMEOUT);
@@ -97,18 +70,18 @@ function call(pRef, js, postFunc) {
   //execOpt.env = (js.ENV != undefined) ? js.ENV : process.env;
   if (js.OutputEncoding == 'binary') execOpt.encoding = 'binary';
 
-  fdebug('execOpt', inspect(execOpt), 102);
+  logger.debug('execOpt: ', execOpt);
 
   var doIt = function(b, next) {
-    fdebug('time_begin', '' + new Date().getTime(), 1);
+    logger.debug('time_begin: %d', new Date().getTime());
     var child = exec(execStr, execOpt,
       function (error, stdout, stderr) {
         if (error) {
-          fdebug('error', error + ' ' + stderr.length + ' ' + stdout.length);
+          logger.error('error: %s (%d / %d)', error, stderr.length, stdout.length);
           var s = 'error:' + error;
           b.push(s);
         } else {
-          fdebug('time_success', '' + new Date().getTime(), 1);
+          logger.debug('time_success: %d', new Date().getTime());
           var res;
 
           if (js.OutputEncoding == 'binary') {
@@ -116,10 +89,10 @@ function call(pRef, js, postFunc) {
           } else {
             res = stdout;
           }
-          
-          fdebug('res', typeof res + ' (' + res.length + ' Bytes)');
-          fdebug('OutputType', js.OutputType);
-          fdebug('OutputEncoding', js.OutputEncoding);
+
+          logger.debug('res: %s (%d Bytes)', typeof res, res.length);
+          logger.debug('OutputType: %s, OutputEncoding: %s', js.OutputType,
+            js.OutputEncoding);
           b.push(res);
         }
         next();
@@ -130,7 +103,7 @@ function call(pRef, js, postFunc) {
   var wait = (js.Wait < cfg.MIN_EXEC_WAIT) ? cfg.MIN_EXEC_WAIT : js.Wait;
   utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
     if (postFunc) {
-      fdebug('postFunc');
+      logger.debug('postFunc');
       postFunc(pRef, js);
     }
     response.prepareResult(pRef, js, repeatResult);

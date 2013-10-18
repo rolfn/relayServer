@@ -1,12 +1,14 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-10
+ * version: 2013-10-18
  */
 
 const MODULE = 'utils';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+
+var logger = cfg.logger;
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -16,26 +18,6 @@ var tools = require('./tools.js');
  */
 function inspect(o) {};
 inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
 
 /**
  * Wiederholtes Aufrufen der Funktion exec.
@@ -68,11 +50,11 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
   // Wartezeit sich selbst erneut aufrufen.
   if (running) {
     js.t_start.push(new Date().getTime());
-    fdebug('t_start.push', '' + js.t_start[js.t_start.length-1]);
+    logger.debug('t_start.push %d', js.t_start[js.t_start.length-1]);
     exec(_buf, function() {
       js.t_stop.push(new Date().getTime());
-      fdebug('t_stop.push', '' + js.t_stop[js.t_stop.length-1]);
-      fdebug('buf', ' (nb:' + nb + ') ' + inspect(_buf));
+      logger.debug('t_stop.push %d', js.t_stop[js.t_stop.length-1]);
+      logger.debug('buf (nb: %d): ', nb, _buf);
       if (--nb) {
         setTimeout(function() {
           repeat(nb, wait, exec, ready, pRef, js, _buf);

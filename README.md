@@ -52,7 +52,7 @@ echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
 ```
 ##  GitLab-Webhook-Server
 
-Dieser Server ist über http auf dem Port 3240 erreichbar (Beispiel: `http://a73434.berlin.ptb.de:3420`). Die URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien des betreffenden Repositoriums auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben sind, ausgeführt. Enthält diese Datei keinen gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe: [node-gitlab-hook](../../../../rolf.niepraschk/node-gitlab-hook/blob/master/README.md).
+Dieser Server ist über http auf dem Port 3240 erreichbar (Beispiel: `http://a73434.berlin.ptb.de:3420`). Die URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien des betreffenden Repositoriums auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben sind, ausgeführt. Enthält diese Datei keine gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe: [node-gitlab-hook](../../../../rolf.niepraschk/node-gitlab-hook/blob/master/README.md).
 
 ### Beispiel des Inhaltes der Konfigurationsdatei
 

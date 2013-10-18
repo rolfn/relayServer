@@ -1,3 +1,6 @@
+* Fri Oct 11 2013 Rolf.Niepraschk@ptb.de
+- utils.js: "repeat" umgeschrieben, wegen Fehlverhaltens
+
 * Wed Oct 09 2013 Rolf.Niepraschk@ptb.de
 - Update "gitlabhook"
 

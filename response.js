@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-02-14
+ * version: 2013-10-18
  */
 
 const MODULE = 'response';
@@ -10,43 +10,16 @@ var tools = require('./tools.js');
 var vm = require('vm');
 var addon = null;
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger
 
 /**
  * Wenn vorhanden, Datei "relay-add.js" laden.
  */
 try {
   addon = require('./relay-add.js');
-  debug('"relay-add.js" loaded');
+  logger.info('"relay-add.js" loaded');
 } catch(e) {
-  debug('"relay-add.js" not found');
+  logger.info('"relay-add.js" not found');
 }
 
 /**
@@ -56,7 +29,7 @@ try {
  * @param {object} _data zu sendende Daten
  */
 function sendResponse(pRef, js, _data) {
-  fdebug('_data', _data);
+  logger.debug('_data: ', _data);
   var ctype, data;
   if (js.OutputType == 'stream') {
     ctype = ((js.ContentType != undefined) ? js.ContentType :
@@ -67,7 +40,7 @@ function sendResponse(pRef, js, _data) {
     ctype = 'application/json';
     data = JSON.stringify(_data) + '\n';
   }
-  fdebug('ContentType', ctype);
+  logger.debug('ContentType: %s', ctype);
   pRef.res.writeHead(200, {
     'Content-Type':ctype,'Access-Control-Allow-Origin':'*'});
   pRef.res.end(data);
@@ -84,11 +57,11 @@ function prepareResult(pRef, js, data) {
   var x = data;
   var jsonRes = {};
 
-  fdebug('js', inspect(js));
+  logger.debug('js: ', js);
 
   if (js.t_start != undefined) jsonRes.t_start = js.t_start;
-  if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;    
-  
+  if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;
+
   if (js.Action == cfg.bin.VXITRANSCEIVER) {
     jsonRes.t__start = [];
     /**
@@ -108,7 +81,7 @@ function prepareResult(pRef, js, data) {
       jsonRes.t__stop[i] = js.t_stop[i];
     }
     /// Zum Vergleich der Zeiten vom vxi-Programm mit denen
-    /// der hier erzeugten    
+    /// der hier erzeugten
     /// TODO: Ist Start- und Stoppzeit im vxi-Programm weiter nötig?
     if (!Array.isArray(x)) x = [x];
     var a;
@@ -119,8 +92,8 @@ function prepareResult(pRef, js, data) {
       jsonRes.t_start.push(parseInt(a.shift()));
       // letztes Element ist Stoppzeit
       jsonRes.t_stop.push(parseInt(a.pop()));
-      // Falls vorher mehr als zwei "|" enthalten waren. 
-      x[i] = a.join('|'); 
+      // Falls vorher mehr als zwei "|" enthalten waren.
+      x[i] = a.join('|');
     }
     ///
     if (!jsonRes.t__start.length || !jsonRes.t__stop.length) {
@@ -140,24 +113,25 @@ function prepareResult(pRef, js, data) {
     jsonRes.t_start = jsonRes.t_start[0];
     jsonRes.t_stop = jsonRes.t_stop[0];
   }
- 
+
   if ((js) && (js.PostProcessing)) {
     // Einfache Strings und String-Arrays unterstützen.
     var evalStr = (Array.isArray(js.PostProcessing)) ?
       js.PostProcessing.join('') : js.PostProcessing;
-    fdebug('evalStr', inspect(evalStr));
+    logger.debug('evalStr: %s', evalStr);
+
     var sandbox = {};
     sandbox._x = x;
     if (jsonRes.t_start != undefined) {
       sandbox._t_start = jsonRes.t_start;
       delete jsonRes.t_start; //???
-    } 
+    }
     if (jsonRes.t_stop != undefined) {
       sandbox._t_stop = jsonRes.t_stop;
       delete jsonRes.t_stop;
     }
     if (addon != undefined) sandbox._ = addon;
-    fdebug('addon', inspect(addon));
+    logger.debug('addon: ', addon);
     try{
       // Benutzer-JS-Anweisungen innerhalb der sandbox ausführen.
       vm.runInNewContext(evalStr, sandbox);
@@ -166,9 +140,9 @@ function prepareResult(pRef, js, data) {
     }
     // sandbox-Variablen der Rückgabe-Struktur zuweisen.
     for (var key in sandbox) {
-      // "runInNewContext" bringt Funktion "gc" mit. 
+      // "runInNewContext" bringt Funktion "gc" mit.
       if (key != 'gc') {
-        fdebug('sandbox[' + key + ']', inspect(sandbox[key]));
+        logger.debug('sandbox[%s]', key, sandbox[key]);
         // temporäre Variablen ignorieren
         if (key[0] != '_') jsonRes[key] = sandbox[key];
       }
@@ -176,7 +150,7 @@ function prepareResult(pRef, js, data) {
   } else {
     jsonRes.Result = x;
   }
-  fdebug('jsonRes', inspect(jsonRes));
+  logger.debug('jsonRes: ', jsonRes);
   if (js.OutputType == 'stream') {
     if (jsonRes.Result != undefined) {
       sendResponse(pRef, js, jsonRes.Result);

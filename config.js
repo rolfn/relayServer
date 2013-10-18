@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-08
+ * version: 2013-10-18
  */
 
 const MODULE = 'config';
@@ -8,9 +8,9 @@ const MODULE = 'config';
 /**
  * Datenstruktur mit Default-Werten
  */
-var cfg = {
-  VERSION: '8.0b',
-  DATE: '2013-10-08',
+module.exports = {
+  VERSION: '8.1b',
+  DATE: '2013-10-18',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
@@ -42,6 +42,6 @@ var cfg = {
   theRepeats: {}
 }
 
-for (var i in cfg) exports[i] = cfg[i];
+//for (var i in cfg) exports[i] = cfg[i];
+//delete cfg;
 
-delete cfg;

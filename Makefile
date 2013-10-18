@@ -3,7 +3,7 @@
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 3 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -68,6 +68,7 @@ spec : dist
 
 # texcaller dazu?
 dist : rm_buildroot vxi11
+	git pull
 #	npm install request nodemailer gitlabhook
 	mkdir -p $(BUILD_ROOT)/etc/init.d
 	mkdir -p $(BUILD_ROOT)/usr/local/bin

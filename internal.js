@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-09-18
+ * version: 2013-10-18
  */
 
 const MODULE = 'internal';
@@ -18,34 +18,7 @@ var _email = require('./email.js');
 //    npm install buffertools -g ; npm install ldapjs -g
 //var _latex = require('./latex.js'); // TODO: Überarbeiten!
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 /**
  * Liefert Angaben zum Betriebssystem
@@ -110,7 +83,6 @@ function getOSrelease(_file, success, error) {
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
-  fdebug('js', inspect(js));
   var doIt = null;
   switch (js.Action) {
     case 'RANDOM':
