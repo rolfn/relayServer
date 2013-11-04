@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-18
+ * version: 2013-11-04
  */
 
 const MODULE = 'http';
@@ -43,13 +43,13 @@ function call(pRef, js) {
     },
     function (e, res, body) {
       if (!e && res.statusCode == 200) {
-        fdebug('response body', inspect(body));
+        logger.debug('response body', body);
         response.prepareResult(pRef, js, body);
       } else {
-        fdebug('error', e);
+        logger.error('body', body);
         var x = ((res) && (res.statusCode)) ? res.statusCode :
           'no response';
-        fdebug('statusCode', x);
+        logger.error('statusCode: %d', x);
         response.prepareError(pRef, js, x);
       }
     }

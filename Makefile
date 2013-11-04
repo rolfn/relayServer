@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2013-10-09, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-10-18, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -27,6 +27,11 @@ DOC_SERVER_PORT=5984
 DOC_DB_URL=http://$(DOC_SERVER):$(DOC_SERVER_PORT)/$(DOC_DB)
 ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
 COMPACT=curl -H "Content-Type: application/json" -X POST
+
+ARCH=$(shell arch)
+INSTALL_DIRS_ROOT = $$HOME/couch-apps/repos/_attachments/
+OS_RELEASES = openSUSE_11.4  openSUSE_12.2  openSUSE_12.3  openSUSE_13.1  SLE_11_SP3
+INSTALL_DIRS = $(addsuffix /$(ARCH), $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
 
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
@@ -135,5 +140,11 @@ arch :
 debug :
 	@echo $(VERSION)
 	@echo $(JS_SOURCE)
+	@echo $(INSTALL_DIRS)
+
+install : rpm
+	@echo "=== INSTALL ==="
+	@target=$(shell ls -1t $$HOME/rpmbuild/RPMS/$(ARCH)/*.rpm | head -1) ; \
+	$(foreach i, $(INSTALL_DIRS), cp -pv $$target $i ;)
 
 .PHONY : dist vxi11 arch clean rpm src_rpm spec

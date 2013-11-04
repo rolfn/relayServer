@@ -1,20 +1,12 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-18
+ * version: 2013-11-04
  */
 
 const MODULE = 'tools';
 
 var util = require('util');
 var fs = require('fs');
-
-/**
- * Kommandozeilenwert zur Steuerung der debug-Ausgabe ermitteln. Ohne
- * Angabe wird 0 (keine Ausgabe) verwendet.
- */
-var debugLevel = process.argv[2] ? process.argv[2] : 0;
-
-exports.isDebug = debugLevel != 0;
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -121,18 +113,18 @@ function rmdirRecursive(dir, clbk){
       if (err) return clbk(err);
       var filename = files.shift();
       if (filename === null || typeof filename == 'undefined') {
-        fdebug('rmdir', dir);
+        logger.debug('dir: %s', dir);
         return fs.rmdir(dir, clbk);
       }
       var file = dir+'/'+filename;
       fs.stat(file, function(err, stat){
         if (err) return clbk(err);
         if (stat.isDirectory()) {
+          logger.debug('dir: %s', file);
           rmdirRecursive(file, rmFile);
-          fdebug('rmdir', file);
         } else {
           fs.unlink(file, rmFile);
-          fdebug('unlink', file);
+          logger.debug('unlink: %s', file);
         }
       });
     })();
@@ -151,22 +143,22 @@ exports.rmdirRecursive = rmdirRecursive;
 */
 function createTempFile(dir, name, buf, success, error) {
   fs.mkdir(dir, '700', function (e) {
-    fdebug('create working directory', e ? e : dir);
+    logger.debug('create working directory: %s', e ? e : dir);
     if (e) {
       error(e);
     } else {
       fs.open(dir + '/' + name, 'w', '600', function(e, fd) {
-        fdebug('file open', e ? e : name);
+        logger.debug('file open: %s', e ? e : name);
         if (e) {
           error(e);
         } else {
           fs.write(fd, buf, 0, buf.length, null, function(e, nb, buf){
-            fdebug('file write', e ? e : nb + ' Bytes');
+            logger.debug('file write: %s', e ? e : nb + ' Bytes');
             if (e) {
               error(e);
             } else {
               fs.close(fd, function(e){
-                fdebug('file close', e ? e : ' --> next step');
+                logger.debug('file close: %s', e ? e : ' --> next step');
                 if (e) {
                   error(e);
                 } else {

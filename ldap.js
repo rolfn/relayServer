@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-18
+ * version: 2013-11-04
  */
 
 // noch ungetestet in der modularen Variante!
@@ -61,7 +61,6 @@ function search2(pRef, js, last) {
             js.Success = true;
             unbind(pRef, js);
           } else {
-            fdebug('last', last);
             logger.debug('last: ', last);
             last(pRef, js);
           }

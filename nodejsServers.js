@@ -23,6 +23,8 @@ logger.add(require('winston').transports.Console, {
 
 var server1 = http.createServer(relay.start);
 server1.listen(cfg.RELAY_PORT);
+if (cfg.isDebug) logger.enable(); else logger.disable();
+logger.info('logging: %s', cfg.isDebug);
 logger.info('relay server listen (%d)', cfg.RELAY_PORT);
 
 // TODO: Nachdenken, ob das Konzept eines zweiten vorgelagerten Servers
