@@ -79,6 +79,8 @@ function call(pRef, js, postFunc) {
         if (error) {
           logger.error('error: %s (%d / %d)', error, stderr.length, stdout.length);
           var s = 'error:' + error;
+          logger.error('exitCode:', error.code);
+          js.exitCode = error.code;
           b.push(s);
         } else {
           logger.debug('time_success: %d', new Date().getTime());
@@ -89,7 +91,8 @@ function call(pRef, js, postFunc) {
           } else {
             res = stdout;
           }
-
+          logger.debug('exitCode:', 0);
+          js.exitCode = 0;
           logger.debug('res: %s (%d Bytes)', typeof res, res.length);
           logger.debug('OutputType: %s, OutputEncoding: %s', js.OutputType,
             js.OutputEncoding);

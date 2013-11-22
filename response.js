@@ -61,6 +61,7 @@ function prepareResult(pRef, js, data) {
 
   if (js.t_start != undefined) jsonRes.t_start = js.t_start;
   if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;
+  if (js.exitCode != undefined) jsonRes.exitCode = js.exitCode;
 
   if (js.Action == cfg.bin.VXITRANSCEIVER) {
     jsonRes.t__start = [];

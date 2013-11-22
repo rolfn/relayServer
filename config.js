@@ -15,8 +15,8 @@ var debugLevel = process.argv[2] ? process.argv[2] : 0;
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '8.1c',
-  DATE: '2013-11-04',
+  VERSION: '8.1d',
+  DATE: '2013-11-22',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,

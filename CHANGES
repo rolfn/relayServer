@@ -1,5 +1,8 @@
+* Tue Nov 05 2013 Rolf.Niepraschk@ptb.de
+- Undefinierte Funktion "fdebug"
+
 * Fri Oct 18 2013 Rolf.Niepraschk@ptb.de
-- Jetzt logger-Funktion
+- Jetzt logger-Funktion (winston)
 
 * Fri Oct 11 2013 Rolf.Niepraschk@ptb.de
 - utils.js: "repeat" umgeschrieben, wegen Fehlverhaltens
