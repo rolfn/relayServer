@@ -23,7 +23,7 @@ var logger = cfg.logger;
 function call(pRef, js, postFunc) {
   var execStr = '';
   logger.debug('Action: %s', js.Action);
-  if (js.execStr == undefined) {
+  if (js.execStr === undefined) {
 
     execStr = js.Action;
 
@@ -36,18 +36,18 @@ function call(pRef, js, postFunc) {
         execStr = execStr + ' "+%Y-%m-%d %H:%M:%S"';
         break;
       case cfg.bin.RSCRIPT:
-        if (js.Body != undefined) {
+        if (js.Body !== undefined) {
           rscript.call(pRef, js);
           // Kehrt später noch mal zu dieser Funktion zurück.
           return;
         }
         // TODO: LaTeX ähnlich wie RSCRIPT handhaben. (???)
-        break
+        break;
       default:
         break;
     }
 
-    if (js.Value != undefined) {
+    if (js.Value !== undefined) {
       if (Array.isArray(js.Value)) {
         for (var i=0; i < js.Value.length; i++) {
           execStr = execStr + ' "' + js.Value[i] + '"';
@@ -66,7 +66,7 @@ function call(pRef, js, postFunc) {
   var execOpt = {};
   execOpt.timeout = tools.getInt(js.Timeout, cfg.DEFAULT_EXEC_TIMEOUT);
   execOpt.maxBuffer = tools.getInt(js.MaxBuffer, cfg.DEFAULT_EXEC_MAXBUFFER);
-  if (js.WorkingDir != undefined) execOpt.cwd = js.WorkingDir;
+  if (js.WorkingDir !== undefined) execOpt.cwd = js.WorkingDir;
   //execOpt.env = (js.ENV != undefined) ? js.ENV : process.env;
   if (js.OutputEncoding == 'binary') execOpt.encoding = 'binary';
 
@@ -101,7 +101,7 @@ function call(pRef, js, postFunc) {
         next();
       }
     );
-  }
+  };
 
   var wait = (js.Wait < cfg.MIN_EXEC_WAIT) ? cfg.MIN_EXEC_WAIT : js.Wait;
   utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {

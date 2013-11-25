@@ -16,7 +16,7 @@ var logger = cfg.logger;
  * @param {object} o Zu untersuchende JS-Variable.
  * @return {string}  String-Repräsentation
  */
-function inspect(o) {};
+function inspect(o) {}
 inspect = tools.inspect;
 
 /**

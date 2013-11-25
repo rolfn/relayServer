@@ -45,7 +45,7 @@ function getOSrelease(_file, success, error) {
             var x = lines[i].split('=');
             var key = '', val = '';
             if (x.length == 1) {
-              if (i==0) {// 'SuSE-release'
+              if (i === 0) {// 'SuSE-release'
                 isSUSE = true;
                 key = 'NAME';
                 if (lines[i].indexOf('SUSE Linux Enterprise') > -1) {
@@ -62,7 +62,7 @@ function getOSrelease(_file, success, error) {
               key = 'VERSION_ID';
             }
             val = val.replace(/"/g, '');
-            if (key != '' &&
+            if (key !== '' &&
               ((isSUSE && (key == 'NAME' || key == 'VERSION_ID') || !isSUSE))) {
               ret[key] = val;
             }

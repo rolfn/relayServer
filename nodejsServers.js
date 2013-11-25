@@ -35,7 +35,7 @@ logger.info('relay server listen (%d)', cfg.RELAY_PORT);
 var lg = {
   log:   logger.info,
   error: logger.error
-}
+};
 
 lg = undefined;
 
@@ -79,7 +79,7 @@ echo '{"Action":"TCP","Repeat":3,"Wait":2000,"Host":"e75493","Port":"23",
 echo '{"Action":"HTTP","Url":"http://a73434.berlin.ptb.de"}' | \
   curl -T - -X PUT http://localhost:55555
 
-echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "GrÃ¼Ãe von NodeJS",
+echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
   "From": "Homunculus ","To": "Thomas.Bock@ptb.de",
   "Body": "Hallo, wie geht es Dir?\nHeute scheint die Sonne."}' | \
    curl -T - -X PUT http://localhost:55555

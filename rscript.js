@@ -27,12 +27,12 @@ function call(pRef, js) {
       });
     }
   };
-  if ((js.KeepFiles == undefined) || (js.KeepFiles != true))
+  if ((js.KeepFiles === undefined) || (js.KeepFiles !== true))
     js.KeepFiles = false;
   var params = [];
   js.WorkingDir = tools.getTempDir() + '/' + pRef.jobId;
   params.push(cfg.R_FILE);
-  if (js.Value != undefined) {
+  if (js.Value !== undefined) {
     if (Array.isArray(js.Value)) {
       params = params.concat(js.Value);
     } else {

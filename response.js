@@ -10,7 +10,7 @@ var tools = require('./tools.js');
 var vm = require('vm');
 var addon = null;
 
-var logger = cfg.logger
+var logger = cfg.logger;
 
 /**
  * Wenn vorhanden, Datei "relay-add.js" laden.
@@ -32,7 +32,7 @@ function sendResponse(pRef, js, _data) {
   logger.debug('_data: ', _data);
   var ctype, data;
   if (js.OutputType == 'stream') {
-    ctype = ((js.ContentType != undefined) ? js.ContentType :
+    ctype = ((js.ContentType !== undefined) ? js.ContentType :
       'application/octet-stream') + ';charset=ISO-8859-1';
     // Hier 8-Bit-Charset nötig!
     data = _data;
@@ -59,12 +59,13 @@ function prepareResult(pRef, js, data) {
 
   logger.debug('js: ', js);
 
-  if (js.t_start != undefined) jsonRes.t_start = js.t_start;
-  if (js.t_stop != undefined) jsonRes.t_stop = js.t_stop;
-  if (js.exitCode != undefined) jsonRes.exitCode = js.exitCode;
+  if (js.t_start !== undefined) jsonRes.t_start = js.t_start;
+  if (js.t_stop !== undefined) jsonRes.t_stop = js.t_stop;
+  if (js.exitCode !== undefined) jsonRes.exitCode = js.exitCode;
 
   if (js.Action == cfg.bin.VXITRANSCEIVER) {
     jsonRes.t__start = [];
+    var i;
     /**
       Der oder die gelieferten Strings haben am Anfang und am Ende
       einen Zeitstempel (ms seit 1.1.1970). Diese müssen entfernt, aber
@@ -74,11 +75,11 @@ function prepareResult(pRef, js, data) {
                  t_start       GPIB-Response       t_stop
       </pre>
     */
-    for (var i=0;i < js.t_start.length;i++) {
+    for (i=0;i < js.t_start.length;i++) {
       jsonRes.t__start[i] = js.t_start[i];
     }
     jsonRes.t__stop = [];
-    for (var i=0;i < js.t_stop.length;i++) {
+    for (i=0;i < js.t_stop.length;i++) {
       jsonRes.t__stop[i] = js.t_stop[i];
     }
     /// Zum Vergleich der Zeiten vom vxi-Programm mit denen
@@ -86,8 +87,8 @@ function prepareResult(pRef, js, data) {
     /// TODO: Ist Start- und Stoppzeit im vxi-Programm weiter nötig?
     if (!Array.isArray(x)) x = [x];
     var a;
-    jsonRes.t_start = [], jsonRes.t_stop = [];
-    for (var i=0;i < x.length;i++) {
+    jsonRes.t_start = []; jsonRes.t_stop = [];
+    for (i=0;i < x.length;i++) {
       a = x[i].split('|');
       // erstes Element ist Startzeit
       jsonRes.t_start.push(parseInt(a.shift()));
@@ -123,15 +124,15 @@ function prepareResult(pRef, js, data) {
 
     var sandbox = {};
     sandbox._x = x;
-    if (jsonRes.t_start != undefined) {
+    if (jsonRes.t_start !== undefined) {
       sandbox._t_start = jsonRes.t_start;
       delete jsonRes.t_start; //???
     }
-    if (jsonRes.t_stop != undefined) {
+    if (jsonRes.t_stop !== undefined) {
       sandbox._t_stop = jsonRes.t_stop;
       delete jsonRes.t_stop;
     }
-    if (addon != undefined) sandbox._ = addon;
+    if (addon !== undefined) sandbox._ = addon;
     logger.debug('addon: ', addon);
     try{
       // Benutzer-JS-Anweisungen innerhalb der sandbox ausführen.
@@ -153,7 +154,7 @@ function prepareResult(pRef, js, data) {
   }
   logger.debug('jsonRes: ', jsonRes);
   if (js.OutputType == 'stream') {
-    if (jsonRes.Result != undefined) {
+    if (jsonRes.Result !== undefined) {
       sendResponse(pRef, js, jsonRes.Result);
     } else {
       sendResponse(pRef, js, x);

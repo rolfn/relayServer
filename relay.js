@@ -29,7 +29,7 @@ function getActionType(str) {
   var ret = str.indexOf('/');
   if (ret > -1) {
     ret = 0;
-    for (i in cfg.bin) {
+    for (var i in cfg.bin) {
       if (cfg.bin[i] == str) {
         ret = 1; break;
       }
@@ -49,8 +49,8 @@ function analyzeActions3(pRef, js) {
   logger.debug(js);
   js.Repeat = tools.getInt(js.Repeat, 1);
   js.Wait = tools.getInt(js.Wait, 0);
-  if (js.OutputType == undefined) js.OutputType = 'json';
-  if (js.OutputEncoding == undefined) js.OutputEncoding = 'utf8';
+  if (js.OutputType === undefined) js.OutputType = 'json';
+  if (js.OutputEncoding === undefined) js.OutputEncoding = 'utf8';
   js.t_start = []; js.t_stop = [];
   if (('DemoMode' in js) && (js.DemoMode) && ('DemoResponse' in js)) {
     var doIt = function(b, next) {
@@ -81,7 +81,7 @@ function analyzeActions3(pRef, js) {
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function analyzeActions2(pRef, js) {
-  if (js.Passwd != undefined) {
+  if (js.Passwd !== undefined) {
     zlib.deflate(js.Passwd, function(err, buf) {
       if (err) {
         response.prepareError(pRef, js, 'internal error');
@@ -134,6 +134,6 @@ function start(_req, _res) {
   _res.connection.on('close', function () {
     logger.info('close connection: %d', new Date().getTime());
   });
-};
+}
 
 exports.start = start;

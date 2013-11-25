@@ -36,7 +36,7 @@ module.exports = {
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
     '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
     '/etc/release'],
-  isDebug: debugLevel != 0,
+  isDebug: debugLevel !== 0,
   bin: {
     VXITRANSCEIVER: '/usr/local/bin/vxiTransceiver',
     RSCRIPT: '/usr/bin/Rscript',
@@ -47,7 +47,7 @@ module.exports = {
     WHICH: '/usr/bin/which'
   },
   theRepeats: {}
-}
+};
 
 //for (var i in cfg) exports[i] = cfg[i];
 //delete cfg;

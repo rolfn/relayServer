@@ -57,7 +57,7 @@ function search2(pRef, js, last) {
         });
         res.on('end', function(result) {
            logger.debug('status: %s', result.status);
-          if (last == undefined) {
+          if (last === undefined) {
             js.Success = true;
             unbind(pRef, js);
           } else {
@@ -90,7 +90,7 @@ function search1(pRef, js, last) {
 }
 
 function auth3(pRef, js) {
-  if (js.DN == undefined) {
+  if (js.DN === undefined) {
     js.Data = ('Search failure or wrong username');
     unbind(pRef, js);
   } else {

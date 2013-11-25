@@ -26,7 +26,7 @@ exports.inspect = inspect;
  */
 String.prototype.trim = function() {
   return this.replace(/^\s+|\s+$/g,"");
-}
+};
 
 /**
  * Ergänzt für Zahlen n < 10 eine führende Null.
@@ -34,7 +34,7 @@ String.prototype.trim = function() {
  * @return {string} auf zwei Stellen ergänzte Zahl
  */
 function pad2(n) {
-  return n<10 ? '0'+n : n
+  return n<10 ? '0'+n : n;
 }
 
 exports.pad2 = pad2;
@@ -45,7 +45,7 @@ exports.pad2 = pad2;
  * @return {string} temporäres Verzeichnis
  */
 function getTempDir() {
-  return process.env.TMPDIR ? process.env.TMPDIR : '/tmp'
+  return process.env.TMPDIR ? process.env.TMPDIR : '/tmp';
 }
 
 exports.getTempDir = getTempDir;  // TODO: Modul "tmp" verwenden.
@@ -59,10 +59,10 @@ exports.getTempDir = getTempDir;  // TODO: Modul "tmp" verwenden.
  * @return {number} Float-Zahl
  */
 exports.getFloat = function(s, d) {
-  var _d = d == undefined ? 0.0 : d;
+  var _d = d === undefined ? 0.0 : d;
   var x = parseFloat(s);
   return isNaN(x) ? _d : x;
-}
+};
 /**
  * Liefert ähnlich zu parseInt eine Int-Zahl, die der String s repräsentiert.
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert
@@ -72,10 +72,10 @@ exports.getFloat = function(s, d) {
  * @return {number} Int-Zahl
  */
 exports.getInt = function(s, d) {
-  var _d = d == undefined ? 0 : d;
+  var _d = d === undefined ? 0 : d;
   var x = parseInt(s);
   return isNaN(x) ? _d : x;
-}
+};
 
 /**
  * Testet, ob das übergebene Objekt leer ist.
@@ -84,7 +84,7 @@ exports.getInt = function(s, d) {
  */
 var isEmpty = function(obj) {
   return Object.keys(obj).length === 0;
-}
+};
 
 exports.isEmpty = isEmpty;
 
@@ -129,7 +129,7 @@ function rmdirRecursive(dir, clbk){
       });
     })();
   });
-};
+}
 
 exports.rmdirRecursive = rmdirRecursive;
 
