@@ -1,9 +1,7 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-18
+ * version: 2013-11-25
  */
-
-const MODULE = 'internal';
 
 var fs = require('fs');
 var cfg = require('./config.js');
@@ -16,7 +14,7 @@ var _email = require('./email.js');
 //var _ldap = require('./ldap.js');
 //    derzeit (2013-01-14) Probleme (buffertools)!
 //    npm install buffertools -g ; npm install ldapjs -g
-//var _latex = require('./latex.js'); // TODO: Überarbeiten!
+var _latex = require('./latex.js'); // TODO: Überarbeiten!
 
 var logger = cfg.logger;
 
@@ -123,8 +121,12 @@ function call(pRef, js) {
       // https://github.com/vog/texcaller
       // TODO: Auslagern nach "dispatcher.js" und external action
       // "/usr/local/bin/texcaller" benutzen. (???)
-      ///processLATEX_1(pRef, js);
-      response.prepareError(pRef, js, 'not working!');
+      response.prepareError(pRef, js, 'not working!'); ///
+      if (js.Body !== undefined) {
+        _latex.call(pRef, js);
+        // Kehrt später noch mal zu dieser Funktion zurück.
+        return;
+      }
       break;
     // Administration
     case '_version':

@@ -1,10 +1,8 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-18
+ * version: 2013-11-25
  */
-
-const MODULE = 'relay'; // TODO: Überall wegnehmen.
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');

@@ -1,9 +1,7 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-18
+ * version: 2013-11-25
  */
-
-const MODULE = 'latex';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
@@ -15,3 +13,9 @@ var logger = cfg.logger;
 /**
  * TODO: Code vom Vorgänger übernehmen und anpassen.
  */
+
+function call(pRef, js) {
+  /// ...
+}
+
+exports.call = call;

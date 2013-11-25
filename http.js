@@ -1,9 +1,7 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-04
+ * version: 2013-11-25
  */
-
-const MODULE = 'http';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
