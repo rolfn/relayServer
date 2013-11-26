@@ -34,12 +34,14 @@ function call(pRef, js) {
   var cmd = getCmd();
   if (!cmd) response.prepareError(pRef, js, 'invalid TeX command');
 
-  js.Repeat = js.Repeat || cfg.DEFAULT_TEX_RUNS;
+  js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
+  js.Repeat = tools.getInt(js.Repeat, cfg.DEFAULT_TEX_RUNS);
+  logger.debug('Repeat: ' + js.Repeat);
+
 
   Tmp.dir({ prefix:'node-latex.', keep:js.KeepFiles, unsafeCleanup:true },
     function (err, path) {
     if (err) {
-      logger.error(err); // ???
       response.prepareError(pRef, js, err);
     }
     logger.debug('Tempdir: ' + path);

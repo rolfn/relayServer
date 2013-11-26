@@ -41,6 +41,7 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
   if (!_buf) {// Erster Aufruf
     var _buf = [];
     cfg.theRepeats[pRef.jobId] = { running:true };
+    nb = tools.getInt(js.Repeat, 1);
   }
   var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
   // Solange kein "killRepeats" passiert ist bzw. nicht letzter Durchgang:
