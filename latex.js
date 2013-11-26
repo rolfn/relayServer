@@ -21,8 +21,11 @@ var logger = cfg.logger;
 function call(pRef, js) {
 
   function post(pRef, js) {
-    var rfile = Path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex', '.' +
-      cfg.DEFAULT_TEX_DESTFMT));
+    logger.debug('js.WorkingDir:' + js);
+    logger.debug('xxx:' + cfg.TEX_FILE.replace('.tex',
+      '.' + cfg.DEFAULT_TEX_DESTFMT));
+    var rfile = Path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex',
+      '.' + cfg.DEFAULT_TEX_DESTFMT));
     Fs.readFile(rfile, function (err, data) {
       logger.debug('read result file: ' + rfile);
       // TODO: Ersetzen durch Tmp.rmdirRecursiveSync(...)
