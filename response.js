@@ -32,9 +32,9 @@ function sendResponse(pRef, js, _data) {
   var ctype, data;
   logger.debug('OutputType: %s', js.OutputType);
   if (js.OutputType == 'stream') {
-    ctype = ((js.ContentType !== undefined) ? js.ContentType :
-      'application/octet-stream') + ';charset=ISO-8859-1';
-    // Hier 8-Bit-Charset nötig!
+    ctype = (js.ContentType !== undefined) ? js.ContentType :
+      'application/octet-stream;charset=ISO-8859-1';
+      // Hier 8-Bit-Charset nötig!
     data = _data;
   } else {
     ctype = 'application/json';

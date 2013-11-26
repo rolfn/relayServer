@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2013-11-26
  */
 
 /**
@@ -13,8 +13,8 @@ var debugLevel = process.argv[2] ? process.argv[2] : 0;
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '8.1d',
-  DATE: '2013-11-22',
+  VERSION: '8.2a',
+  DATE: '2013-11-26',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
