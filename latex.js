@@ -23,16 +23,14 @@ function call(pRef, js) {
   function post(pRef, js) {
     var rfile = Path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex', '.' +
       cfg.DEFAULT_TEX_DESTFMT));
-    logger.debug('result file: ' + rfile);
-    logger.debug('remove: ' + js.WorkingDir);
-    // TODO: Ersetzen durch Tmp.rmdirRecursiveSync(...)
-    //       falls der Autor Funktion public macht.
-    if (!js.KeepFiles) tools.rmdirRecursiveSync(js.WorkingDir);
-    // TODO: result <-- "texput.pdf"
-    ///var result = 'Inhalt von ' + rfile;
     Fs.readFile(rfile, function (err, data) {
+      logger.debug('read result file: ' + rfile);
+      // TODO: Ersetzen durch Tmp.rmdirRecursiveSync(...)
+      //       falls der Autor Funktion public macht.
+      logger.debug('remove: ' + js.WorkingDir);
+      if (!js.KeepFiles) tools.rmdirRecursiveSync(js.WorkingDir);
       if (err) response.prepareError(pRef, js, err);
-      response.prepareResult(pRef, js, data);
+      else response.prepareResult(pRef, js, data);
     });
   }
 
