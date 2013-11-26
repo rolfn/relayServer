@@ -82,8 +82,8 @@ echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
   "Body": "Hallo, wie geht es Dir?\nHeute scheint die Sonne."}' | \
    curl -T - -X PUT http://localhost:55555
 
-echo '{"Action":"LaTeX","Source":"\\documentclass{article}\\begin{document}
-  Hello world!!!\\end{document}","OutputType":"stream"}' | \
+echo '{"Action":"TEX","Body":"\\documentclass{article}\\begin{document}
+  Hello world!!!\\end{document}"}' | \
     curl -T - -X PUT http://localhost:55556 > zz.pdf
 </pre>
 */

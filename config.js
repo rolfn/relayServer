@@ -28,6 +28,7 @@ module.exports = {
   DEFAULT_SMTP_PORT: 25,
   DEFAULT_TEX_RUNS: 2,
   DEFAULT_TEX_CMD: 'pdflatex',
+  DEFAULT_TEX_DESTFMT: 'pdf',
   TEX_CMDS: ['tex', 'latex', 'pdftex', 'pdflatex', 'xetex', 'xelatex',
     'luatex', 'lualatex'],
   TEX_FILE: 'texput.tex',

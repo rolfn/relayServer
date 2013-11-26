@@ -47,7 +47,7 @@ function analyzeActions3(pRef, js) {
   logger.debug(js);
   //js.Repeat = tools.getInt(js.Repeat, 1);
   js.Wait = tools.getInt(js.Wait, 0);
-  if (js.OutputType === undefined) js.OutputType = 'json';
+  //if (js.OutputType === undefined) js.OutputType = 'json';
   if (js.OutputEncoding === undefined) js.OutputEncoding = 'utf8';
   js.t_start = []; js.t_stop = [];
   if (('DemoMode' in js) && (js.DemoMode) && ('DemoResponse' in js)) {

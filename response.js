@@ -27,8 +27,10 @@ try {
  * @param {object} _data zu sendende Daten
  */
 function sendResponse(pRef, js, _data) {
-  logger.debug('_data: ', _data);
+  js.OutputType = js.OutputType || 'json';
+  logger.debug('_data: ', _data.toString().slice(0,100));
   var ctype, data;
+  logger.debug('OutputType: %s', js.OutputType);
   if (js.OutputType == 'stream') {
     ctype = ((js.ContentType !== undefined) ? js.ContentType :
       'application/octet-stream') + ';charset=ISO-8859-1';
@@ -151,7 +153,7 @@ function prepareResult(pRef, js, data) {
   } else {
     jsonRes.Result = x;
   }
-  logger.debug('jsonRes: ', jsonRes);
+  //logger.debug('jsonRes: ', jsonRes);
   if (js.OutputType == 'stream') {
     if (jsonRes.Result !== undefined) {
       sendResponse(pRef, js, jsonRes.Result);

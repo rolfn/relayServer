@@ -5,6 +5,8 @@
 
 var util = require('util');
 var fs = require('fs');
+var Fs = require('fs');
+var path = require('path');
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable

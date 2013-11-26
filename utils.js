@@ -53,7 +53,7 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
     exec(_buf, function() {
       js.t_stop.push(new Date().getTime());
       logger.debug('t_stop.push %d', js.t_stop[js.t_stop.length-1]);
-      logger.debug('buf (nb: %d): ', nb, _buf);
+      //logger.debug('buf (nb: %d): ', nb, _buf);
       if (--nb) {
         setTimeout(function() {
           repeat(nb, wait, exec, ready, pRef, js, _buf);

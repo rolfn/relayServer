@@ -105,9 +105,8 @@ function call(pRef, js, postFunc) {
   utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
     if (postFunc) {
       logger.debug('postFunc');
-      postFunc(pRef, js);
-    }
-    response.prepareResult(pRef, js, repeatResult);
+      postFunc(pRef, js, repeatResult);
+    } else response.prepareResult(pRef, js, repeatResult);
   }, pRef, js);
 
 }
