@@ -43,6 +43,7 @@ function sendResponse(pRef, js, _data) {
     'Content-Type':ctype,'Access-Control-Allow-Origin':'*'});
   pRef.res.end(data);
   pRef.req.connection.end();
+  return;
 }
 
 /**

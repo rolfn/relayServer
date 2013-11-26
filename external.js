@@ -56,7 +56,7 @@ function call(pRef, js, postFunc) {
     }
 
   } else {// Sonderfall
-    execStr = js.execStr;
+    execStr = js.execStr; // z.B. "TEX"
   }
 
   logger.info('execStr: %s', execStr);

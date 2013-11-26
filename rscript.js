@@ -1,9 +1,10 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2013-11-26
  */
 
 var cfg = require('./config.js');
+var response = require('./response.js');
 var tools = require('./tools.js');
 var external = require('./external.js');
 var fs = require('fs');
@@ -45,6 +46,7 @@ function call(pRef, js) {
 
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
   //  schreiben, zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
+  // TODO: Tmp.dir(...) verwenden.
   tools.createTempFile(js.WorkingDir, cfg.R_FILE, content,
     function() {
       delete js.Body;
@@ -53,7 +55,7 @@ function call(pRef, js) {
       external.call(pRef, js, cleanUp);
     },
     function (error) {
-      prepareError(pRef, js, error);
+      response.prepareError(pRef, js, error);
     }
   );
 }

@@ -26,9 +26,11 @@ module.exports = {
   DEFAULT_TCP_TIMEOUT: 2000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
-  DEFAULT_TEX_MAXRUNS: 5,
-  DEFAULT_TEX_SRCFMT: 'LaTeX',
-  DEFAULT_TEX_DESTFMT: 'PDF',
+  DEFAULT_TEX_RUNS: 2,
+  DEFAULT_TEX_CMD: 'pdflatex',
+  TEX_CMDS: ['tex', 'latex', 'pdftex', 'pdflatex', 'xetex', 'xelatex',
+    'luatex', 'lualatex'],
+  TEX_FILE: 'texput.tex',
   R_FILE: 'cmd.R',
   // Reihenfolge bestimmt Wichtigkeit
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',

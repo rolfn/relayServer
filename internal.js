@@ -115,18 +115,18 @@ function call(pRef, js) {
       //_ldap.search(pRef, js);
       response.prepareError(pRef, js, 'not working!');
       break;
-    case 'LaTeX':
+    case 'TEX':
       // eigentl. external, aber wegen Komplexität intern verwaltet.
       // http://www.profv.de/texcaller/index.html
       // https://github.com/vog/texcaller
       // TODO: Auslagern nach "dispatcher.js" und external action
       // "/usr/local/bin/texcaller" benutzen. (???)
-      response.prepareError(pRef, js, 'not working!'); ///
-      if (js.Body !== undefined) {
+      //response.prepareError(pRef, js, 'not working!'); ///
+      ///if (js.Body !== undefined) {
         _latex.call(pRef, js);
-        // Kehrt später noch mal zu dieser Funktion zurück.
-        return;
-      }
+        // Verzweigt später zu "external".
+        ///return;
+      ///}
       break;
     // Administration
     case '_version':

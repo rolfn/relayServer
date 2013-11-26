@@ -132,6 +132,31 @@ function rmdirRecursive(dir, clbk){
 exports.rmdirRecursive = rmdirRecursive;
 
 /**
+ * Removes files and folders in a directory recursively.
+ * (copy from nodeJS modul "tmp")
+ * @param {String} path
+ */
+function rmdirRecursiveSync(dir) {
+  var files = fs.readdirSync(dir);
+
+  for (var i = 0, length = files.length; i < length; i++) {
+    var file = path.join(dir, files[i]);
+    // lstat so we don't recurse into symlinked directories.
+    var stat = fs.lstatSync(file);
+
+    if (stat.isDirectory()) {
+      _rmdirRecursiveSync(file);
+    } else {
+      fs.unlinkSync(file);
+    }
+  }
+
+  fs.rmdirSync(dir);
+}
+
+exports.rmdirRecursiveSync = rmdirRecursiveSync;
+
+/**
  * Erzeugt in einem temporären Verzeichnis eine Datei mit Inhalt.
  * @param {string} dir temporäres Verzeichnis
  * @param {string} name Name der Datei
