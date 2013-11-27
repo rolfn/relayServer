@@ -21,19 +21,18 @@ var logger = cfg.logger;
 function call(pRef, js) {
 
   function post(pRef, js) {
-    logger.debug('js.WorkingDir:' + js);
-    logger.debug('xxx:' + cfg.TEX_FILE.replace('.tex',
-      '.' + cfg.DEFAULT_TEX_DESTFMT));
     var rfile = Path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex',
       '.' + cfg.DEFAULT_TEX_DESTFMT));
     Fs.readFile(rfile, function (err, data) {
-      logger.debug('read result file: ' + rfile);
-      // TODO: Ersetzen durch Tmp.rmdirRecursiveSync(...)
-      //       falls der Autor Funktion public macht.
-      logger.debug('remove: ' + js.WorkingDir);
-      if (!js.KeepFiles) tools.rmdirRecursiveSync(js.WorkingDir);
       if (err) response.prepareError(pRef, js, err);
-      else response.prepareResult(pRef, js, data);
+      logger.debug('successful read: ' + rfile);
+      if (!js.KeepFiles) {
+        logger.debug('remove: ' + js.WorkingDir);
+        // TODO: Ersetzen durch Tmp.rmdirRecursiveSync(...)
+        //       falls der Autor Funktion public macht.
+        tools.rmdirRecursiveSync(js.WorkingDir);
+      }
+      response.prepareResult(pRef, js, data);
     });
   }
 
