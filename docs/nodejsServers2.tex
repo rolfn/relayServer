@@ -1,0 +1,251 @@
+%---------------------------
+\setcounter{errorcontextlines}{100}
+\listfiles
+\documentclass[%
+fontsize=11pt
+,paper=a4
+,twoside
+,headings=normal
+,pagesize
+]{scrartcl}
+\usepackage{hyphsubst}% Trennregeln austauschen
+\HyphSubstIfExists{ngerman-x-latest}{%
+  \HyphSubstLet{ngerman}{ngerman-x-latest}}{}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{cmap}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[largesmallcaps]{kpfonts}
+\usepackage[scale=.85]{tgheros}
+%%\renewcommand{\sfdefault}{cmbr}
+\usepackage[scaled]{luximono}
+\usepackage{microtype}
+\DeclareMicrotypeAlias{jkp}{ppl}
+\DeclareMicrotypeAlias{jkpk}{ppl}
+\usepackage[obeyspaces,spaces]{url}
+\usepackage[ngerman]{babel}
+\usepackage[autostyle=true,babel=once,german=guillemets,maxlevel=3]{csquotes}%
+\defineshorthand{"`}{\openautoquote}
+\defineshorthand{"'}{\closeautoquote}
+
+%\setkomafont{minisec}{\normalfont\bfseries}
+%\setkomafont{disposition}{\normalfont\bfseries}
+%\setkomafont{descriptionlabel}{\normalfont\bfseries}
+%\usepackage[scale=.85]{tgheros}
+\usepackage{tgheros}
+\DeclareMicrotypeAlias{jkp}{ppl}
+\DeclareMicrotypeAlias{jkpk}{ppl}
+
+\renewcommand*\labelitemii{$\circ$}
+
+\makeatletter
+\newcommand\Minisec[1]{\@afterindentfalse \vskip 1.5ex
+  {\parindent \z@
+    \raggedsection\normalfont\sectfont\nobreak
+    \usekomafont{minisec}#1\nobreak}\nobreak%
+  \@afterheading
+}
+\makeatother
+
+
+
+\usepackage{xcolor,listings}
+\lstset{%
+     basicstyle=\footnotesize\ttfamily,
+     identifierstyle={},
+     keywordstyle=\bfseries,
+     %stringstyle=\itshape\color{DTKlstStrings},
+     commentstyle=\itshape,
+     columns=fixed,
+     tabsize=2,
+     frame=single,
+     extendedchars=true,
+     showspaces=false,
+     showstringspaces=false,
+     breaklines=true,
+     breakindent=10pt,
+     backgroundcolor=\color{black!10},
+     breakautoindent=true,
+     captionpos=t,
+     aboveskip=\medskipamount,
+     belowskip=\medskipamount,
+     xrightmargin=\fboxsep,
+     prebreak=\mbox{$\hookleftarrow$},
+     columns=fullflexible,
+     keepspaces=true,
+     title={\lstname},
+}
+\makeatletter
+\def\lst@maketitle#1{%
+   \vskip\abovecaptionskip
+     #1\par
+   \vskip\belowcaptionskip}%
+\makeatother
+
+\setlength\textheight{1.08\textheight}
+
+\shorthandon{"}
+\title{Gebrauchsanweisung zu "`nodejsServers2"'}
+\date{2013-11-27}
+\author{Rolf Niepraschk, AG~7.54}
+\shorthandoff{"}
+
+\usepackage{shortvrb}
+\MakeShortVerb{\|}
+
+\begin{document}
+
+\maketitle
+
+\section*{Einleitung}
+
+Bei "`nodejsServers2"' handelt es sich um ein auf "`nodejs"' basierendes
+Programm, welches als sogenannter "`Dämon"' auf einem Linux"=Rechner
+gestartet wird, d.\,h.\ es läuft solange auch der Linux"=Rechner läuft.
+"`nodejsServers2"' bietet einen Netzwerkzugänge in Form mehrerer
+http"=Server auf unterschiedlichen Ports. Mit dieser Hilfe empfängt
+"`nodejsServers2"' Daten von außerhalb befindlichen Programmen (z.\,B.\
+Web"=Applikationen) und sendet daraufhin verschiedenartige Daten zurück. Der
+Sinn ist, auf diese Weise Funktionen anzubieten, die ohne "`nodejsServers2"'
+nicht oder nur in komplizierter Weise zur Verfügung stehen würden.
+
+\section*{relay"=Server -- Port: 55555}
+
+Die Komponente "`relay"=Server"' bietet den Zugang zu einer Vielzahl von
+externen auf dem Linux"=Rechner installierten Programmen und
+Netzwerkprotokollen. Web"=Applikationen sind beispielsweise damit in der Lage
+die sich aus der sogenannten "`Same-Origin-Policy"' ergebenen
+Einschränkungen zu überwinden oder Daten per Netzwerkzugriff zu erhalten,
+die normalerweise über diesen Weg nicht zugänglich sind.
+
+Die Anforderung an den "`relay"=Server"' geschieht immer über eine
+Datenstruktur im JSON"=Format. Diese enthält mindestens einen mit "`Action"'
+benannten Wert, der die auszuführende Aktion auswählt. Sogenannte "`externe
+Aktionen"' beginnen mit dem Zeichen "`/"' und bilden den Dateipfad zu einem
+auf dem Rechner installierten Programm, welches gestartet werden soll.
+Es sind nur die im Folgenden aufgeführten Programme erlaubt. Aktionen, die
+nicht das Zeichen "`/"' enthalten, werden als "`interne Aktionen"'
+bezeichnet, da sie mit einer Ausnahme ohne Start eines besonderen Programms
+auskommen, also einzig die Möglichkeiten der Programmiersprache
+"`JavaScript"' in der durch "`nodejs"' angebotenen Form nutzen.
+
+\subsection*{Externe Aktionen}
+
+\begin{description}
+
+  \item[Action] -- kennzeichnet das Programm, welches von "`NodejsRelay"'
+  gestartet wird.
+
+  \begin{itemize}
+
+    \item |"/usr/local/bin/vxiTransceiver"|: \par
+
+      Kommunikation über das VXI-11"=Protokoll mit Messgeräten. Die weiteren
+      Parameter:
+
+      \begin{description}
+
+        \item[Host] -- IP-Adresse oder Rechnername des Messgerätes (zwingend)
+
+        \item[Device] -- die Geräteadresse (zwingend)
+
+        \item[Value] -- der String zum Auslösen eines bestimmten Gerätebefehls (zwingend)
+
+        \item[VxiTimeout] -- Zeit in ms, die auf eine Rückmeldung vom Gerät
+        gewartet wird (optional, Standard: 2000). Der Wert "`0"' kann
+        benutzt werden, um bei fehlerhaften GPIB"=Geräten einen "`timeout
+        error"' zu vermeiden, wenn diese zwar Daten aber kein korrektes
+        Ende"=Signal senden.
+
+      \end{description}
+
+\begin{lstlisting}[language={},name=Beispiel:]
+echo '{"Action":"/usr/local/bin/vxiTransceiver","Host":"e75481",
+  "Device":"gpib0,5","Value":"*IDN?"}' | \
+  curl -T - -X PUT http://localhost:55555
+\end{lstlisting}
+
+\begin{lstlisting}[language={},name=Rückgabe:]
+{
+"t_start":1385556963144,"t_stop":1385556963157,
+"exitCode":0,
+"t__start":1385556963131,"t__stop":1385556963161,  ???
+"Result":["HEWLETT-PACKARD,34970A,0,13-2-2\n"]
+}
+\end{lstlisting}
+
+      Die vom Gerät gesendete Antwort ist dem Kennwort "`Result"'
+      zugeordnet. "`exitCode"' ist der Rückgabecode des Programmaufrufs (in
+      der Shell "`|$?|"') und "`|t_start|"'/"""`|t_start|"' kennzeichnen die
+      Dauer des Aufrufes in ms. Falls die absolute Zeit
+      von Interesse ist, kann sie mit
+
+\begin{lstlisting}[language={}]
+date -d @$[1385556963157 / 1000]
+\end{lstlisting}
+
+      in Sekundengenauigkeit dargestellt werden: \par
+      \quad |Mi 27. Nov 13:56:03 CET 2013|.
+
+    \item |"/usr/bin/Rscript"|: \par
+
+      Senden von Programmcode an die Statistik"=Software "`R"'. Die weiteren
+      Parameter:
+      \begin{description}
+
+        \item[Body] -- R-Programmcode in Form eines Strings oder eines
+        Arrays von Strings. Im zweiten Falle wird aus dem Array intern ein
+        einzelner String erzeugt, wobei nach jedem Inhalt eines
+        Array"=Elements ein Zeilenumbruch ("`|\n|"') eingefügt wird.
+
+        \item[Value] -- Zusätzliche Parameter für den Aufruf des Programms
+        "`Rscript"' (optional, String oder String"=Array). Der Aufruf
+        enthält später in jedem Falle als ersten Parameter vor den hier
+        angegebenen den Namen der temporären Datei mit dem Programmcode.
+
+        \item[KeepFiles] -- "`true"' verhindert, dass nach erfolgtem
+        Programmaufruf das temporär angelegte Verzeichnis und dessen Inhalt
+        gelöschte wird (optional, Standard: "`false"', nur für Testzwecke).
+
+      \end{description}
+\enlargethispage{-2\baselineskip}
+\begin{lstlisting}[language={},name=Beispiel:]
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"/usr/bin/Rscript",
+"Body":["a <- 1:10","b <- which(a > 2 & a < 8)","b"]}
+EOF
+\end{lstlisting}
+
+\begin{lstlisting}[language={},name=Rückgabe:]
+{
+  "t_start":1385566508241,
+  "t_stop":1385566508399,
+  "exitCode":0,
+  "Result":"[1] 3 4 5 6 7\n"
+}
+\end{lstlisting}
+
+    \item |"/bin/echo"|: \par
+
+  \end{itemize}
+
+\end{description}
+
+\subsection*{Interne Aktionen}
+
+
+
+\vfill
+
+\begingroup \small \itshape
+
+\noindent Hinweise zu Verbesserungen dieses Dokuments bitte als
+Issue"=Eintrag des git"=Projektes "`nodejsServers2"' (siehe "`GitLab"') oder per
+E-Mail an \url{Rolf.Niepraschk@ptb.de}.
+
+\endgroup
+
+\end{document}
+%---------------------------
