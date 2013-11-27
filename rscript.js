@@ -19,12 +19,13 @@ var logger = cfg.logger;
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
-  var cleanUp = function(pRef, js) {
+  var cleanUp = function(pRef, js, data) {
     if (!js.KeepFiles) {
       tools.rmdirRecursive(js.WorkingDir, function (e) {
-        logging.debug('remove working directory: %s', (e) ? e : js.WorkingDir);
+        logger.debug('remove working directory: %s', (e) ? e : js.WorkingDir);
       });
     }
+    response.prepareResult(pRef, js, data);
   };
   if ((js.KeepFiles === undefined) || (js.KeepFiles !== true))
     js.KeepFiles = false;
@@ -51,7 +52,7 @@ function call(pRef, js) {
     function() {
       delete js.Body;
       // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
-      logging.debug('2nd "external.call"');
+      logger.debug('2nd "external.call"');
       external.call(pRef, js, cleanUp);
     },
     function (error) {

@@ -14,7 +14,7 @@ var debugLevel = process.argv[2] ? process.argv[2] : 0;
  */
 module.exports = {
   VERSION: '8.2a',
-  DATE: '2013-11-26',
+  DATE: '2013-11-27',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
@@ -29,8 +29,7 @@ module.exports = {
   DEFAULT_TEX_RUNS: 2,
   DEFAULT_TEX_CMD: 'pdflatex',
   DEFAULT_TEX_DESTFMT: 'pdf',
-  TEX_CMDS: ['pdftex', 'pdflatex', 'xetex', 'xelatex',
-    'luatex', 'lualatex'],
+  TEX_CMDS: ['pdftex', 'pdflatex', 'xetex', 'xelatex', 'luatex', 'lualatex'],
   TEX_FILE: 'texput.tex',
   R_FILE: 'cmd.R',
   // Reihenfolge bestimmt Wichtigkeit

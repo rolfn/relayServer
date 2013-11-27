@@ -1,16 +1,19 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2013-11-27
  */
 
+var cfg = require('./config.js');
 var util = require('util');
 var fs = require('fs');
 var Fs = require('fs');
 var path = require('path');
 
+var logger = cfg.logger;
+
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
+ * (Rekursion bis Ebene 2, coloriert)                                 F
  * @param {object} o Zu untersuchende JS-Variable.
  * @return {string}  String-Repräsentation
  */

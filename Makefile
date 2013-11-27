@@ -114,7 +114,7 @@ $(DOC_DIR)/index.html : $(DOC_SRC)
 
 docs-install : docs
 	echo $(MAIN) > _id
-	erica -v --docid $(MAIN) push $(DOC_DB_URL)
+	erica -v --is-ddoc --docid $(MAIN) push $(DOC_DB_URL)
 	$(COMPACT) $(DOC_DB_URL)/_compact
 	$(RM) $(DOC_DIR)/*.js.html $(DOC_DIR)/index.html
 
