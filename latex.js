@@ -14,22 +14,43 @@ var tmp = require('temp'); tmp.track();
 
 var logger = cfg.logger;
 
-/**
- * TODO: Code vom Vorgänger übernehmen und anpassen.
- */
-
 function call(pRef, js) {
 
   function post(pRef, js) {
-    var texFile = js.execStr.replace(js.Command, '').trim();
+    var texFile = js.execStr.split(' ').pop();
     var resultFile = path.join(js.WorkingDir,
       texFile.replace('.tex', '.' + cfg.DEFAULT_TEX_DESTFMT));
+    logger.debug('texFile: ' + texFile);
+    logger.debug('resultFile: ' + resultFile);
     fs.readFile(resultFile, function (err, data) {
       if (err) {
-        // TODO: Stattdessen neue Datei "tex-error.tex" erzeugen. Darin
-        // "texput.log" einladen und weiteren "external.call" mit geändertem
-        // "js.execStr". Vorsicht vor Endlosschleife!
-        response.prepareError(pRef, js, err);
+        if (js.execStr.indexOf(cfg.TEX_ERROR_FILE) == -1) {// keine Endlosschleife
+          // Fehlermeldung als pdf-Code
+          js.execStr = js.execStr.replace(cfg.TEX_FILE, cfg.TEX_ERROR_FILE);
+          var fname = path.join(js.WorkingDir, cfg.TEX_ERROR_FILE);
+
+          var content = [];
+          content.push('\\documentclass{article}');
+          content.push('\\usepackage[T1]{fontenc}');
+          content.push('\\usepackage{lmodern}');
+          content.push('\\usepackage{listings}');
+          content.push('\\lstset{basicstyle=\\footnotesize\\ttfamily}');
+          content.push('\\usepackage[margin={10mm,10mm}]{geometry}');
+          content.push('\\begin{document}');
+          content.push('\\lstinputlisting{texput.log}');
+          content.push('\\end{document}');
+
+          fs.writeFile(fname, content.join('\n'), function(err) {
+            if (err) {
+              var e = 'File creation error: ' + err;
+              logger.error(e);
+              response.prepareError(pRef, js, e);
+            } else {
+              logger.debug('2nd "external.call"');
+              external.call(pRef, js, post);
+            }
+          });
+        } else response.prepareError(pRef, js, err);
       } else {
         logger.debug('successful read: ' + resultFile);
         if (!js.KeepFiles) {
@@ -58,13 +79,13 @@ function call(pRef, js) {
   js.ContentType = 'application/pdf';
   js.OutputType = 'stream';
   js.OutputEncoding = 'binary';
-  js.execStr = cmd + ' ' + cfg.TEX_FILE;
+  js.execStr = cmd + ' -interaction=batchmode '  + cfg.TEX_FILE;
 
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
   //  schreiben, dann zweiter Aufruf von "external.call".
   tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {
     js.WorkingDir = p;
-    var fname = path.join(p, cfg.TEX_FILE)
+    var fname = path.join(p, cfg.TEX_FILE);
     fs.writeFile(fname, content, function(err) {
       if (err) {
         var e = 'File creation error: ' + err;
@@ -73,7 +94,7 @@ function call(pRef, js) {
       } else {
         delete js.Body;
         // Aufruf mit Dateinamen-Parameter statt 'Body';
-        logger.debug('switch to "external.call"');
+        logger.debug('1st "external.call"');
         external.call(pRef, js, post);
       }
     });

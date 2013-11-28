@@ -101,12 +101,14 @@ function call(pRef, js, postFunc) {
     );
   };
 
+  logger.debug('js: ', js);
+
   var wait = (js.Wait < cfg.MIN_EXEC_WAIT) ? cfg.MIN_EXEC_WAIT : js.Wait;
-  utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
+  utils.repeat(js.Repeat, wait, doIt, function(result) {
     if (postFunc) {
       logger.debug('call postFunc');
-      postFunc(pRef, js, repeatResult);
-    } else response.prepareResult(pRef, js, repeatResult);
+      postFunc(pRef, js, result);
+    } else response.prepareResult(pRef, js, result);
   }, pRef, js);
 
 }

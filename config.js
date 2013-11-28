@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-26
+ * version: 2013-11-28
  */
 
 /**
@@ -13,8 +13,8 @@ var debugLevel = process.argv[2] ? process.argv[2] : 0;
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '8.2a',
-  DATE: '2013-11-27',
+  VERSION: '8.2b',
+  DATE: '2013-11-28',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
@@ -31,6 +31,7 @@ module.exports = {
   DEFAULT_TEX_DESTFMT: 'pdf',
   TEX_CMDS: ['pdftex', 'pdflatex', 'xetex', 'xelatex', 'luatex', 'lualatex'],
   TEX_FILE: 'texput.tex',
+  TEX_ERROR_FILE: 'texerror.tex',
   R_FILE: 'cmd.R',
   // Reihenfolge bestimmt Wichtigkeit
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
@@ -43,7 +44,6 @@ module.exports = {
     DATE: '/bin/date',
     SLEEP: '/bin/sleep',
     ECHO: '/bin/echo',
-    TEXCALLER: '/usr/local/bin/texcaller',
     WHICH: '/usr/bin/which'
   },
   theRepeats: {}
