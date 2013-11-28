@@ -21,16 +21,23 @@ var logger = cfg.logger;
 function call(pRef, js) {
 
   function post(pRef, js) {
-    var resultFile = path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex',
-      '.' + cfg.DEFAULT_TEX_DESTFMT));
+    var texFile = js.execStr.replace(js.Command, '').trim();
+    var resultFile = path.join(js.WorkingDir,
+      texFile.replace('.tex', '.' + cfg.DEFAULT_TEX_DESTFMT));
     fs.readFile(resultFile, function (err, data) {
-      if (err) response.prepareError(pRef, js, err);
-      logger.debug('successful read: ' + resultFile);
-      if (!js.KeepFiles) {
-        logger.debug('remove working directory: %s: ', js.WorkingDir);
-        tmp.cleanup();
+      if (err) {
+        // TODO: Stattdessen neue Datei "tex-error.tex" erzeugen. Darin
+        // "texput.log" einladen und weiteren "external.call" mit geändertem
+        // "js.execStr". Vorsicht vor Endlosschleife!
+        response.prepareError(pRef, js, err);
+      } else {
+        logger.debug('successful read: ' + resultFile);
+        if (!js.KeepFiles) {
+          logger.debug('remove working directory: %s: ', js.WorkingDir);
+          tmp.cleanup();
+        }
+        response.prepareResult(pRef, js, data);
       }
-      response.prepareResult(pRef, js, data);
     });
   }
 
@@ -53,8 +60,8 @@ function call(pRef, js) {
   js.OutputEncoding = 'binary';
   js.execStr = cmd + ' ' + cfg.TEX_FILE;
 
-  // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
-  //  schreiben, dann zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
+  // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
+  //  schreiben, dann zweiter Aufruf von "external.call".
   tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {
     js.WorkingDir = p;
     var fname = path.join(p, cfg.TEX_FILE)
@@ -65,8 +72,8 @@ function call(pRef, js) {
         response.prepareError(pRef, js, e);
       } else {
         delete js.Body;
-        // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
-        logger.debug('2nd "external.call"');
+        // Aufruf mit Dateinamen-Parameter statt 'Body';
+        logger.debug('switch to "external.call"');
         external.call(pRef, js, post);
       }
     });

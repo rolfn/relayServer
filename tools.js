@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-27
+ * version: 2013-11-28
  */
 
 var cfg = require('./config.js');
@@ -8,8 +8,6 @@ var util = require('util');
 var fs = require('fs');
 var Fs = require('fs');
 var path = require('path');
-
-var logger = cfg.logger;
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -41,17 +39,6 @@ function pad2(n) {
 }
 
 exports.pad2 = pad2;
-
-/**
- * Liefert das systemübliche temporäre Verzeichnis, sofern definiert (TMPDIR),
- * ansonsten '/tmp'.
- * @return {string} temporäres Verzeichnis
- */
-function getTempDir() {
-  return process.env.TMPDIR ? process.env.TMPDIR : '/tmp';
-}
-
-exports.getTempDir = getTempDir;  // TODO: Modul "tmp" verwenden.
 
 /**
  * Liefert ähnlich zu parseFloat eine Float-Zahl, die der String s repräsentiert.
@@ -103,102 +90,3 @@ function isBASE64(b) {
 }
 
 exports.isBASE64 = isBASE64;
-
-/**
- * Löscht rekursiv eine Verzeichnisstruktur (siehe: <a href="https://github.com/ryanmcgrath/wrench-js" target="_blank">wrench-js</a>).
- * @param {string} dir zu löschende Verzeichnisstruktur.
- * @param {function} clbk Aufruf bei Erfolg oder Fehler.
-*/
-function rmdirRecursive(dir, clbk){
-  fs.readdir(dir, function(err, files){
-    if (err) return clbk(err);
-    (function rmFile(err){
-      if (err) return clbk(err);
-      var filename = files.shift();
-      if (filename === null || typeof filename == 'undefined') {
-        logger.debug('dir: %s', dir);
-        return fs.rmdir(dir, clbk);
-      }
-      var file = dir+'/'+filename;
-      fs.stat(file, function(err, stat){
-        if (err) return clbk(err);
-        if (stat.isDirectory()) {
-          logger.debug('dir: %s', file);
-          rmdirRecursive(file, rmFile);
-        } else {
-          fs.unlink(file, rmFile);
-          logger.debug('unlink: %s', file);
-        }
-      });
-    })();
-  });
-}
-
-exports.rmdirRecursive = rmdirRecursive;
-
-/**
- * Removes files and folders in a directory recursively.
- * (copy from nodeJS modul "tmp")
- * @param {String} path
- */
-function rmdirRecursiveSync(dir) {
-  var files = fs.readdirSync(dir);
-
-  for (var i = 0, length = files.length; i < length; i++) {
-    var file = path.join(dir, files[i]);
-    // lstat so we don't recurse into symlinked directories.
-    var stat = fs.lstatSync(file);
-
-    if (stat.isDirectory()) {
-      _rmdirRecursiveSync(file);
-    } else {
-      fs.unlinkSync(file);
-    }
-  }
-
-  fs.rmdirSync(dir);
-}
-
-exports.rmdirRecursiveSync = rmdirRecursiveSync;
-
-/**
- * Erzeugt in einem temporären Verzeichnis eine Datei mit Inhalt.
- * @param {string} dir temporäres Verzeichnis
- * @param {string} name Name der Datei
- * @param {Buffer} buf Inhalt der Datei
- * @param {function} success Aufruf bei Erfolg
- * @param {function} error Aufruf im Fehlerfall
-*/
-function createTempFile(dir, name, buf, success, error) {
-  fs.mkdir(dir, '700', function (e) {
-    logger.debug('create working directory: %s', e ? e : dir);
-    if (e) {
-      error(e);
-    } else {
-      fs.open(dir + '/' + name, 'w', '600', function(e, fd) {
-        logger.debug('file open: %s', e ? e : name);
-        if (e) {
-          error(e);
-        } else {
-          fs.write(fd, buf, 0, buf.length, null, function(e, nb, buf){
-            logger.debug('file write: %s', e ? e : nb + ' Bytes');
-            if (e) {
-              error(e);
-            } else {
-              fs.close(fd, function(e){
-                logger.debug('file close: %s', e ? e : ' --> next step');
-                if (e) {
-                  error(e);
-                } else {
-                  success();
-                }
-              });
-            }
-          });
-        }
-      });
-    }
-  });
-}
-
-exports.createTempFile = createTempFile;
