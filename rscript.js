@@ -8,6 +8,9 @@ var response = require('./response.js');
 var tools = require('./tools.js');
 var external = require('./external.js');
 var fs = require('fs');
+var os = require('os');
+var path = require('path');
+var tmp = require('temp'); tmp.track();
 
 var logger = cfg.logger;
 
@@ -21,16 +24,16 @@ var logger = cfg.logger;
 function call(pRef, js) {
   var cleanUp = function(pRef, js, data) {
     if (!js.KeepFiles) {
-      tools.rmdirRecursive(js.WorkingDir, function (e) {
-        logger.debug('remove working directory: %s', (e) ? e : js.WorkingDir);
-      });
+      logger.debug('remove working directory: %s: ', js.WorkingDir);
+      tmp.cleanup();
     }
     response.prepareResult(pRef, js, data);
   };
-  if ((js.KeepFiles === undefined) || (js.KeepFiles !== true))
-    js.KeepFiles = false;
+
+  js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
+
   var params = [];
-  js.WorkingDir = tools.getTempDir() + '/' + pRef.jobId;
+
   params.push(cfg.R_FILE);
   if (js.Value !== undefined) {
     if (Array.isArray(js.Value)) {
@@ -41,24 +44,27 @@ function call(pRef, js) {
   }
   // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.R_FILE".
   js.Value = params;
-  // "fs.write" erfordert Buffer! "string" und "string[]" unterstützen.
-  var content = (Array.isArray(js.Body)) ? new Buffer(js.Body.join('\n'))
-    : new Buffer(js.Body);
+
+  // "String" und "String[]" unterstützen.
+  var content = Array.isArray(js.Body) ? js.Body.join('\n') : js.Body;
 
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
-  //  schreiben, zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
-  // TODO: Tmp.dir(...) verwenden.
-  tools.createTempFile(js.WorkingDir, cfg.R_FILE, content,
-    function() {
-      delete js.Body;
-      // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
-      logger.debug('2nd "external.call"');
-      external.call(pRef, js, cleanUp);
-    },
-    function (error) {
-      response.prepareError(pRef, js, error);
-    }
-  );
+  //  schreiben, dann zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
+  tmp.mkdir({dir:os.tmpDir(), prefix:'R-'}, function(err, p) {
+    js.WorkingDir = p;
+    var fname = path.join(p, cfg.R_FILE)
+    fs.writeFile(fname, content, function(err) {
+      if (err) {
+        response.prepareError(pRef, js, err);
+      } else {
+        delete js.Body;
+        // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
+        logger.debug('2nd "external.call"');
+        external.call(pRef, js, cleanUp);
+      }
+    });
+  });
+
 }
 
 exports.call = call;

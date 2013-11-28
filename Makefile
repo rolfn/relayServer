@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2013-10-18, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2013-11-28, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -74,7 +74,7 @@ spec : dist
 # texcaller dazu?
 dist : rm_buildroot vxi11
 	git pull
-#	npm install request nodemailer gitlabhook
+#	npm install request nodemailer gitlabhook temp
 	mkdir -p $(BUILD_ROOT)/etc/init.d
 	mkdir -p $(BUILD_ROOT)/usr/local/bin
 	mkdir -p $(BUILD_ROOT)/usr/sbin
