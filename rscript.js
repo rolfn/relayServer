@@ -45,17 +45,20 @@ function call(pRef, js) {
   // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.R_FILE".
   js.Value = params;
 
+  if (!js.Body) response.prepareError(pRef, js, 'missing program code');
   // "String" und "String[]" unterstützen.
   var content = Array.isArray(js.Body) ? js.Body.join('\n') : js.Body;
 
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
   //  schreiben, dann zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
-  tmp.mkdir({dir:os.tmpDir(), prefix:'R-'}, function(err, p) {
+  tmp.mkdir({dir:os.tmpDir(), prefix:'R.'}, function(err, p) {
     js.WorkingDir = p;
     var fname = path.join(p, cfg.R_FILE)
     fs.writeFile(fname, content, function(err) {
       if (err) {
-        response.prepareError(pRef, js, err);
+        var e = 'File creation error: ' + err;
+        logger.error(e);
+        response.prepareError(pRef, js, e);
       } else {
         delete js.Body;
         // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';

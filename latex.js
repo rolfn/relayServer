@@ -7,10 +7,10 @@ var cfg = require('./config.js');
 var tools = require('./tools.js');
 var external = require('./external.js');
 var response = require('./response.js');
-var Tmp = require('tmp');
-var Fs = require('fs');
-var Path = require('path');
-Tmp.setGracefulCleanup();
+var fs = require('fs');
+var os = require('os');
+var path = require('path');
+var tmp = require('temp'); tmp.track();
 
 var logger = cfg.logger;
 
@@ -21,16 +21,14 @@ var logger = cfg.logger;
 function call(pRef, js) {
 
   function post(pRef, js) {
-    var rfile = Path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex',
+    var resultFile = path.join(js.WorkingDir, cfg.TEX_FILE.replace('.tex',
       '.' + cfg.DEFAULT_TEX_DESTFMT));
-    Fs.readFile(rfile, function (err, data) {
+    fs.readFile(resultFile, function (err, data) {
       if (err) response.prepareError(pRef, js, err);
-      logger.debug('successful read: ' + rfile);
+      logger.debug('successful read: ' + resultFile);
       if (!js.KeepFiles) {
-        logger.debug('remove: ' + js.WorkingDir);
-        // TODO: Ersetzen durch Tmp.rmdirRecursiveSync(...)
-        //       falls der Autor Funktion public macht.
-        tools.rmdirRecursiveSync(js.WorkingDir);
+        logger.debug('remove working directory: %s: ', js.WorkingDir);
+        tmp.cleanup();
       }
       response.prepareResult(pRef, js, data);
     });
@@ -46,35 +44,33 @@ function call(pRef, js) {
   if (!cmd) response.prepareError(pRef, js, 'invalid TeX command');
 
   if (!js.Body) response.prepareError(pRef, js, 'missing document data');
-
   var content = (Array.isArray(js.Body)) ? js.Body.join('\n') : js.Body;
+
   js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
   js.Repeat = tools.getInt(js.Repeat, cfg.DEFAULT_TEX_RUNS);
   js.ContentType = 'application/pdf';
   js.OutputType = 'stream';
   js.OutputEncoding = 'binary';
+  js.execStr = cmd + ' ' + cfg.TEX_FILE;
 
-  Tmp.dir({ prefix:'node-latex.', keep:js.KeepFiles, unsafeCleanup:true },
-    function (err, path) {
-      if (err) response.prepareError(pRef, js, err);
-
-      logger.debug('Tempdir: ' + path);
-
-      js.WorkingDir = path;
-      js.execStr = cmd + ' ' + cfg.TEX_FILE;
-      //js.execStr = '/usr/bin/echo ' + js.execStr;
-      var fname = Path.join(path, cfg.TEX_FILE);
-      Fs.writeFile(fname, content, function (err) {
-        if (err) {
-          var e = 'File creation error: ' + err;
-          logger.error(e);
-          response.prepareError(pRef, js, e);
-        }
-        logger.debug('File created: ' + fname);
+  // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
+  //  schreiben, dann zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
+  tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {
+    js.WorkingDir = p;
+    var fname = path.join(p, cfg.TEX_FILE)
+    fs.writeFile(fname, content, function(err) {
+      if (err) {
+        var e = 'File creation error: ' + err;
+        logger.error(e);
+        response.prepareError(pRef, js, e);
+      } else {
+        delete js.Body;
+        // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
+        logger.debug('2nd "external.call"');
         external.call(pRef, js, post);
-      });
-    }
-  );
+      }
+    });
+  });
 
 }
 
