@@ -82,7 +82,7 @@ function call(pRef, js) {
   js.execStr = cmd + ' -interaction=batchmode '  + cfg.TEX_FILE;
 
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
-  //  schreiben, dann zweiter Aufruf von "external.call".
+  //  schreiben, dann Aufruf von "external.call".
   tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {
     js.WorkingDir = p;
     var fname = path.join(p, cfg.TEX_FILE);

@@ -196,8 +196,8 @@ date -d @$[1385556963157 / 1000]
       \begin{description}
 
         \item[Body] -- R-Programmcode in Form eines Strings oder eines
-        Arrays von Strings. Im zweiten Falle wird aus dem Array intern ein
-        einzelner String erzeugt, wobei nach jedem Inhalt eines
+        Arrays von Strings (zwingend). Im zweiten Falle wird aus dem Array
+        intern ein einzelner String erzeugt, wobei nach jedem Inhalt eines
         Array"=Elements ein Zeilenumbruch ("`|\n|"') eingefügt wird.
 
         \item[Value] -- Zusätzliche Parameter für den Aufruf des Programms
@@ -205,9 +205,10 @@ date -d @$[1385556963157 / 1000]
         enthält später in jedem Falle als ersten Parameter vor den hier
         angegebenen den Namen der temporären Datei mit dem Programmcode.
 
-        \item[KeepFiles] -- "`true"' verhindert, dass nach erfolgtem
-        Programmaufruf das temporär angelegte Verzeichnis und dessen Inhalt
-        gelöschte wird (optional, Standard: "`false"', nur für Testzwecke).
+        \item[KeepFiles] -- "`true"' oder "`1"' verhindert, dass nach
+        erfolgtem Programmaufruf das temporär angelegte Verzeichnis und
+        dessen Inhalt gelöschte wird (optional, Standard: "`false"', nur für
+        Testzwecke).
 
       \end{description}
 \enlargethispage{-2\baselineskip}
@@ -252,7 +253,66 @@ EOF
 
 \subsection*{Interne Aktionen}
 
+  Es handelt sich um eine vom Server direkt ausführbare Aktion, bei der die
+  Angabe des Namens eines externen Programms nicht notwendig ist bzw.\ es
+  wird auf ein solches gänzlich verzichtet. Beginnt "`|Action|"' mit dem
+  Zeichen "`|_|"', so kennzeichnet sie einen internen Prozess zu
+  administrativen Zwecken.
 
+ \begin{description}
+
+  \item[Action] -- kennzeichnet die zu erledigende Aufgabe.
+
+  \begin{itemize}
+
+    \item |"TEX"|: \par
+
+      Bei dieser Aktion handelt es sich eigentlich auch um einen externen
+      Programmauf. Aufgrund der Komplexität ist sie dennoch als "`interne
+      Aktionen"' eingeordnet.
+
+      Es wird aus dem übergebenen \TeX"=Code eine Datei erzeugt, die mit
+      einem der unterstützten \TeX"=Compiler in PDF"=Code (PDF"=Stream)
+      konvertiert wird.
+
+      \begin{description}
+
+        \item[Body] -- \TeX"=Code in Form eines Strings oder eines Arrays von
+        Strings (zwingend). Im zweiten Falle wird aus dem Array intern ein
+        einzelner String erzeugt, wobei nach jedem Inhalt eines
+        Array"=Elements ein Zeilenumbruch ("`|\n|"') eingefügt wird.
+
+        \item[Command] -- Der Name des \TeX"=Compilers (optional, Standard:
+        "`pdflatex"'). Es werden nur \TeX"=Compiler unterstützt, die auf
+        direktem Wege PDF"=Dateien erzeugen, d.\,h.\ "`pdflatex"',
+        "`lualatex"', "`xelatex"', "`pdftex"', "`luatex"', "`xetex"'.
+
+        \item[KeepFiles] -- "`true"' oder "`1"' verhindert, dass nach
+        erfolgtem Programmaufruf das temporär angelegte Verzeichnis und
+        dessen Inhalt gelöschte wird (optional, Standard: "`false"', nur für
+        Testzwecke).
+
+      \end{description}
+
+    \item |"TCP"|: \par
+
+    \item |"EMAIL"|: \par
+
+    \item |"RANDOM"|: \par
+
+    \item |"TIME"|: \par
+
+    \item |"_killRepeats"|: \par
+
+    \item |"_version"|: \par
+
+    \item |"_nodesVersion"|: \par
+
+    \item |"_environment"|: \par
+
+  \end{itemize}
+
+\end{description}
 
 \vfill
 
