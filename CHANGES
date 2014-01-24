@@ -1,3 +1,6 @@
+* Fri Jan 24 2014 Rolf.Niepraschk@ptb.de
+- Neuer logger-Transport "vWebsocket". Zugriff nun via "vlLogging".
+
 * Tue Dec 03 2013 Rolf.Niepraschk@ptb.de
 - TEX wiederbelebt, umstrukturiert/vereinheitlicht.
 

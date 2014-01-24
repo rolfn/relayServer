@@ -1,24 +1,20 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-28
+ * version: 2014-01-24
  */
 
-/**
- * Kommandozeilenwert zur Steuerung der debug-Ausgabe ermitteln. Ohne
- * Angabe wird 0 (keine Ausgabe) verwendet. // Nur noch temporär!!!
- */
-var debugLevel = process.argv[2] ? process.argv[2] : 0;
 
 /**
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '8.2b',
-  DATE: '2013-11-28',
+  VERSION: '9.0a',
+  DATE: '2014-01-24',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
   GITLABHOOK_HOST: '0.0.0.0',
+  WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 10000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
@@ -37,7 +33,6 @@ module.exports = {
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
     '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
     '/etc/release'],
-  isDebug: debugLevel !== 0,
   bin: {
     VXITRANSCEIVER: '/usr/local/bin/vxiTransceiver',
     RSCRIPT: '/usr/bin/Rscript',

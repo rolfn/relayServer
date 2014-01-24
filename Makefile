@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2013-11-28, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-01-23, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -80,7 +80,7 @@ dist : rm_buildroot vxi11
 	mkdir -p $(BUILD_ROOT)/usr/sbin
 	mkdir -p $(BUILD_ROOT)/usr/local/share/vaclab/nodejs
 	mkdir -p $(BUILD_ROOT)/usr/lib/node_modules
-	cp -p nodejsServers vxiTransceiver $(BUILD_ROOT)/usr/local/bin/
+	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -pr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/

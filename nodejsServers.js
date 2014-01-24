@@ -2,28 +2,34 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2014-01-23
  */
 
-var http = require('http');
 var cfg = require('./config.js');
-var logger = cfg.logger = require('vlogger')();
+var winston = require('winston');
+require('vWebsocket');
+var logger = cfg.logger = require('vlogger')({
+  transports: [
+    new winston.transports.vWebsocket({
+      level: 'debug',
+      port: cfg.WEBSOCKET_PORT,
+      handleExceptions: true,
+      colorize: true,
+      prettyPrint: true
+    })
+  ]
+});
+winston.remove(winston.transports.Console);
+
+var http = require('http');
 var relay = require('./relay.js');
 // var dispatcher = require('./dispatcher.js');
 
-logger.add(require('winston').transports.Console, {
-  level: 'debug',
-  handleExceptions: true,
-  colorize: true,
-  prettyPrint: true,
-  json: false
-});
-
 var server1 = http.createServer(relay.start);
 server1.listen(cfg.RELAY_PORT);
-if (cfg.isDebug) logger.enable(); else logger.disable();
-logger.info('logging: %s', cfg.isDebug);
-logger.info('relay server listen (%d)', cfg.RELAY_PORT);
+///if (cfg.isDebug) logger.enable(); else logger.disable();
+///logger.info('logging: %s', cfg.isDebug);
+logger.info('relay server listen (%d)\n', cfg.RELAY_PORT);
 
 // TODO: Nachdenken, ob das Konzept eines zweiten vorgelagerten Servers
 //       sinnvoll ist.
@@ -35,7 +41,7 @@ var lg = {
   error: logger.error
 };
 
-lg = undefined;
+///lg = undefined;
 
 var glh = {
   port: cfg.GITLABHOOK_PORT,
@@ -46,7 +52,7 @@ var glh = {
 
 var server3 = require('gitlabhook')(glh);
 server3.listen();
-if (server3.server) logger.info('webhook server listen (%d)', cfg.GITLABHOOK_PORT);
+if (server3.server) logger.info('webhook server listen (%d)\n', cfg.GITLABHOOK_PORT);
 
 /**
 <h4> Beispiele zur Kommunikation mit dem Relay-Server</h4>
