@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-01-23, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-01-24, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 3 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -83,7 +83,7 @@ dist : rm_buildroot vxi11
 	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
-	cp -pr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
+	cp -pLr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p $(CONFIG) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
 ##	cp -pr /usr/lib/node_modules/request $(BUILD_ROOT)/usr/lib/node_modules/

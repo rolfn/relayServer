@@ -6,6 +6,7 @@ fontsize=11pt
 ,paper=a4
 ,twoside
 ,headings=normal
+,numbers=endperiod
 ,pagesize
 ]{scrartcl}
 \usepackage{hyphsubst}% Trennregeln austauschen
@@ -49,8 +50,6 @@ fontsize=11pt
 }
 \makeatother
 
-
-
 \usepackage{xcolor,listings}
 \lstset{%
      basicstyle=\footnotesize\ttfamily,
@@ -88,7 +87,7 @@ fontsize=11pt
 
 \shorthandon{"}
 \title{Gebrauchsanweisung zu "`nodejsServers2"'}
-\date{2013-11-27}
+\date{2014-01-27}
 \author{Rolf Niepraschk, AG~7.54}
 \shorthandoff{"}
 
@@ -111,7 +110,7 @@ Web"=Applikationen) und sendet daraufhin verschiedenartige Daten zurück. Der
 Sinn ist, auf diese Weise Funktionen anzubieten, die ohne "`nodejsServers2"'
 nicht oder nur in komplizierter Weise zur Verfügung stehen würden.
 
-\section*{relay"=Server -- Port: 55555}
+\section{relay"=Server -- Port: 55555}
 
 Die Komponente "`relay"=Server"' bietet den Zugang zu einer Vielzahl von
 externen auf dem Linux"=Rechner installierten Programmen und
@@ -131,7 +130,7 @@ bezeichnet, da sie mit einer Ausnahme ohne Start eines besonderen Programms
 auskommen, also einzig die Möglichkeiten der Programmiersprache
 "`JavaScript"' in der durch "`nodejs"' angebotenen Form nutzen.
 
-\subsection*{Externe Aktionen}
+\subsection{Externe Aktionen}
 
 \begin{description}
 
@@ -251,7 +250,7 @@ EOF
 
 \end{description}
 
-\subsection*{Interne Aktionen}
+\subsection{Interne Aktionen}
 
   Es handelt sich um eine vom Server direkt ausführbare Aktion, bei der die
   Angabe des Namens eines externen Programms nicht notwendig ist bzw.\ es
@@ -313,6 +312,87 @@ EOF
   \end{itemize}
 
 \end{description}
+
+\section{Gitlab"=Hook"=Server -- Port: 3420}
+
+Die Web"=Applikation "`GitLab"' gestattet ähnlich zu dem Konkurrenzprodukt
+"`GitHub"' einen bequemen Zugriff auf das Versionskontrollsystem "`GIT"'. Zu
+jedem  in "`GitLab"' registrierten Repositorium kann über
+"`Settings"'/"""`Web hooks"' eine http"=Adresse angegeben werden. Nach
+Änderung des betreffende Repositoriums (push"=Aktion) wird an diese Adresse
+eine Datenstruktur gesendet. Sie enthält etliche Angaben zu dem
+Repositorium, wie Name des Repositoriums, URL für GIT"=Aktionen, Nutzername,
+IDs der letzten Commits u.\,v.\,a. "`nodejsServers2"' bietet die
+Funktionalität eines Gitlab"=Hook"=Servers und ist somit in der Lage, diese
+Informationen von "`GitLab"' zu empfangen und auszuwerten. Die Adresse, die
+in "`GitLab"' angegeben werden muss, lautet im Falle des auf "`a73434"'
+laufenden "`nodejsServers2"' folgendermaßen:
+\begin{lstlisting}[language={}]
+  http://a73434.berlin.ptb.de:3420
+\end{lstlisting}
+Zur Definition dessen, was nach Eintreffen der
+Informationen von "`GitLab"' zu tun ist, muss eine Datei |gitlabhook.conf|
+angelegt werden. Als Beispiel sei hier der Inhalt angeführt, der dazu führt,
+dass sich automatisch mit Änderung des Repositoriums "`vaclabpage"'
+html"=Seiten, die vom Webserver ausgeliefert werden, erneuern:
+\begin{lstlisting}[language={}]
+{
+  "tasks": {
+    "vaclabpage": [
+      "exec 1>/dev/null",
+      "exec 2>/dev/null",
+      "git clone %h",
+      "cd %r",
+      "cp -p --parents `git ls-files` /srv/www/htdocs/vaclabpage/"
+    ]
+  },
+  "keep":false
+}
+\end{lstlisting}
+Zur Erklärung: Unter "`tasks"' kann ein oder mehrere Namen von
+GIT"=Repositorien aufgeführt werden. Jedem dieser Namen ist ein String oder
+ein String"=Array zugeordnet. Darin enthalten sind Unix"=Kommandozeilenaufrufe.
+"`|%h|"' ist ein Platzhalter für die zum Clonen des GIT"=Repositorium
+verwendbare URL. "`|%r|"' steht für den Namen des Repositoriums. Mit
+"`|"keep":false|"' wird festgelegt, dass temporär erstellte Verzeichnisse nicht
+erhalten bleiben sollen. Die Beschreibung zu dem NodeJS"=Module
+"`node-gitlab-hook"' enthält weitere Hinweise zur Syntax in |gitlabhook.conf|.
+
+Der konkrete Ablauf im temporären Verzeichnis des Rechners
+(|/tmp|) zur Erneuerung der Home"=Page des Vakuumlabors ist also der
+folgende:
+\begin{enumerate}
+  \item Lokales Duplikat des GIT"=Repositoriums anlegen.
+  \item In das Verzeichnis mit dem Namen des Repositoriums wechseln.
+  \item Alle relevanten Dateien zum Webserver"=Verzeichnis kopieren.
+\end{enumerate}
+Es ist zu beachten, dass alle unter "`nodejsServers2"' laufenden Prozesse
+mit den Rechten des Nutzers "`wwwrun"' laufen.
+
+\section{Logging"=Zugriff per Websocket"=Protokoll -- Port: 9001}
+
+Um detaillierte Informationen über den internen Ablauf beim Ansprechen der
+unter "`nodejsServers2"' laufenden Server"=Prozesse zu erhalten, kann über
+den Port~|9001| per Websocket"=Protokoll Kontakt aufgenommen werden. Zu
+diesem Zweck steht das Kommandozeilen"=Programm |vlLogging| zur Verfügung.
+Ohne Parameter nimmt es Kontakt zum lokal laufenden "`nodejsServers2"' auf.
+Wird als Parameter ein anderer Rechner (Rechnername oder IP"=Adresse)
+angegeben, kann auch auf Informationen eines entfernten Rechners zugegriffen
+werden. Es wird das folgende Ausgabeformat angeboten:
+\begin{lstlisting}[language={}]
+2013-10-17 08:53:10.862 - LEVEL: [FILE_NAME:LINE_NUMBER:FUNCTION_NAME] MESSAGE
+\end{lstlisting}
+\begin{itemize}
+  \item |LEVEL|: "`debug"', "`error"', "`warn"' oder "`info"'
+  \item |FILE_NAME|: Die Datei, in der sich der abzuarbeitende Code befindet
+  \item |LINE_NUMBER|: Zeilennummer in |FILE_NAME|
+  \item |FUNCTION_NAME|: Funktion, in der sich der abzuarbeitende Code befindet
+  \item |MESSAGE|: Konkrete Informationen zum betreffenden Code"=Teil.
+\end{itemize}
+Diese Informationen dienen der Fehlersuche im Programmcode von
+"`nodejsServers2"' und auch zur allgemeinen Beobachtung z.\,B.\ der
+Kommunikation mit Messgeräten. Künftig könnte der Websocket"=Zugriff auch von
+einer Web"=Applikation (Web"=Browser) aus erfolgen.
 
 \vfill
 
