@@ -288,6 +288,12 @@ var strToNum = function(numStr, pos){
   return res;
 };
 
+/**
+ * Entfernt einfach alle whitespaces im String
+ */
+var vlTrim = function(str) {
+    return str.replace(/\s/g, "");
+};
 
 /**
  * Extrahiert Float-Zahl aus String welcher von
@@ -302,8 +308,24 @@ function extractVM212DCR(s) {
   var regex = /^(\sDCR\s\s)([+-][0-9]{1}\.?[0-9]{4}[E][-][0-9]{2})/;
 
   return strToNum(regex.exec(s), 2);
-}
+};
 exports.extractVM212DCR =  extractVM212DCR;
+
+/**
+ * Extrahiert Float-Zahl aus String welcher von
+ * der FRS geliefert wird
+ * Es wird nicht auf lb getested
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractFRS(s) {
+    var regex = /^([+-][0-9]{1,2}\.?[0-9]{6})/;
+    
+    return strToNum(regex.exec(vlTrim(s)), 1);
+};
+exports.extractFRS =  extractFRS;
 
 /**
  * Extrahiert Float-Zahl aus String welcher von den MKS CDGs
@@ -376,7 +398,7 @@ exports.extractKeithleyVolt = extractKeithleyVolt;
  * @return Number Zahl.
  */
 function extractKeithleyC(s) {
-  var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(_C)/;
+  var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})([_,])/;
   return strToNum(regex.exec(s), 1);
 }
 exports.extractKeithleyC = extractKeithleyC;

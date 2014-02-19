@@ -3,6 +3,32 @@
 var add =require("./relay-add.js");
 
 /**
+ * Test der  FRS-Auslese-Funktion
+ */
+var s = [
+    "0.024380 lb \r\n",
+    "+ 0.929080 lb \r\n",
+    "+ 0.929078 lb \r\n",
+   "+ 0.929078 lb \r\n",
+    "+ 0.929078 lb \r\n",
+    "+ 0.929078 lb \r\n",
+    "+\n \r\n 0.929078 lb \r\n",
+    "+ 0.929076 lb ",
+    "+ 0.929076 lb \r\n\n+ 0.929076 lb \r\n+ 0.929076 lb \r\n",
+    "+ 0.929076 lb \r\n+ 0.929074 lb \r\n",
+    "+10.9290 lb \r\n+ 0.929074 lb \r\n",
+    "+ 0.929074 lb \r\n+ 0.929074 lb \r\n",
+    "+ 0.929074 lb \r\n+ 0.929074 lb \r\n",
+    "+ 0.929074 lb \r\n+ 0.929074 lb \r\n",
+    "+ 0.92900.929074 lb \r\n",
+    "+929074 lb \r\n+ 0.929074 lb \r\n",
+    "+ 0.929074 lb \r\n+ 0.929076 lb \r\n",
+    "+ 0.929076 lb \r\n+ 0.929076 lb \r\n"
+];
+console.log("---------------extractFRS-------------");
+console.log(s.map(add.extractFRS));
+
+/**
  * Test der extractKeithleyTemp  function
  */
 var s = [
