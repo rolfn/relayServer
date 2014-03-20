@@ -314,14 +314,16 @@ exports.extractVM212DCR =  extractVM212DCR;
 /**
  * Extrahiert Float-Zahl aus String welcher von
  * der FRS geliefert wird
- * Es wird nicht auf lb getested
+ * Es wird nicht auf lb getested: Bei großen
+ * Drücken kann der Druck ruhig in der letzten 
+ * Stelle schwanken (also das lb verschwinden)
  *
  * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
  * @return Number Zahl.
  */
 function extractFRS(s) {
-    var regex = /^([+-][0-9]{1,2}\.?[0-9]{6})/;
+    var regex = /^([+-]{0,1}[\s]{0,2}[0-9]{1,2}\.?[0-9]{6})/;
     
     return strToNum(regex.exec(vlTrim(s)), 1);
 };
