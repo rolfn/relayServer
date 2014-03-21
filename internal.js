@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2014-03-21
  */
 
 var fs = require('fs');
@@ -9,6 +9,7 @@ var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
 var _tcp = require('./tcp.js');
+var _udp = require('./udp.js');
 var _http = require('./http.js');
 var _email = require('./email.js');
 //var _ldap = require('./ldap.js');
@@ -100,6 +101,9 @@ function call(pRef, js) {
       break;
     case 'TCP':
       _tcp.call(pRef, js);
+      break;
+    case 'UDP':
+      _udp.call(pRef, js);
       break;
     case 'HTTP':
       _http.call(pRef, js);

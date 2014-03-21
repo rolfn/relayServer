@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-01-24, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-03-20, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 4 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"

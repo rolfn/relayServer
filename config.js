@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-01-24
+ * version: 2014-03-21
  */
 
 
@@ -8,8 +8,8 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '9.0a',
-  DATE: '2014-01-24',
+  VERSION: '9.1a',
+  DATE: '2014-03-21',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
