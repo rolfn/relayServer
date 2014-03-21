@@ -19,16 +19,18 @@ var logger = cfg.logger;
  */
 function call(pRef, js) {
   function doIt(b, next) {
-    var result = [], host = js.Host, port = tools.getInt(js.Port);
+    var host = js.Host, port = tools.getInt(js.Port);
     var buf = new Buffer((js.Value) ? js.Value : '');
     var client = dgram.createSocket('udp4');
     client.send(buf, 0, buf.length, port, host, function(err, bytes) {
+      client.close();
       if (!err) {
         logger.debug('success (%d Bytes sendet)', bytes);
         b.push('OK');
         next();
       } else {
         logger.error('error: %s', err);
+        b.push('error: ' + err);
       }
     });
   }

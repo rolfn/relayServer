@@ -8,7 +8,7 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '9.1a',
+  VERSION: '9.1b',
   DATE: '2014-03-21',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
