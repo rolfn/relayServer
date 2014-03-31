@@ -31,6 +31,7 @@ function call(pRef, js) {
       } else {
         logger.error('error: %s', err);
         b.push('error: ' + err);
+        // evtl. auch hier "next();"?
       }
     });
   }

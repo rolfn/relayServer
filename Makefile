@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-03-20, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-03-31, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -80,18 +80,21 @@ dist : rm_buildroot vxi11
 	mkdir -p $(BUILD_ROOT)/usr/sbin
 	mkdir -p $(BUILD_ROOT)/usr/local/share/vaclab/nodejs
 	mkdir -p $(BUILD_ROOT)/usr/lib/node_modules
-	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
+	mkdir -p $(BUILD_ROOT)/usr/lib/systemd/system
+	cp -p vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
+##	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -pLr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p $(CONFIG) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
-	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
+	cp -p NodejsServers.service $(BUILD_ROOT)/usr/lib/systemd/system/
+##	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
 ##	cp -pr /usr/lib/node_modules/request $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/ldapjs $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/buffertools $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/nodemailer $(BUILD_ROOT)/usr/lib/node_modules/
-	cd $(BUILD_ROOT)/usr/sbin/ && \
-    ln -sf ../../etc/init.d/NodejsServers rcNodejsServers
+##	cd $(BUILD_ROOT)/usr/sbin/ && \
+##    ln -sf ../../etc/init.d/NodejsServers rcNodejsServers
 
 vxi11 : $(VXI11_SRC)/vxi11_transceiver
 
