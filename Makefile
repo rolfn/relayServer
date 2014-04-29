@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-04-01, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-04-29, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 3 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -17,7 +17,7 @@ CONFIG = gitlabhook.conf
 NODE_MODULES = node_modules
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
-VXI11_SRC = vxi11
+#VXI11_SRC = vxi11
 DOC_CMD=/usr/bin/dox-foundation
 DOC_DIR=_attachments
 DOC_SRC=doc_src
@@ -72,6 +72,7 @@ spec : dist
 	@cat CHANGES >> $(SPEC_FILE)
 
 # texcaller dazu?
+##dist : rm_buildroot vxi11
 dist : rm_buildroot vxi11
 	git pull
 #	npm install request nodemailer gitlabhook temp
@@ -83,7 +84,7 @@ dist : rm_buildroot vxi11
 	mkdir -p $(BUILD_ROOT)/usr/lib/systemd/system
 	cp -p vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 ##	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
-	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
+##	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -pLr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p $(CONFIG) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
@@ -96,10 +97,10 @@ dist : rm_buildroot vxi11
 ##	cd $(BUILD_ROOT)/usr/sbin/ && \
 ##    ln -sf ../../etc/init.d/NodejsServers rcNodejsServers
 
-vxi11 : $(VXI11_SRC)/vxi11_transceiver
+##vxi11 : $(VXI11_SRC)/vxi11_transceiver
 
-$(VXI11_SRC)/vxi11_transceiver :
-	$(MAKE) -C $(VXI11_SRC)
+## $(VXI11_SRC)/vxi11_transceiver :
+## 	$(MAKE) -C $(VXI11_SRC)
 
 docs : $(DOC_DIR)/index.html
 

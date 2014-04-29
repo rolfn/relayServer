@@ -1,6 +1,5 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-03-21
  */
 
 
@@ -8,8 +7,8 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '9.1b',
-  DATE: '2014-03-21',
+  VERSION: '10.0a',
+  DATE: '2014-04-29',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
@@ -18,6 +17,7 @@ module.exports = {
   DEFAULT_EXEC_TIMEOUT: 10000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
+  MIN_VXI11_WAIT: 50, // msec
   MIN_TCP_WAIT: 250, // msec // ???
   DEFAULT_TCP_TIMEOUT: 2000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
@@ -34,7 +34,6 @@ module.exports = {
     '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
     '/etc/release'],
   bin: {
-    VXITRANSCEIVER: '/usr/local/bin/vxiTransceiver',
     RSCRIPT: '/usr/bin/Rscript',
     DATE: '/bin/date',
     SLEEP: '/bin/sleep',

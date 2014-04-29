@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-03-21
+ * version: 2014-04-29
  */
 
 var fs = require('fs');
@@ -16,6 +16,7 @@ var _email = require('./email.js');
 //    derzeit (2013-01-14) Probleme (buffertools)!
 //    npm install buffertools -g ; npm install ldapjs -g
 var _latex = require('./latex.js'); // TODO: Überarbeiten!
+var _vxi11 = require('./vxi.js');
 
 var logger = cfg.logger;
 
@@ -131,6 +132,9 @@ function call(pRef, js) {
         // Verzweigt später zu "external".
         ///return;
       ///}
+      break;
+    case 'VXI11':
+      _vxi11.call(pRef, js);
       break;
     // Administration
     case '_version':

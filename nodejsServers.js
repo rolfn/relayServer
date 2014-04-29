@@ -71,7 +71,7 @@ echo '{"Action":"RANDOM"}' | \
 echo '{"Action":"TIME","Repeat":3,"Wait":2000}' | \
   curl -T - -X PUT http://localhost:55555
 
-echo '{"Action":"/usr/local/bin/vxiTransceiver","Host":"e75481",
+echo '{"Action":"VXI11","Host":"e75481",
   "Device":"gpib0,5","Value":"*IDN?"}' | curl -T - -X PUT http://localhost:55555
 
 echo '{"Action":"/usr/bin/Rscript", "Value":["foo","bar"],
@@ -91,5 +91,9 @@ echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
 echo '{"Action":"TEX","Body":"\\documentclass{article}\\begin{document}
   Hello world!!!\\end{document}"}' | \
     curl -T - -X PUT http://localhost:55556 > zz.pdf
+
+echo '{"Action":"UDP","Host":"192.168.98.15","Port":4165,"Value":"Sw_on2adminanel"}' | \
+  curl -T - -X PUT http://localhost:55555
+
 </pre>
 */

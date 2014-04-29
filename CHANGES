@@ -1,3 +1,6 @@
+* Tue Apr 29 2014 Rolf.Niepraschk@ptb.de
+- Node.js-Modul "vxi11"; C-Programm beseitigt.
+
 * Tue Apr 01 2014 Rolf.Niepraschk@ptb.de
 - login-Shell in "NodejsServers.service"
 

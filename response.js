@@ -64,51 +64,6 @@ function prepareResult(pRef, js, data) {
   if (js.t_stop !== undefined) jsonRes.t_stop = js.t_stop;
   if (js.exitCode !== undefined) jsonRes.exitCode = js.exitCode;
 
-  if (js.Action == cfg.bin.VXITRANSCEIVER) {
-    jsonRes.t__start = [];
-    var i;
-    /**
-      Der oder die gelieferten Strings haben am Anfang und am Ende
-      einen Zeitstempel (ms seit 1.1.1970). Diese müssen entfernt, aber
-      gerettet werden.
-      <pre>
-      Beispiel: "1348578392026|MEASURING  -1.17E-3|1348578392032"
-                 t_start       GPIB-Response       t_stop
-      </pre>
-    */
-    for (i=0;i < js.t_start.length;i++) {
-      jsonRes.t__start[i] = js.t_start[i];
-    }
-    jsonRes.t__stop = [];
-    for (i=0;i < js.t_stop.length;i++) {
-      jsonRes.t__stop[i] = js.t_stop[i];
-    }
-    /// Zum Vergleich der Zeiten vom vxi-Programm mit denen
-    /// der hier erzeugten
-    /// TODO: Ist Start- und Stoppzeit im vxi-Programm weiter nötig?
-    if (!Array.isArray(x)) x = [x];
-    var a;
-    jsonRes.t_start = []; jsonRes.t_stop = [];
-    for (i=0;i < x.length;i++) {
-      a = x[i].split('|');
-      // erstes Element ist Startzeit
-      jsonRes.t_start.push(parseInt(a.shift()));
-      // letztes Element ist Stoppzeit
-      jsonRes.t_stop.push(parseInt(a.pop()));
-      // Falls vorher mehr als zwei "|" enthalten waren.
-      x[i] = a.join('|');
-    }
-    ///
-    if (!jsonRes.t__start.length || !jsonRes.t__stop.length) {
-      delete jsonRes.t__start;
-      delete jsonRes.t__stop;
-    } else if (jsonRes.t__start.length == 1) {
-      jsonRes.t__start = jsonRes.t__start[0];
-      jsonRes.t__stop = jsonRes.t__stop[0];
-    }
-    ///
-  }
-
   if (!jsonRes.t_start.length || !jsonRes.t_stop.length) {
     delete jsonRes.t_start;
     delete jsonRes.t_stop;

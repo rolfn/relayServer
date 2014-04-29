@@ -26,10 +26,6 @@ function call(pRef, js, postFunc) {
     execStr = js.Action;
 
     switch (js.Action) {// Spezifische Ergänzungen der Aufrufe
-      case cfg.bin.VXITRANSCEIVER:
-        execStr = execStr + ' "' + js.Host + '" "' + js.Device + '"' +
-          ((js.VxiTimeout) ? ' ' + js.VxiTimeout : '');
-        break;
       case cfg.bin.DATE:
         execStr = execStr + ' "+%Y-%m-%d %H:%M:%S"';
         break;
