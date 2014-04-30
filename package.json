@@ -1,0 +1,23 @@
+{
+  "name": "nodejsServers2",
+  "version": "10.0.2",
+  "description": "Nodejs-basierte http-Server für Messaufgaben",
+  "author": {
+    "name": "Rolf Niepraschk",
+    "email": "Rolf.Niepraschk@ptb.de"
+  },
+  "dependencies": {
+    "gitlabhook": ">=0.0.11",
+    "moment": "~2.6.0",
+    "request": "~2.34.0",
+    "socket.io": "~0.9.16",
+    "socket.io-client": "~0.9.16",
+    "stack-trace": "~0.0.9",
+    "vlogger": ">=0.0.2",
+    "vxi11": ">=0.0.11",
+    "winston": "~0.7.3",
+    "vwebsocket": ">=0.0.1",
+    "nodemailer": "~0.6.3",
+    "temp": "~0.7.0"
+  }
+}
