@@ -18,15 +18,16 @@ var logger = cfg.logger;
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
+  var params = { host:js.Host, device:js.Device, command:js.Value,
+    logger: {
+      log:logger.debug,
+      error:logger.error
+    }
+  };
+  var timeout = parseInt(js.Timeout);
+  // "I/O Timeout" und "Lock Timeout" bei DEVICE_READ
+  if (Number.isFinite(timeout)) params.readTimeout = timeout;
   function doIt(b, next) {
-    var params = { host:js.Host, device:js.Device, command:js.Value,
-      logger: {
-        log:cfg.logger.debug,
-        error:cfg.logger.error
-      },
-      readTimeout:parseInt(js.Timeout)
-      // setzt bei DEVICE_READ "I/O Timeout" und "Lock Timeout"
-    };
     vxi(params, function(result) {
       if (result) {
         b.push(result);

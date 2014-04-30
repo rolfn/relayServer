@@ -3,7 +3,7 @@
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -52,33 +52,23 @@ spec : dist
 	@echo "BuildArch: $(BUILDARCH)" >> $(SPEC_FILE)
 	@echo "Packager: $(PACKAGER)" >> $(SPEC_FILE)
 	@echo "AutoReqProv: no" >> $(SPEC_FILE)
-	@echo "Requires: nodejs" >> $(SPEC_FILE)
+	@echo "Requires: nodejs" >> $(SPEC_FILE)%{?systemd_requires}
+	@echo "%{?systemd_requires}" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%description" >> $(SPEC_FILE)
 	@echo "$(DESCRIPTION)" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
-	@echo "%post" >> $(SPEC_FILE)
-	@echo "%if 0%{?suse_version} >= 1230" >> $(SPEC_FILE)
-	@echo "%{fillup_only}" >> $(SPEC_FILE)
-	@echo "%service_add_post %{Name}.service" >> $(SPEC_FILE)
-	@echo "%else" >> $(SPEC_FILE)
-	@echo "%{fillup_and_insserv} %{Name}" >> $(SPEC_FILE)
-	@echo "%endif" >> $(SPEC_FILE)
+	@echo "%pre" >> $(SPEC_FILE)
+	@echo "%service_add_pre %{name}.service" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
-	@echo "%postun" >> $(SPEC_FILE)
-	@echo "%if 0%{?suse_version} >= 1230" >> $(SPEC_FILE)
-	@echo "%service_del_postun %{Name}.service" >> $(SPEC_FILE)
-	@echo "%else" >> $(SPEC_FILE)
-	@echo "%restart_on_update %{Name}" >> $(SPEC_FILE)
-	@echo "%insserv_cleanup" >> $(SPEC_FILE)
-	@echo "%endif" >> $(SPEC_FILE)
+	@echo "%post" >> $(SPEC_FILE)
+	@echo "%service_add_post %{name}.service" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%preun" >> $(SPEC_FILE)
-	@echo "%if 0%{?suse_version} >= 1230" >> $(SPEC_FILE)
-	@echo "%service_del_preun %{Name}.service" >> $(SPEC_FILE)
-	@echo "%else" >> $(SPEC_FILE)
-	@echo "%stop_on_removal %{Name}" >> $(SPEC_FILE)
-	@echo "%endif" >> $(SPEC_FILE)
+	@echo "%service_del_preun %{name}.service" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%postun" >> $(SPEC_FILE)
+	@echo "%service_del_postun %{name}.service" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%files" >> $(SPEC_FILE)
 	@find $(BUILD_ROOT)/* -type d -name '*' -print | sed 's/^$(BUILD_ROOT)/%dir /' \
