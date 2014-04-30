@@ -36,13 +36,10 @@ logger.info('relay server listen (%d)\n', cfg.RELAY_PORT);
 // var server2 = http.createServer(dispatcher.start);
 // server2.listen(exports.DISPATCHER_PORT);
 
-var lg = logger;
-///lg = undefined;
-
 var glh = {
   port: cfg.GITLABHOOK_PORT,
   host: cfg.GITLABHOOK_HOST,
-  logger: lg,
+  logger: logger,
   configPathes: [__dirname, '/etc/gitlabhook', '/usr/local/etc/gitlabhook/']
 };
 
