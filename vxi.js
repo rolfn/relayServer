@@ -26,7 +26,7 @@ function call(pRef, js) {
   };
   var timeout = parseInt(js.Timeout);
   // "I/O Timeout" und "Lock Timeout" bei DEVICE_READ
-  if (Number.isFinite(timeout)) params.readTimeout = timeout;
+  if (isFinite(timeout)) params.readTimeout = timeout;
   function doIt(b, next) {
     vxi(params, function(result) {
       if (result) {
