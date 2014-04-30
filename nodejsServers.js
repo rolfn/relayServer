@@ -2,12 +2,12 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-01-23
+ * version: 2014-04-30
  */
 
 var cfg = require('./config.js');
 var winston = require('winston');
-require('vWebsocket');
+require('vwebsocket');
 var logger = cfg.logger = require('vlogger')({
   transports: [
     new winston.transports.vWebsocket({
@@ -36,11 +36,7 @@ logger.info('relay server listen (%d)\n', cfg.RELAY_PORT);
 // var server2 = http.createServer(dispatcher.start);
 // server2.listen(exports.DISPATCHER_PORT);
 
-var lg = {
-  log:   logger.info,
-  error: logger.error
-};
-
+var lg = logger;
 ///lg = undefined;
 
 var glh = {

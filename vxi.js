@@ -20,7 +20,7 @@ var logger = cfg.logger;
 function call(pRef, js) {
   function doIt(b, next) {
     var params = { host:js.Host, device:js.Device, command:js.Value,
-      logger:{
+      logger: {
         log:cfg.logger.debug,
         error:cfg.logger.error
       },

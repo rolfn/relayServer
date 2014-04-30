@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2014-04-29, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-04-30, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -57,6 +57,29 @@ spec : dist
 	@echo "%description" >> $(SPEC_FILE)
 	@echo "$(DESCRIPTION)" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
+	@echo "%post" >> $(SPEC_FILE)
+	@echo "%if 0%{?suse_version} >= 1230" >> $(SPEC_FILE)
+	@echo "%{fillup_only}" >> $(SPEC_FILE)
+	@echo "%service_add_post %{Name}.service" >> $(SPEC_FILE)
+	@echo "%else" >> $(SPEC_FILE)
+	@echo "%{fillup_and_insserv} %{Name}" >> $(SPEC_FILE)
+	@echo "%endif" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%postun" >> $(SPEC_FILE)
+	@echo "%if 0%{?suse_version} >= 1230" >> $(SPEC_FILE)
+	@echo "%service_del_postun %{Name}.service" >> $(SPEC_FILE)
+	@echo "%else" >> $(SPEC_FILE)
+	@echo "%restart_on_update %{Name}" >> $(SPEC_FILE)
+	@echo "%insserv_cleanup" >> $(SPEC_FILE)
+	@echo "%endif" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%preun" >> $(SPEC_FILE)
+	@echo "%if 0%{?suse_version} >= 1230" >> $(SPEC_FILE)
+	@echo "%service_del_preun %{Name}.service" >> $(SPEC_FILE)
+	@echo "%else" >> $(SPEC_FILE)
+	@echo "%stop_on_removal %{Name}" >> $(SPEC_FILE)
+	@echo "%endif" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
 	@echo "%files" >> $(SPEC_FILE)
 	@find $(BUILD_ROOT)/* -type d -name '*' -print | sed 's/^$(BUILD_ROOT)/%dir /' \
     >> $(SPEC_FILE)
@@ -65,8 +88,8 @@ spec : dist
 	@find $(BUILD_ROOT) -type l -name '*' -print | sed 's/^$(BUILD_ROOT)//' \
     >> $(SPEC_FILE)
 	@echo -n "%config(noreplace) " >> $(SPEC_FILE)
-	@find $(BUILD_ROOT) -type f -name "$(CONFIG)" | sed 's/^$(BUILD_ROOT)//' \
-    >> $(SPEC_FILE)
+##	@find $(BUILD_ROOT) -type f -name "$(CONFIG)" | sed 's/^$(BUILD_ROOT)//' \
+##    >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%changelog" >> $(SPEC_FILE)
 	@cat CHANGES >> $(SPEC_FILE)
