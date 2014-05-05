@@ -1,9 +1,11 @@
 
 # Rolf Niepraschk, 2014-04-30, Rolf.Niepraschk@ptb.de
 
+# TODO: "noarch"?
+
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 2 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
