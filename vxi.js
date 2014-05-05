@@ -31,11 +31,11 @@ function call(pRef, js) {
     vxi(params, function(result) {
       if (result) {
         b.push(result);
-        next();
       } else {
         logger.error('read error');
         b.push('read error');
       }
+      next();
     });
   }
   var wait = js.Wait < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT : js.Wait;

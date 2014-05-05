@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2014-04-30, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-05-05, Rolf.Niepraschk@ptb.de
 
 # TODO: "noarch"?
 
@@ -11,7 +11,8 @@ GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
 DESCRIPTION = $(SUMMARY)
 PACKAGER = "Rolf Niepraschk"
-BUILDARCH = $(shell arch)
+#BUILDARCH = $(shell arch)
+BUILDARCH = "noarch"
 JS_TEST = relay-add-test.js
 JS_SOURCE = $(wildcard *.js)
 JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
