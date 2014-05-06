@@ -1,8 +1,6 @@
 
 # Rolf Niepraschk, 2014-05-05, Rolf.Niepraschk@ptb.de
 
-# TODO: "noarch"?
-
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
 RELEASE = 1 # >0!

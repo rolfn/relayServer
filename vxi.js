@@ -28,12 +28,13 @@ function call(pRef, js) {
   // "I/O Timeout" und "Lock Timeout" bei DEVICE_READ
   if (isFinite(timeout)) params.readTimeout = timeout;
   function doIt(b, next) {
-    vxi(params, function(result) {
-      if (result) {
-        b.push(result);
+    vxi(params, function(result, error) {
+      if (error) {
+        var e = 'error ' + error;
+        logger.error(e);
+        b.push(e);
       } else {
-        logger.error('read error');
-        b.push('read error');
+        b.push(result);
       }
       next();
     });
