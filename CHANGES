@@ -1,5 +1,5 @@
 * Thu May 08 2014 Rolf.Niepraschk@ptb.de
-- http-Header-Erzeugung geändert; excel-Erzeugung
+- http-Header-Erzeugung geändert; excel-Erzeugung ("XLSX-OUT" und "XLSX-IN")
 
 * Tue May 06 2014 Rolf.Niepraschk@ptb.de
 - Read-Error-Nummer

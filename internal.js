@@ -122,29 +122,16 @@ function call(pRef, js) {
       response.prepareError(pRef, js, 'not working!');
       break;
     case 'TEX':
-      // eigentl. external, aber wegen Komplexität intern verwaltet.
-      // http://www.profv.de/texcaller/index.html
-      // https://github.com/vog/texcaller
-      // TODO: Auslagern nach "dispatcher.js" und external action
-      // "/usr/local/bin/texcaller" benutzen. (???)
-      //response.prepareError(pRef, js, 'not working!'); ///
-      ///if (js.Body !== undefined) {
-        try {
-          _latex.call(pRef, js);
-        } catch(err) {
-          logger.error('err', err);
-          response.prepareError(pRef, js, err);
-        }
-        // Verzweigt später zu "external".
-        ///return;
-      ///}
+      _latex.call(pRef, js);
       break;
     case 'VXI11':
       _vxi11.call(pRef, js);
       break;
     case 'XLSX-OUT':
-      _excel.call(pRef, js);
-      ///response.prepareError(pRef, js, 'coming soon!');
+      _excel.toXLSX(pRef, js);
+      break;
+    case 'XLSX-IN':
+      _excel.fromXLSX(pRef, js);
       break;
     // Administration
     case '_version':

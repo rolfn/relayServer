@@ -17,7 +17,7 @@ var logger = cfg.logger;
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
-function call(pRef, js) {
+function toXLSX(pRef, js) {
   var params = {};
   params.worksheets = js.Value;
   logger.debug('params: ', params);
@@ -36,7 +36,18 @@ function call(pRef, js) {
     logger.error(e.toString());
     response.prepareError(pRef, js, 'xlsx creation error');
   }
-
 }
 
-exports.call = call;
+function fromXLSX(pRef, js) {
+  try {
+    var data = xlsx.parse(new Buffer(js.Value, 'base64'));
+    response.prepareResult(pRef, js, data);
+  } catch(e) {
+    logger.error(e.toString());
+    response.prepareError(pRef, js, 'xlsx convert error');
+  }
+}
+
+exports.toXLSX = toXLSX;
+exports.fromXLSX = fromXLSX;
+
