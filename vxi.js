@@ -1,13 +1,13 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-04-29
+ * version: 2014-05-07
  */
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
-var vxi = require('vxi11').vxiTransceiver
+var vxi = require('vxi11').vxiTransceiver;
 
 var logger = cfg.logger;
 

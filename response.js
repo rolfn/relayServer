@@ -29,20 +29,20 @@ try {
 function sendResponse(pRef, js, _data) {
   js.OutputType = js.OutputType || 'json';
   logger.debug('_data: ', _data.toString().slice(0,100));
-  var ctype, data;
+  var data, head = js.Head ? js.Head : {};
   logger.debug('OutputType: %s', js.OutputType);
   if (js.OutputType == 'stream') {
-    ctype = (js.ContentType !== undefined) ? js.ContentType :
+    if (!head['Content-Type']) head['Content-Type'] =
       'application/octet-stream;charset=ISO-8859-1';
       // Hier 8-Bit-Charset nötig!
     data = _data;
   } else {
-    ctype = 'application/json';
+    head['Content-Type'] = 'application/json';
     data = JSON.stringify(_data) + '\n';
   }
-  logger.debug('ContentType: %s', ctype);
-  pRef.res.writeHead(200, {
-    'Content-Type':ctype,'Access-Control-Allow-Origin':'*'});
+  head['Access-Control-Allow-Origin'] = '*';
+  logger.debug('head: ', head);
+  pRef.res.writeHead(200, head);
   pRef.res.end(data);
   pRef.req.connection.end();
   return;
@@ -70,7 +70,7 @@ function prepareResult(pRef, js, data) {
   } else if (jsonRes.t_start.length == 1) {
     jsonRes.t_start = jsonRes.t_start[0];
     jsonRes.t_stop = jsonRes.t_stop[0];
-  }
+  } // TODO: Sinnhaftigkeit überprüfen!
 
   if ((js) && (js.PostProcessing)) {
     // Einfache Strings und String-Arrays unterstützen.

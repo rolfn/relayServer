@@ -17,6 +17,7 @@ var _email = require('./email.js');
 //    npm install buffertools -g ; npm install ldapjs -g
 var _latex = require('./latex.js'); // TODO: Überarbeiten!
 var _vxi11 = require('./vxi.js');
+var _excel = require('./excel.js');
 
 var logger = cfg.logger;
 
@@ -128,13 +129,22 @@ function call(pRef, js) {
       // "/usr/local/bin/texcaller" benutzen. (???)
       //response.prepareError(pRef, js, 'not working!'); ///
       ///if (js.Body !== undefined) {
-        _latex.call(pRef, js);
+        try {
+          _latex.call(pRef, js);
+        } catch(err) {
+          logger.error('err', err);
+          response.prepareError(pRef, js, err);
+        }
         // Verzweigt später zu "external".
         ///return;
       ///}
       break;
     case 'VXI11':
       _vxi11.call(pRef, js);
+      break;
+    case 'XLSX-OUT':
+      _excel.call(pRef, js);
+      ///response.prepareError(pRef, js, 'coming soon!');
       break;
     // Administration
     case '_version':

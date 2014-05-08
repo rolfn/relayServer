@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-26
+ * version: 2014-05-08
  */
 
 var cfg = require('./config.js');
@@ -15,7 +15,6 @@ var tmp = require('temp'); tmp.track();
 var logger = cfg.logger;
 
 function call(pRef, js) {
-
   function post(pRef, js) {
     var texFile = js.execStr.split(' ').pop();
     var resultFile = path.join(js.WorkingDir,
@@ -70,17 +69,21 @@ function call(pRef, js) {
 
   var cmd = getCmd();
   if (!cmd) response.prepareError(pRef, js, 'invalid TeX command');
-
   if (!js.Body) response.prepareError(pRef, js, 'missing document data');
   var content = (Array.isArray(js.Body)) ? js.Body.join('\n') : js.Body;
 
   js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
   js.Repeat = tools.getInt(js.Repeat, cfg.DEFAULT_TEX_RUNS);
-  js.ContentType = 'application/pdf';
+  var filename = js.Filename ? js.Filename :
+    cfg.DEFAULT_TEX_OUTNAME + '.' + cfg.DEFAULT_TEX_DESTFMT;
+  logger.debug('filename: %s', filename);
+  js.Head = {};
+  js.Head['Content-Type'] = 'application/pdf';
+  js.Head['Content-Disposition'] = 'attachment; filename=' + filename;
   js.OutputType = 'stream';
-  js.OutputEncoding = 'binary';
+  js.OutputEncoding = 'binary';// TODO: Kann das weg?
   js.execStr = cmd + ' -interaction=batchmode '  + cfg.TEX_FILE;
-
+  logger.debug('Head: %s', js.Head);
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
   //  schreiben, dann Aufruf von "external.call".
   tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {

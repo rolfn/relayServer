@@ -7,8 +7,8 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '10.0.6',
-  DATE: '2014-05-06',
+  VERSION: '11.0.1',
+  DATE: '2014-05-08',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,
@@ -22,9 +22,11 @@ module.exports = {
   DEFAULT_TCP_TIMEOUT: 2000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
+  DEFAULT_XLSX_NAME: 'data.xlsx',
   DEFAULT_TEX_RUNS: 2,
   DEFAULT_TEX_CMD: 'pdflatex',
   DEFAULT_TEX_DESTFMT: 'pdf',
+  DEFAULT_TEX_OUTNAME: 'output',
   TEX_CMDS: ['pdftex', 'pdflatex', 'xetex', 'xelatex', 'luatex', 'lualatex'],
   TEX_FILE: 'texput.tex',
   TEX_ERROR_FILE: 'texerror.tex',
