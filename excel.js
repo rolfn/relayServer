@@ -11,6 +11,18 @@ var xlsx = require('node-xlsx');
 
 var logger = cfg.logger;
 
+function simplify(d) {
+  for (var i=0; i<d.worksheets.length; i++) {
+    for (var j=0; j<d.worksheets[i].data.length; j++) {
+      for (var k=0; k<d.worksheets[i].data[j].length; k++) {
+        var v = d.worksheets[i].data[j][k].value;
+        d.worksheets[i].data[j][k] = v;
+      }
+    }
+  }
+  return d;
+}
+
 /**
  * Konfiguration der nötigen Datenstrukturen.
  * Wait/Repeat wird nicht unterstützt.
@@ -29,7 +41,7 @@ function toXLSX(pRef, js) {
     js.Head = {};
     js.Head['Content-Type'] =
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    // application/ms-excel ???
+    // 'application/ms-excel' ???
     js.Head['Content-Disposition'] = 'attachment; filename=' + filename;
     response.prepareResult(pRef, js, buf);
   } catch(e) {
@@ -40,8 +52,10 @@ function toXLSX(pRef, js) {
 
 function fromXLSX(pRef, js) {
   try {
+    logger.debug('Value.length: %d', js.Value.length);
     var data = xlsx.parse(new Buffer(js.Value, 'base64'));
-    response.prepareResult(pRef, js, data);
+    var short = (typeof js.ShortFormat == 'boolean') ? js.ShortFormat : true;
+    response.prepareResult(pRef, js, short ? simplify(data) : data);
   } catch(e) {
     logger.error(e.toString());
     response.prepareError(pRef, js, 'xlsx convert error');
