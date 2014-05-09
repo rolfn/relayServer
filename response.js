@@ -28,7 +28,8 @@ try {
  */
 function sendResponse(pRef, js, _data) {
   js.OutputType = js.OutputType || 'json';
-  logger.debug('_data: ', _data.toString().slice(0,100));
+  //logger.debug('_data: ', _data.toString().slice(0,100));
+  logger.debug('_data: ', tools.inspect(_data));
   var data, head = js.Head ? js.Head : {};
   logger.debug('OutputType: %s', js.OutputType);
   if (js.OutputType == 'stream') {
