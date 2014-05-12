@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2014-05-12
  */
 
 var cfg = require('./config.js');
@@ -16,6 +16,16 @@ var logger = cfg.logger;
  */
 function inspect(o) {}
 inspect = tools.inspect;
+
+function addStartTime(js) {
+  if (!Array.isArray(js.t_start)) js.t_start = [];
+  js.t_start.push(new Date().getTime());
+}
+
+function addStopTime(js) {
+  if (!Array.isArray(js.t_stop)) js.t_stop = [];
+  js.t_stop.push(new Date().getTime());
+}
 
 /**
  * Wiederholtes Aufrufen der Funktion exec.
@@ -48,10 +58,10 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
   // "exec" ausführen und Ergebnis in Array _buf speichern und ggf. nach
   // Wartezeit sich selbst erneut aufrufen.
   if (running) {
-    js.t_start.push(new Date().getTime());
+    addStartTime(js);
     logger.debug('t_start.push %d', js.t_start[js.t_start.length-1]);
     exec(_buf, function() {
-      js.t_stop.push(new Date().getTime());
+      addStopTime(js);
       logger.debug('t_stop.push %d', js.t_stop[js.t_stop.length-1]);
       //logger.debug('buf (nb: %d): ', nb, _buf);
       if (--nb) {
@@ -71,4 +81,6 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
 }
 
 exports.repeat = repeat;
+exports.addStartTime = addStartTime;
+exports.addStopTime = addStopTime;
 

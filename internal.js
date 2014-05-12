@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-04-29
+ * version: 2014-05-08
  */
 
 var fs = require('fs');

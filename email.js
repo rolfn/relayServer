@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2014-05-12
  */
 
 var cfg = require('./config.js');
@@ -52,9 +52,11 @@ function call(pRef, js) {
   console.log = function (d) {
     process.stderr.write(d + '\n');
   };
+  utils.addStartTime(js);
   mailer.send_mail(message, function(error, success){
     console.log = saveConsoleLog;
     if (success) {
+      utils.addStopTime(js);
       response.prepareResult(pRef, js, 'OK');
     } else {
       response.prepareError(pRef, js, error);

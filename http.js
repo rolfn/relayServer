@@ -31,6 +31,7 @@ function call(pRef, js) {
     }
   }
   logger.debug('method: %s, proxy: %s, json: %s', method, proxy, json);
+  utils.addStartTime(js);
   request(
     { method: method,
       uri: js.Url,
@@ -41,6 +42,7 @@ function call(pRef, js) {
     },
     function (e, res, body) {
       if (!e && res.statusCode == 200) {
+        utils.addStopTime(js);
         logger.debug('response body', body);
         response.prepareResult(pRef, js, body);
       } else {

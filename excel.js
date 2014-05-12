@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-08
+ * version: 2014-05-12
  */
 
 var cfg = require('./config.js');
@@ -37,7 +37,6 @@ function toXLSX(pRef, js) {
     var buf = xlsx.build(params);
     var filename = js.Filename ? js.Filename : cfg.DEFAULT_XLSX_NAME;
     js.OutputType = 'stream';
-    js.OutputEncoding = 'binary';// TODO: Kann das weg?
     js.Head = {};
     js.Head['Content-Type'] =
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -53,12 +52,14 @@ function toXLSX(pRef, js) {
 function fromXLSX(pRef, js) {
   try {
     logger.debug('Value.length: %d', js.Value.length);
+    utils.addStartTime(js);
     var data = xlsx.parse(new Buffer(js.Value, 'base64'));
+    utils.addStopTime(js);
     var short = (typeof js.ShortFormat == 'boolean') ? js.ShortFormat : true;
     response.prepareResult(pRef, js, short ? simplify(data) : data);
   } catch(e) {
     logger.error(e.toString());
-    response.prepareError(pRef, js, 'xlsx convert error');
+    response.prepareError(pRef, js, 'xlsx convertion error');
   }
 }
 
