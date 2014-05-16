@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-07
+ * version: 2014-05-13
  */
 
 var cfg = require('./config.js');
@@ -28,15 +28,13 @@ function call(pRef, js) {
   // "I/O Timeout" und "Lock Timeout" bei DEVICE_READ
   if (isFinite(timeout)) params.readTimeout = timeout;
   function doIt(b, next) {
-    vxi(params, function(result, error) {
-      if (error) {
-        var e = 'error ' + error;
-        logger.error(e);
-        b.push(e);
-      } else {
-        b.push(result);
-      }
+    vxi(params, function(result) {
+      b.push(result);
       next();
+    }, function(error) {
+      logger.error(e);
+      b.push(e);
+      next(); // oder besser "response.prepareError(pRef, js, e);"?
     });
   }
   var wait = js.Wait < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT : js.Wait;

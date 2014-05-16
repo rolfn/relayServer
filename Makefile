@@ -96,7 +96,8 @@ dist : rm_buildroot vxi11
 	mkdir -p $(BUILD_ROOT)/usr/local/share/vaclab/nodejs
 	mkdir -p $(BUILD_ROOT)/usr/lib/node_modules
 	mkdir -p $(BUILD_ROOT)/usr/lib/systemd/system
-	cp -p vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
+##	cp -p vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
+	cp -p vlLogging $(BUILD_ROOT)/usr/local/bin/
 ##	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 ##	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/

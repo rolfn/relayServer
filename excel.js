@@ -59,7 +59,7 @@ function fromXLSX(pRef, js) {
     response.prepareResult(pRef, js, short ? simplify(data) : data);
   } catch(e) {
     logger.error(e.toString());
-    response.prepareError(pRef, js, 'xlsx convertion error');
+    response.prepareError(pRef, js, 'xlsx conversion error');
   }
 }
 
