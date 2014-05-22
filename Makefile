@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2014-05-12, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-05-21, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -30,9 +30,12 @@ ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
 COMPACT=curl -H "Content-Type: application/json" -X POST
 
 ARCH=$(shell arch)
-INSTALL_DIRS_ROOT = $$HOME/couch-apps/repos/_attachments/
+INSTALL_DIRS_PARENT = $$HOME/couch-apps/repos/
+INSTALL_DIRS_ROOT = $(INSTALL_DIRS_PARENT)_attachments/
 OS_RELEASES = openSUSE_11.4  openSUSE_12.2  openSUSE_12.3  openSUSE_13.1  SLE_11_SP3
-INSTALL_DIRS = $(addsuffix /$(ARCH), $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
+### INSTALL_DIRS = $(addsuffix /$(ARCH), $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
+INSTALL_DIRS = $(addsuffix /noarch, $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
+
 
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
@@ -163,7 +166,8 @@ debug :
 
 install : rpm
 	@echo "=== INSTALL ==="
-	@target=$(shell ls -1t $$HOME/rpmbuild/RPMS/$(ARCH)/*.rpm | head -1) ; \
+	@target=$(shell ls -1t $$HOME/rpmbuild/RPMS/noarch/*.rpm | head -1) ; \
 	$(foreach i, $(INSTALL_DIRS), cp -pv $$target $i ;)
+	make -C $(INSTALL_DIRS_PARENT)
 
 .PHONY : dist vxi11 arch clean rpm src_rpm spec

@@ -88,5 +88,8 @@ echo '{"Action":"TEX","Body":"\\documentclass{article}\\begin{document}
 echo '{"Action":"UDP","Host":"192.168.98.15","Port":4165,"Value":"Sw_on2adminanel"}' | \
   curl -T - -X PUT http://localhost:55555
 
+echo '{"Action":"VXI11","Host":"e75465","Device":"gpib0,1", "Value":"DAT:SOU MATH2;STAR 1;STOP 50000;:DAT:ENC RPB;WID 2;:HEAD ON;:VERB OFF;:WAVF?\r","Encoding":"base64"}' |
+  curl -T - -X PUT http://localhost:55555
+
 </pre>
 */

@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-13
+ * version: 2014-05-22
  */
 
 var cfg = require('./config.js');
@@ -19,6 +19,7 @@ var logger = cfg.logger;
  */
 function call(pRef, js) {
   var params = { host:js.Host, device:js.Device, command:js.Value,
+    encoding: js.Encoding,
     logger: {
       log:logger.debug,
       error:logger.error
