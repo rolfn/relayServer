@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-05-21, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-05-27, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -16,6 +16,7 @@ JS_SOURCE = $(wildcard *.js)
 JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
 CONFIG = gitlabhook.conf
 NODE_MODULES = node_modules
+GETSERVER = /home/niepra01/myapp/miscellaneous/getVaclabServer
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 #VXI11_SRC = vxi11
@@ -101,6 +102,7 @@ dist : rm_buildroot vxi11
 	mkdir -p $(BUILD_ROOT)/usr/lib/systemd/system
 ##	cp -p vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 	cp -p vlLogging $(BUILD_ROOT)/usr/local/bin/
+	cp -p $(GETSERVER) $(BUILD_ROOT)/usr/local/bin/
 ##	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
 ##	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/

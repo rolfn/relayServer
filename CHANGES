@@ -1,3 +1,6 @@
+* Tue May 27 2014 Rolf.Niepraschk@ptb.de
+- "getVaclabServer" zugefügt
+
 * Thu May 22 2014 Rolf.Niepraschk@ptb.de
 - VXI-11-Modul: encoding ('utf8', 'base64', 'binary')
 

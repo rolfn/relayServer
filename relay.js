@@ -104,7 +104,7 @@ function analyzeActions1(pRef, data) {
     try{
       js = JSON.parse(data);
     } catch(err) {
-      response.prepareError(pRef, js, 'data error');
+      response.prepareError(pRef, js, 'data error (invalid JSON)');
     }
     analyzeActions2(pRef, js);
   } else {

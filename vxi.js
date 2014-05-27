@@ -33,8 +33,8 @@ function call(pRef, js) {
       b.push(result);
       next();
     }, function(error) {
-      logger.error(e);
-      b.push(e);
+      logger.error(error);
+      b.push(error);
       next(); // oder besser "response.prepareError(pRef, js, e);"?
     });
   }
