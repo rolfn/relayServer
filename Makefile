@@ -1,23 +1,25 @@
 
-# Rolf Niepraschk, 2013-10-09, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-05-27, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 3 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
 DESCRIPTION = $(SUMMARY)
 PACKAGER = "Rolf Niepraschk"
-BUILDARCH = $(shell arch)
+#BUILDARCH = $(shell arch)
+BUILDARCH = "noarch"
 JS_TEST = relay-add-test.js
 JS_SOURCE = $(wildcard *.js)
 JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
 CONFIG = gitlabhook.conf
 NODE_MODULES = node_modules
+GETSERVER = /home/niepra01/myapp/miscellaneous/getVaclabServer
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
-VXI11_SRC = vxi11
+#VXI11_SRC = vxi11
 DOC_CMD=/usr/bin/dox-foundation
 DOC_DIR=_attachments
 DOC_SRC=doc_src
@@ -27,6 +29,14 @@ DOC_SERVER_PORT=5984
 DOC_DB_URL=http://$(DOC_SERVER):$(DOC_SERVER_PORT)/$(DOC_DB)
 ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
 COMPACT=curl -H "Content-Type: application/json" -X POST
+
+ARCH=$(shell arch)
+INSTALL_DIRS_PARENT = $$HOME/couch-apps/repos/
+INSTALL_DIRS_ROOT = $(INSTALL_DIRS_PARENT)_attachments/
+OS_RELEASES = openSUSE_11.4  openSUSE_12.2  openSUSE_12.3  openSUSE_13.1  SLE_11_SP3
+### INSTALL_DIRS = $(addsuffix /$(ARCH), $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
+INSTALL_DIRS = $(addsuffix /noarch, $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
+
 
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
@@ -47,10 +57,23 @@ spec : dist
 	@echo "BuildArch: $(BUILDARCH)" >> $(SPEC_FILE)
 	@echo "Packager: $(PACKAGER)" >> $(SPEC_FILE)
 	@echo "AutoReqProv: no" >> $(SPEC_FILE)
-	@echo "Requires: nodejs" >> $(SPEC_FILE)
+	@echo "Requires: nodejs" >> $(SPEC_FILE)%{?systemd_requires}
+	@echo "%{?systemd_requires}" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%description" >> $(SPEC_FILE)
 	@echo "$(DESCRIPTION)" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%pre" >> $(SPEC_FILE)
+	@echo "%service_add_pre %{name}.service" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%post" >> $(SPEC_FILE)
+	@echo "%service_add_post %{name}.service" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%preun" >> $(SPEC_FILE)
+	@echo "%service_del_preun %{name}.service" >> $(SPEC_FILE)
+	@echo "" >> $(SPEC_FILE)
+	@echo "%postun" >> $(SPEC_FILE)
+	@echo "%service_del_postun %{name}.service" >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%files" >> $(SPEC_FILE)
 	@find $(BUILD_ROOT)/* -type d -name '*' -print | sed 's/^$(BUILD_ROOT)/%dir /' \
@@ -60,37 +83,44 @@ spec : dist
 	@find $(BUILD_ROOT) -type l -name '*' -print | sed 's/^$(BUILD_ROOT)//' \
     >> $(SPEC_FILE)
 	@echo -n "%config(noreplace) " >> $(SPEC_FILE)
-	@find $(BUILD_ROOT) -type f -name "$(CONFIG)" | sed 's/^$(BUILD_ROOT)//' \
-    >> $(SPEC_FILE)
+##	@find $(BUILD_ROOT) -type f -name "$(CONFIG)" | sed 's/^$(BUILD_ROOT)//' \
+##    >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%changelog" >> $(SPEC_FILE)
 	@cat CHANGES >> $(SPEC_FILE)
 
 # texcaller dazu?
+##dist : rm_buildroot vxi11
 dist : rm_buildroot vxi11
-#	npm install request nodemailer gitlabhook
+	git pull
+#	npm install request nodemailer gitlabhook temp
 	mkdir -p $(BUILD_ROOT)/etc/init.d
 	mkdir -p $(BUILD_ROOT)/usr/local/bin
 	mkdir -p $(BUILD_ROOT)/usr/sbin
 	mkdir -p $(BUILD_ROOT)/usr/local/share/vaclab/nodejs
 	mkdir -p $(BUILD_ROOT)/usr/lib/node_modules
-	cp -p nodejsServers vxiTransceiver $(BUILD_ROOT)/usr/local/bin/
-	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
+	mkdir -p $(BUILD_ROOT)/usr/lib/systemd/system
+##	cp -p vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
+	cp -p vlLogging $(BUILD_ROOT)/usr/local/bin/
+	cp -p $(GETSERVER) $(BUILD_ROOT)/usr/local/bin/
+##	cp -p nodejsServers vxiTransceiver vlLogging $(BUILD_ROOT)/usr/local/bin/
+##	cp -p $(VXI11_SRC)/vxi11_transceiver $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
-	cp -pr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
+	cp -pLr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p $(CONFIG) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
-	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
+	cp -p NodejsServers.service $(BUILD_ROOT)/usr/lib/systemd/system/
+##	cp -p NodejsServers $(BUILD_ROOT)/etc/init.d/
 ##	cp -pr /usr/lib/node_modules/request $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/ldapjs $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/buffertools $(BUILD_ROOT)/usr/lib/node_modules/
 ##	cp -pr /usr/lib/node_modules/nodemailer $(BUILD_ROOT)/usr/lib/node_modules/
-	cd $(BUILD_ROOT)/usr/sbin/ && \
-    ln -sf ../../etc/init.d/NodejsServers rcNodejsServers
+##	cd $(BUILD_ROOT)/usr/sbin/ && \
+##    ln -sf ../../etc/init.d/NodejsServers rcNodejsServers
 
-vxi11 : $(VXI11_SRC)/vxi11_transceiver
+##vxi11 : $(VXI11_SRC)/vxi11_transceiver
 
-$(VXI11_SRC)/vxi11_transceiver :
-	$(MAKE) -C $(VXI11_SRC)
+## $(VXI11_SRC)/vxi11_transceiver :
+## 	$(MAKE) -C $(VXI11_SRC)
 
 docs : $(DOC_DIR)/index.html
 
@@ -108,7 +138,7 @@ $(DOC_DIR)/index.html : $(DOC_SRC)
 
 docs-install : docs
 	echo $(MAIN) > _id
-	erica -v --docid $(MAIN) push $(DOC_DB_URL)
+	erica -v --is-ddoc --docid $(MAIN) push $(DOC_DB_URL)
 	$(COMPACT) $(DOC_DB_URL)/_compact
 	$(RM) $(DOC_DIR)/*.js.html $(DOC_DIR)/index.html
 
@@ -134,5 +164,12 @@ arch :
 debug :
 	@echo $(VERSION)
 	@echo $(JS_SOURCE)
+	@echo $(INSTALL_DIRS)
+
+install : rpm
+	@echo "=== INSTALL ==="
+	@target=$(shell ls -1t $$HOME/rpmbuild/RPMS/noarch/*.rpm | head -1) ; \
+	$(foreach i, $(INSTALL_DIRS), cp -pv $$target $i ;)
+	make -C $(INSTALL_DIRS_PARENT)
 
 .PHONY : dist vxi11 arch clean rpm src_rpm spec

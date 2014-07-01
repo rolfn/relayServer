@@ -1,12 +1,12 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-10-10
+ * version: 2014-05-12
  */
-
-const MODULE = 'utils';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+
+var logger = cfg.logger;
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
@@ -14,28 +14,18 @@ var tools = require('./tools.js');
  * @param {object} o Zu untersuchende JS-Variable.
  * @return {string}  String-Repräsentation
  */
-function inspect(o) {};
+function inspect(o) {}
 inspect = tools.inspect;
 
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
+function addStartTime(js) {
+  if (!Array.isArray(js.t_start)) js.t_start = [];
+  js.t_start.push(new Date().getTime());
+}
 
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+function addStopTime(js) {
+  if (!Array.isArray(js.t_stop)) js.t_stop = [];
+  js.t_stop.push(new Date().getTime());
+}
 
 /**
  * Wiederholtes Aufrufen der Funktion exec.
@@ -61,18 +51,19 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
   if (!_buf) {// Erster Aufruf
     var _buf = [];
     cfg.theRepeats[pRef.jobId] = { running:true };
+    nb = tools.getInt(js.Repeat, 1);
   }
   var running = cfg.theRepeats[pRef.jobId] && cfg.theRepeats[pRef.jobId].running;
   // Solange kein "killRepeats" passiert ist bzw. nicht letzter Durchgang:
   // "exec" ausführen und Ergebnis in Array _buf speichern und ggf. nach
   // Wartezeit sich selbst erneut aufrufen.
   if (running) {
-    js.t_start.push(new Date().getTime());
-    fdebug('t_start.push', '' + js.t_start[js.t_start.length-1]);
+    addStartTime(js);
+    logger.debug('t_start.push %d', js.t_start[js.t_start.length-1]);
     exec(_buf, function() {
-      js.t_stop.push(new Date().getTime());
-      fdebug('t_stop.push', '' + js.t_stop[js.t_stop.length-1]);
-      fdebug('buf', ' (nb:' + nb + ') ' + inspect(_buf));
+      addStopTime(js);
+      logger.debug('t_stop.push %d', js.t_stop[js.t_stop.length-1]);
+      //logger.debug('buf (nb: %d): ', nb, _buf);
       if (--nb) {
         setTimeout(function() {
           repeat(nb, wait, exec, ready, pRef, js, _buf);
@@ -90,4 +81,6 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
 }
 
 exports.repeat = repeat;
+exports.addStartTime = addStartTime;
+exports.addStopTime = addStopTime;
 

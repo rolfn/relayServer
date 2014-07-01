@@ -51,6 +51,7 @@ function calQsp(psoll, pist, mq){
       // Gas
       if (ret.dp > bord) {
         if (q && q < sscbord) {
+
 	  ret.sp1 = q ;
 	  ret.sp2 = 0;
         }
@@ -58,22 +59,22 @@ function calQsp(psoll, pist, mq){
 	  ret.sp1 = q / 10;
 	  ret.sp2 = q;
         }
-      };
+      }
       // Kupplung
       if (ret.dp <= bord) {
         ret.pfill_ok = false;
         if (q * f && q * f < sscbord) {
-	  ret.sp1 = q * f;
-	  ret.sp2 = q * f / 100;
+          ret.sp1 = q * f;
+          ret.sp2 = q * f / 100;
         }
         if (q * f && q * f > sscbord) {
-	  ret.sp1 = q * f / 100;
-	  ret.sp2 = q * f;
+          ret.sp1 = q * f / 100;
+          ret.sp2 = q * f;
         }
-      };
+      }
       // Bremse
       if (ret.dp < eps || pist > psoll) {
-        ret.pfill_ok = true,
+        ret.pfill_ok = true;
         ret.sp1 = 0;
         ret.sp2 = 0;
       }
@@ -111,7 +112,7 @@ function vlStat(x) {
     res.sd = sd;
     return res;
   }
-};
+}
 exports.vlStat = vlStat;
 
 
@@ -126,7 +127,7 @@ exports.vlStat = vlStat;
 function checkNumArr(arr) {
   if (arr && Array.isArray(arr)) {
     var res = {};
-    res.Arr = [],
+    res.Arr = [];
     res.Skip = [];
     arr.map(function(v, i) {
       if (isNumber(v)) {
@@ -138,7 +139,7 @@ function checkNumArr(arr) {
     });
     return res;
   }
-};
+}
 exports.checkNumArr = checkNumArr;
 
 /**
@@ -205,7 +206,7 @@ function vlSlope(vec, tstart, tstop) {
     } //again
   } //m
   return slope(vec, t);
-};
+}
 exports.vlSlope = vlSlope;
 
 /**
@@ -235,15 +236,15 @@ function slope(y, x) {
         sumY = sumY + y[i];
         YArr.push(y[i]);
         remainN++;
-      };
-    };
+      }
+    }
     mvX = sumX / remainN;
     mvY = sumY / remainN;
     for (var j = 0; j < YArr.length; j++) {
       SSxy = SSxy + (XArr[j] - mvX) * (YArr[j] - mvY);
       SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
       SSyy = SSyy + Math.pow(YArr[j] - mvY, 2);
-    };
+    }
     ret.remainN = remainN;
     ret.mvX = mvX;
     ret.mvY = mvY;
@@ -279,15 +280,21 @@ exports.slope = slope;
  */
 
 var strToNum = function(numStr, pos){
+  var res;
+  if(numStr && numStr.length > pos){
+    res = parseFloat(numStr[pos]);
+  } else {
+    res = NaN;
+  }
+  return res;
+};
 
-    if(numStr && numStr.length > pos){
-	var res = parseFloat(numStr[pos]);
-    }else{
-	var res = NaN;
-    }
-    return res;
-}
-
+/**
+ * Entfernt einfach alle whitespaces im String
+ */
+var vlTrim = function(str) {
+    return str.replace(/\s/g, "");
+};
 
 /**
  * Extrahiert Float-Zahl aus String welcher von
@@ -302,8 +309,26 @@ function extractVM212DCR(s) {
   var regex = /^(\sDCR\s\s)([+-][0-9]{1}\.?[0-9]{4}[E][-][0-9]{2})/;
 
   return strToNum(regex.exec(s), 2);
-}
+};
 exports.extractVM212DCR =  extractVM212DCR;
+
+/**
+ * Extrahiert Float-Zahl aus String welcher von
+ * der FRS geliefert wird
+ * Es wird nicht auf lb getested: Bei großen
+ * Drücken kann der Druck ruhig in der letzten
+ * Stelle schwanken (also das lb verschwinden)
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractFRS(s) {
+    var regex = /^([+-]{0,1}[\s]{0,2}[0-9]{1,2}\.?[0-9]{6})/;
+
+    return strToNum(regex.exec(vlTrim(s)), 1);
+};
+exports.extractFRS =  extractFRS;
 
 /**
  * Extrahiert Float-Zahl aus String welcher von den MKS CDGs
@@ -366,6 +391,21 @@ function extractKeithleyVolt(s) {
 }
 exports.extractKeithleyVolt = extractKeithleyVolt;
 
+
+/**
+ * Extrahiert Float-Zahl aus String
+ * z.B. SE2 Temperaturen
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractKeithleyC(s) {
+  var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})([_,])/;
+  return strToNum(regex.exec(s), 1);
+}
+exports.extractKeithleyC = extractKeithleyC;
+
 /**
  * Extrahiert Float-Zahl aus String
  * z.B. SE1  Temperatursensoren
@@ -426,7 +466,7 @@ exports.extractIm540 = extractIm540;
  */
 function isNumber(n) {
   return !isNaN(parseFloat(n)) && isFinite(n);
-};
+}
 exports.isNumber = isNumber;
 
 /**
@@ -444,15 +484,15 @@ exports.isNumber = isNumber;
  */
 function vlRes(t, v, u, c) {
     var res = {
-	'Type': t,
-	'Value': v,
-	'Unit': u
+  'Type': t,
+  'Value': v,
+  'Unit': u
     };
     if (c) {
-	res.Comment = c;
+  res.Comment = c;
     }
     return res;
-};
+}
 exports.vlRes = vlRes;
 
 /**
@@ -483,7 +523,7 @@ function se1ValveClosed(hexStr,valve) {
     pat = num.toString(2).split('');
 
     return {'Valve_closed': pat[V[valve]] == '1',
-	    'Valve_opened': pat[V[valve]] == '0' };
+      'Valve_opened': pat[V[valve]] == '0' };
 
-};
+}
 exports.se1ValveClosed = se1ValveClosed;

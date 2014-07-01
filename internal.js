@@ -1,9 +1,7 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-09-18
+ * version: 2014-05-08
  */
-
-const MODULE = 'internal';
 
 var fs = require('fs');
 var cfg = require('./config.js');
@@ -11,41 +9,17 @@ var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
 var _tcp = require('./tcp.js');
+var _udp = require('./udp.js');
 var _http = require('./http.js');
 var _email = require('./email.js');
 //var _ldap = require('./ldap.js');
 //    derzeit (2013-01-14) Probleme (buffertools)!
 //    npm install buffertools -g ; npm install ldapjs -g
-//var _latex = require('./latex.js'); // TODO: Überarbeiten!
+var _latex = require('./latex.js'); // TODO: Überarbeiten!
+var _vxi11 = require('./vxi.js');
+var _excel = require('./excel.js');
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 /**
  * Liefert Angaben zum Betriebssystem
@@ -72,7 +46,7 @@ function getOSrelease(_file, success, error) {
             var x = lines[i].split('=');
             var key = '', val = '';
             if (x.length == 1) {
-              if (i==0) {// 'SuSE-release'
+              if (i === 0) {// 'SuSE-release'
                 isSUSE = true;
                 key = 'NAME';
                 if (lines[i].indexOf('SUSE Linux Enterprise') > -1) {
@@ -89,7 +63,7 @@ function getOSrelease(_file, success, error) {
               key = 'VERSION_ID';
             }
             val = val.replace(/"/g, '');
-            if (key != '' &&
+            if (key !== '' &&
               ((isSUSE && (key == 'NAME' || key == 'VERSION_ID') || !isSUSE))) {
               ret[key] = val;
             }
@@ -110,7 +84,6 @@ function getOSrelease(_file, success, error) {
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
-  fdebug('js', inspect(js));
   var doIt = null;
   switch (js.Action) {
     case 'RANDOM':
@@ -131,6 +104,9 @@ function call(pRef, js) {
     case 'TCP':
       _tcp.call(pRef, js);
       break;
+    case 'UDP':
+      _udp.call(pRef, js);
+      break;
     case 'HTTP':
       _http.call(pRef, js);
       break;
@@ -145,14 +121,17 @@ function call(pRef, js) {
       //_ldap.search(pRef, js);
       response.prepareError(pRef, js, 'not working!');
       break;
-    case 'LaTeX':
-      // eigentl. external, aber wegen Komplexität intern verwaltet.
-      // http://www.profv.de/texcaller/index.html
-      // https://github.com/vog/texcaller
-      // TODO: Auslagern nach "dispatcher.js" und external action
-      // "/usr/local/bin/texcaller" benutzen. (???)
-      ///processLATEX_1(pRef, js);
-      response.prepareError(pRef, js, 'not working!');
+    case 'TEX':
+      _latex.call(pRef, js);
+      break;
+    case 'VXI11':
+      _vxi11.call(pRef, js);
+      break;
+    case 'XLSX-OUT':
+      _excel.toXLSX(pRef, js);
+      break;
+    case 'XLSX-IN':
+      _excel.fromXLSX(pRef, js);
       break;
     // Administration
     case '_version':

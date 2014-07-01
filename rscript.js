@@ -1,43 +1,18 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-09-18
+ * version: 2013-11-26
  */
 
-const MODULE = 'rscript';
-
 var cfg = require('./config.js');
+var response = require('./response.js');
 var tools = require('./tools.js');
 var external = require('./external.js');
 var fs = require('fs');
+var os = require('os');
+var path = require('path');
+var tmp = require('temp'); tmp.track();
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 /**
  * Schreibt Inhalt von js.Body in temporäre Datei und ergänzt js.Value
@@ -47,19 +22,20 @@ fdebug = tools.createFunction('fdebug', debug);
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
-  var cleanUp = function(pRef, js) {
+  var cleanUp = function(pRef, js, data) {
     if (!js.KeepFiles) {
-      tools.rmdirRecursive(js.WorkingDir, function (e) {
-        fdebug('remove working directory', (e) ? e : js.WorkingDir);
-      });
+      logger.debug('remove working directory: %s: ', js.WorkingDir);
+      tmp.cleanup();
     }
+    response.prepareResult(pRef, js, data);
   };
-  if ((js.KeepFiles == undefined) || (js.KeepFiles != true))
-    js.KeepFiles = false;
+
+  js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
+
   var params = [];
-  js.WorkingDir = tools.getTempDir() + '/' + pRef.jobId;
+
   params.push(cfg.R_FILE);
-  if (js.Value != undefined) {
+  if (js.Value !== undefined) {
     if (Array.isArray(js.Value)) {
       params = params.concat(js.Value);
     } else {
@@ -68,23 +44,30 @@ function call(pRef, js) {
   }
   // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.R_FILE".
   js.Value = params;
-  // "fs.write" erfordert Buffer! "string" und "string[]" unterstützen.
-  var content = (Array.isArray(js.Body)) ? new Buffer(js.Body.join('\n'))
-    : new Buffer(js.Body);
+
+  if (!js.Body) response.prepareError(pRef, js, 'missing program code');
+  // "String" und "String[]" unterstützen.
+  var content = Array.isArray(js.Body) ? js.Body.join('\n') : js.Body;
 
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
-  //  schreiben, zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
-  tools.createTempFile(js.WorkingDir, cfg.R_FILE, content,
-    function() {
-      delete js.Body;
-      // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
-      fdebug('2nd "external.call"');
-      external.call(pRef, js, cleanUp);
-    },
-    function (error) {
-      prepareError(pRef, js, error);
-    }
-  );
+  //  schreiben, dann zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
+  tmp.mkdir({dir:os.tmpDir(), prefix:'R.'}, function(err, p) {
+    js.WorkingDir = p;
+    var fname = path.join(p, cfg.R_FILE)
+    fs.writeFile(fname, content, function(err) {
+      if (err) {
+        var e = 'File creation error: ' + err;
+        logger.error(e);
+        response.prepareError(pRef, js, e);
+      } else {
+        delete js.Body;
+        // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
+        logger.debug('2nd "external.call"');
+        external.call(pRef, js, cleanUp);
+      }
+    });
+  });
+
 }
 
 exports.call = call;

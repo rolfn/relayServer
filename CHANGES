@@ -1,3 +1,63 @@
+* Tue May 27 2014 Rolf.Niepraschk@ptb.de
+- "getVaclabServer" zugefügt
+
+* Thu May 22 2014 Rolf.Niepraschk@ptb.de
+- VXI-11-Modul: encoding ('utf8', 'base64', 'binary')
+
+* Wed May 21 2014 Rolf.Niepraschk@ptb.de
+- VXI-11-Modul: "socket.end()" --> "socket.destroy()"
+
+* Tue May 13 2014 Rolf.Niepraschk@ptb.de
+- verbessertes VXI-11-Modul
+
+* Mon May 12 2014 Rolf.Niepraschk@ptb.de
+- timestamp verbessert
+
+* Fri May 09 2014 Rolf.Niepraschk@ptb.de
+- "ShortFormat"
+
+* Thu May 08 2014 Rolf.Niepraschk@ptb.de
+- http-Header-Erzeugung geändert; excel-Erzeugung ("XLSX-OUT" und "XLSX-IN")
+
+* Tue May 06 2014 Rolf.Niepraschk@ptb.de
+- Read-Error-Nummer
+
+* Mon May 05 2014 Rolf.Niepraschk@ptb.de
+- "noarch", timeout-Fehler
+
+* Tue Apr 29 2014 Rolf.Niepraschk@ptb.de
+- Node.js-Modul "vxi11"; C-Programm beseitigt.
+
+* Tue Apr 01 2014 Rolf.Niepraschk@ptb.de
+- login-Shell in "NodejsServers.service"
+
+* Mon Mar 31 2014 Rolf.Niepraschk@ptb.de
+- Umstellung auf systemd
+
+* Fri Mar 21 2014 Rolf.Niepraschk@ptb.de
+- Action "UDP"
+
+* Thu Mar 20 2014 Rolf.Niepraschk@ptb.de
+- Ergänzungen in "relay-add.js"
+
+* Tue Feb 11 2014 Rolf.Niepraschk@ptb.de
+- Im Startscript Runlevel 2 zugefügt
+
+* Fri Jan 24 2014 Rolf.Niepraschk@ptb.de
+- Neuer logger-Transport "vWebsocket". Zugriff nun via "vlLogging".
+
+* Tue Dec 03 2013 Rolf.Niepraschk@ptb.de
+- TEX wiederbelebt, umstrukturiert/vereinheitlicht.
+
+* Tue Nov 05 2013 Rolf.Niepraschk@ptb.de
+- Undefinierte Funktion "fdebug"
+
+* Fri Oct 18 2013 Rolf.Niepraschk@ptb.de
+- Jetzt logger-Funktion (winston)
+
+* Fri Oct 11 2013 Rolf.Niepraschk@ptb.de
+- utils.js: "repeat" umgeschrieben, wegen Fehlverhaltens
+
 * Wed Oct 09 2013 Rolf.Niepraschk@ptb.de
 - Update "gitlabhook"
 
