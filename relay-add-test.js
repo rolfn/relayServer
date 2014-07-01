@@ -25,24 +25,36 @@ var s = [
     "+ 0.929074 lb \r\n+ 0.929076 lb \r\n",
     "+ 0.929076 lb \r\n+ 0.929076 lb \r\n"
 ];
-console.log("---------------extractFRS-1-----------");
+console.log("---------------extractFRS-1-----------:");
 console.log(s.map(add.extractFRS));
 
-var s = [ 
+s = [
   "  0.000000 lb \r\n",
   "  0.00000\n0 lb \r\n",
   "  0.000000 lb \r\n\n  0.000000 lb \r\n",
   "  0.000000 lb \r\n\n  0.000000 lb \r\n  0.000000 lb \r\n",
   "  0.000000 lb \r\n  0.000000 lb \r\n",
-  "  0.000000 lb \r\n  0.000000 lb \r\n",
+  "  0.000000 lb \r\n  0.000000 lb \r\n"
 ];
-console.log("---------------extractFRS-2-----------");
+console.log("---------------extractFRS-2-----------:");
 console.log(s.map(add.extractFRS));
+
+
+
+s = [
+  '?',
+  '?',
+  ' 1.1110E-06 \r\n>',
+  ' 1.1101E-06 \r\n>',
+  ' 1.1094E-06 \r\n>'
+];
+console.log("---------------extractSRG3-----------:");
+console.log(s.map(add.extractSRG3));
 
 /**
  * Test der extractKeithleyTemp  function
  */
-var s = [
+s = [
    "+1.13830698E+00VDC,1.13830698E+00+9.9E37SECS,+9571748RDNG#\n",
    "+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n",
    "+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n",
@@ -54,7 +66,7 @@ var s = [
    "+2.37514629E+01,2.37514629E+01+9.9E37SECS,+9571752RDNG#\n",
    "+2.37530746E+01,2.37530746E+01+9.9E37SECS,+9571753RDNG#\n"
 ];
-console.log("---------------extractKeithleyTemp-------------");
+console.log("---------------extractKeithleyTemp-------------:");
 console.log(s.map(add.extractKeithleyTemp));
 
 /**
@@ -81,7 +93,7 @@ console.log(s.map(add.extractKeithleyTemp));
     "-1.72182336E-05VDC,+1212.895SECS,+09903RDNG#\n",
     "-1.81261366E-05VDC,+1213.002SECS,+09904RDNG#\n" ];
 
-console.log("---------------extractKeithleyVolt-------------");
+console.log("---------------extractKeithleyVolt-------------:");
 console.log(s.map(add.extractKeithleyVolt));
 
 
@@ -93,7 +105,7 @@ s = [ " DCR  +3.4540E-05\n",
       " DCR  +3.4540E05\n",
       " DCR  +3.4540E-05\n"];
 
-console.log("--------------- extractVM212DCR -------------");
+console.log("--------------- extractVM212DCR -------------:");
 console.log(s.map(add.extractVM212DCR));
 
 
@@ -101,13 +113,13 @@ console.log(s.map(add.extractVM212DCR));
  * Test der extractF250  function
  */
 s = ["A 23.234C\r\n","A 23.23C\r\n", "A23.45C","A 23.23"];
-console.log("---------------extractF250-------------");
+console.log("---------------extractF250-------------:");
 console.log(s.map(add.extractF250));
 
 /**
  * Test der extractAtmion  function
  */
-var s = ["0,\t1.9600E-09\r",
+s = ["0,\t1.9600E-09\r",
   "0,\t1.9600E-09\r",
   "0,\t1.9600E-09\r",
   "0,\t1.9600E-09\r",
@@ -128,7 +140,7 @@ var s = ["0,\t1.9600E-09\r",
   "0,\t1.9600E-09\r",
   "0,\t1.9600E-09\r" ];
 var _vec = s.map(add.extractAtmion);
-console.log("---------------extractAtmion-------------");
+console.log("---------------extractAtmion-------------:");
 console.log(_vec);
 _ret =add.checkNumArr(_vec);
 console.log(_ret);
@@ -147,7 +159,7 @@ var arr =  [1.14223873,
             1.77889768,
             -1.39850969,
             -0.24774159];
-console.log("---------------vlStat-------------");
+console.log("---------------vlStat-------------:");
 console.log(add.vlStat(arr));
 
 
@@ -248,12 +260,12 @@ t_stop = [ 1348666058399,
      1348666076145,
      1348666077140 ];
 
-console.log("-------- extractMKSCDG -----------");
+console.log("-------- extractMKSCDG -----------:");
  var vec = raw_vec.map(add.extractMKSCDG);
 console.log(vec);
-console.log("---------------vlslope-------------");
+console.log("---------------vlslope-------------:");
 console.log(add.vlSlope(vec,t_start,t_stop));
-console.log("---------------------------------");
+console.log("---------------------------------:");
 
 var v6zu  = "00310EFE0E\r";
 var v6auf = "00112EFE2E\r";
