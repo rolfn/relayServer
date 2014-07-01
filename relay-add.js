@@ -51,11 +51,11 @@ function calQsp(psoll, pist, mq){
       // Gas
       if (ret.dp > bord) {
         if (q && q < sscbord) {
-	  ret.sp1 = q;
+	  ret.sp1 = q ;
 	  ret.sp2 = 0;
         }
         if (q && q > sscbord){
-	  ret.sp1 = q / 100;
+	  ret.sp1 = q / 10;
 	  ret.sp2 = q;
         }
       };
