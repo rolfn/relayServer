@@ -38,7 +38,8 @@ function call(pRef, js) {
       b.push(result);
       next();
     }, function(error) {
-      if (params.readTimeout == 0) {
+      if (parseInt(params.readTimeout) === 0 &&
+        error.match(/DEVICE_READ: 15/)) {
         logger.debug('Ignore ("readTimeout=0"): ' + error);
         // spezieller Fall wird nicht als Fehler gewertet
         response.prepareResult(pRef, js, null);

@@ -1,5 +1,5 @@
 * Mon Aug 18 2014 Rolf.Niepraschk@ptb.de
-- Fehler in "vxi.js" ("timeout"); Sonderbehandlung "VxiTimeout=0"
+- Fehler in "vxi.js" ("timeout"), Sonderbehandlung "VxiTimeout=0"
 
 * Tue Jul 01 2014 Rolf.Niepraschk@ptb.de
 - Error-Meldungen ("vxi", "tcp", "udp") verbessert
