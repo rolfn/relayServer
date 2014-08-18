@@ -27,9 +27,6 @@ function call(pRef, js) {
   };
 
   if (typeof js.lockDevice == 'boolean') params.lockDevice = js.lockDevice;
-  var x = parseInt(s);
-  return isNaN(x)
-
   if (!isNaN(parseInt(js.VxiTimeout))) params.readTimeout = js.VxiTimeout;
   if (!isNaN(parseInt(js.readTimeout))) params.readTimeout = readTimeout;
   if (!isNaN(parseInt(js.ioTimeout))) params.ioTimeout = js.ioTimeout;
