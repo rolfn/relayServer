@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-12
+ * version: 2014-05-28
  */
 
 var cfg = require('./config.js');
@@ -53,6 +53,7 @@ function call(pRef, js) {
     process.stderr.write(d + '\n');
   };
   utils.addStartTime(js);
+  // TODO: Array von smtp-Server gestatten, falls einer nicht funktioniert.
   mailer.send_mail(message, function(error, success){
     console.log = saveConsoleLog;
     if (success) {

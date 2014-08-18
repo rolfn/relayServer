@@ -29,9 +29,9 @@ function call(pRef, js) {
         b.push('OK');
         next();
       } else {
-        logger.error('error: %s', err);
-        b.push('error: ' + err);
-        // evtl. auch hier "next();"?
+        logger.error(err);
+        //b.push('error: ' + err);
+        response.prepareError(pRef, js, err);
       }
     });
   }

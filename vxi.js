@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-22
+ * version: 2014-08-18
  */
 
 var cfg = require('./config.js');
@@ -25,17 +25,30 @@ function call(pRef, js) {
       error:logger.error
     }
   };
-  var timeout = parseInt(js.Timeout);
-  // "I/O Timeout" und "Lock Timeout" bei DEVICE_READ
-  if (isFinite(timeout)) params.readTimeout = timeout;
+
+  if (typeof js.lockDevice == 'boolean') params.lockDevice = js.lockDevice;
+  var x = parseInt(s);
+  return isNaN(x)
+
+  if (!isNaN(parseInt(js.VxiTimeout))) params.readTimeout = js.VxiTimeout;
+  if (!isNaN(parseInt(js.readTimeout))) params.readTimeout = readTimeout;
+  if (!isNaN(parseInt(js.ioTimeout))) params.ioTimeout = js.ioTimeout;
+  if (!isNaN(parseInt(js.lockTimeout))) params.lockTimeout = js.lockTimeout;
+  if (js.termChar) params.termChar = js.termChar;
+
   function doIt(b, next) {
     vxi(params, function(result) {
       b.push(result);
       next();
     }, function(error) {
-      logger.error(error);
-      b.push(error);
-      next(); // oder besser "response.prepareError(pRef, js, e);"?
+      if (params.readTimeout == 0) {
+        logger.debug('Ignore ("readTimeout=0"): ' + error);
+        // spezieller Fall wird nicht als Fehler gewertet
+        response.prepareResult(pRef, js, null);
+      } else {
+        logger.error(error);
+        response.prepareError(pRef, js, error);
+      }
     });
   }
   var wait = js.Wait < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT : js.Wait;

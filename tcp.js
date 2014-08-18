@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2014-06-10
  */
 
 var cfg = require('./config.js');
@@ -27,9 +27,7 @@ function call(pRef, js) {
     conn.setEncoding('ascii');
     conn.addListener('connect', function(){
       conn.write(cmd);
-      try {// 2012-03-05
-        conn.flush(); // required for legacy support (Node <0.5)?
-      } catch(err) {}
+      if (conn.flush) conn.flush(); // required for legacy support (Node <0.5)?
     });
     conn.addListener('end', function () {
       logger.debug('end 1: %s', JSON.stringify(result));
@@ -45,18 +43,18 @@ function call(pRef, js) {
       next();
     });
     conn.addListener('error', function (e) {
-      //response.prepareError(pRef, js, e.toString());
-      var s = 'error:' + e.toString();
-      logger.error('error: %s', s);
-      result.push(s);
+      var s = e.toString();
+      logger.error(s);
+      //result.push(s);
       conn.end();
+      response.prepareError(pRef, js, s);
     });
     conn.addListener('timeout', function () {
-      logger.error('timeout');
-      //response.prepareError(pRef, js, 'timeout');
-      var s = 'error:timeout';
-      result.push(s);
+      var s = 'timeout';
+      //result.push(s);
+      logger.error(s);
       conn.end();
+      response.prepareError(pRef, js, s);
     });
     conn.addListener('data', function(data){
       result.push(data);
