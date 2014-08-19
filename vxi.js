@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-08-18
+ * version: 2014-08-19
  */
 
 var cfg = require('./config.js');
@@ -39,7 +39,7 @@ function call(pRef, js) {
       next();
     }, function(error) {
       if (parseInt(params.readTimeout) === 0 &&
-        error.match(/DEVICE_READ: 15/)) {
+        error.indexOf('DEVICE_READ: 15') > -1) {
         logger.debug('Ignore ("readTimeout=0"): ' + error);
         // spezieller Fall wird nicht als Fehler gewertet
         response.prepareResult(pRef, js, null);
