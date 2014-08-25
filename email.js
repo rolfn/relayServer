@@ -1,44 +1,15 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-01-14
+ * version: 2014-05-28
  */
-
-const MODULE = 'email';
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var response = require('./response.js');
-var mailer = require('/usr/lib/node_modules/nodemailer');
-// npm install nodemailer -g
+var mailer = require('nodemailer');
+// npm install nodemailer
 
-/**
- * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
- * @param {object} o Zu untersuchende JS-Variable.
- * @return {string}  String-Repräsentation
- */
-function inspect(o) {};
-inspect = tools.inspect;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle 
- * Modulname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function debug(item, subitem, info, level) {};
-debug = tools.createFunction('debug', MODULE);
-
-/**
- * Wie "debug", aber "item" (Funktionsname) wird selbst ermittelt.
- * @param subitem
- * @param info
- * @param level
- */
-function fdebug(subitem, info, level) {};
-fdebug = tools.createFunction('fdebug', debug);
+var logger = cfg.logger;
 
 /**
  * Konfiguration der für nodemailer nötigen Datenstrukturen und Vesenden einer E-Mail.
@@ -54,11 +25,11 @@ function call(pRef, js) {
     user: (js.User) ? js.User : '',
     pass: (js.Password) ? js.Password : ''
   };
-  fdebug('mailer', inspect(mailer));
+  logger.debug('mailer', mailer.SMTP);
   // Nur "From" und "To" sind zwingend.
   var message = {sender:js.From,to:js.To,subject:js.Subject};
   message.body = (js.Body) ? js.Body : '';
-  message.debug = tools.isDebug(99);
+  ///message.debug = tools.isDebug(99);
   if (js.Cc) message.cc = js.Cc;
   if (js.Bcc) message.bcc = js.Bcc;
   if (js.ReplyTo) message.reply_to = js.ReplyTo;
@@ -76,14 +47,17 @@ function call(pRef, js) {
       }
     }
   }
-  fdebug('message', inspect(message));
+  logger.debug('message', message);
   var saveConsoleLog = console.log;
   console.log = function (d) {
     process.stderr.write(d + '\n');
   };
+  utils.addStartTime(js);
+  // TODO: Array von smtp-Server gestatten, falls einer nicht funktioniert.
   mailer.send_mail(message, function(error, success){
     console.log = saveConsoleLog;
     if (success) {
+      utils.addStopTime(js);
       response.prepareResult(pRef, js, 'OK');
     } else {
       response.prepareError(pRef, js, error);

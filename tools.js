@@ -1,139 +1,17 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-09-18
+ * version: 2013-11-28
  */
 
-const MODULE = 'tools';
-
+var cfg = require('./config.js');
 var util = require('util');
 var fs = require('fs');
-
-/**
- * Kommandozeilenwert zur Steuerung der debug-Ausgabe ermitteln. Ohne
- * Angabe wird 0 (keine Ausgabe) verwendet.
- */
-var debugLevel = process.argv[2] ? process.argv[2] : 0;
-
-/**
- * Liefert true, wenn level kleiner oder gleich dem Wert, der auf der
- * Kommandozeile übergeben wurde, ist. Ohne Kommandozeilenwert wird "99"
- * angenommen.
- * @param {number} level
- * @return {boolean}
- */
-function isDebug(level) {
-  var l = 99;
-  if (level != undefined){
-    l = level;
-  }
-  return (l <= debugLevel);
-}
-
-exports.isDebug = isDebug;
-
-/**
- * Konstanten für SGR-Code
- */
-const BOLD = 1;
-const DEFCOLOR = 39;
-const UNBOLD = 22;
-const COLOR = 30;
-const RED = 1;
-const BLUE = 4;
-const RESET = 0;
-
-/**
- * Erzeugt ESC-Code ("Select Graphic Rendition")
- * @param {number} code Farb-/Schriftkonstante
- * @return {string} ESC-Code
- */
-function sgr(code) {// Select Graphic Rendition
-  return '\u001b[' + code + 'm';
-}
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen nach stderr.
- * @param {string} module meist Modulname
- * @param {string} item meist Funktionsname
- * @param {string} _subitem spezifische Aktion innerhalb der Funktion.
- * @param {string} _info Daten
- * @param {number} _level
- */
-function debug(module, item, _subitem, _info, _level) {
-  var info = '';
-  var level = 99;
-  if (isDebug(_level)) {
-
-    if (typeof _info == 'number') {
-      level = _info;
-    } else if (_info != undefined) {
-      info = ': ' + _info;
-      if (typeof _level == 'number') {
-        level = _level;
-      }
-    }
-    var subitem = ((_subitem != undefined) && (_subitem != '')) ? ',' +
-      sgr(BOLD + ';' + (COLOR + RED)) + _subitem + sgr(RESET) : '';
-
-    process.stderr.write('[' + module + ',' +
-      sgr(BOLD + ';' + (COLOR + BLUE)) + item + sgr(RESET) +
-        subitem + ']' + info + '\n');
-  }
-}
-
-exports.debug = debug;
-
-/**
- * Datenstruktur mit zu konfigurierenden Funktionen @see createFunction
- */
-var functions = {
-  debug:  function(param) {
-            return function (item, subitem, info, level) {
-              debug(param, item, subitem, info, level);
-            };
-          },
-  fdebug: function(param) {
-            return function (subitem, info, level) {
-              var item = arguments.callee.caller.name ?
-                arguments.callee.caller.name : "---";
-              param(item, subitem, info, level);
-            };
-          }
-}
-
-/**
- * Erzeugt aufgrund von Eintrag name in "functions" eine Funktion und
- * liefert diese zurück. Die Funktion kann aufgrund von maximal 3 Parametern
- * statisch konfiguriert werden.
- * @param {string} name Schlüsselwort für "functions"
- * @param {???} p1 Konfigurationsparameter
- * @param {???} p2 Konfigurationsparameter
- * @param {???} p3 Konfigurationsparameter
- * @return {function} Konfigurierte Funktion
- */
-function createFunction(name, p1, p2, p3) {
-  return functions[name](p1, p2, p3);
-}
-
-exports.createFunction = createFunction;
-
-/**
- * In Abhängigkeit von "level" Ausgabe von Informationen. Der aktuelle
- * Modulname und Funktionsname wird ebenfalls ausgegeben.
- * @param item meist Funktionsname
- * @param subitem spezifische Aktion innerhalb der Funktion.
- * @param info Daten
- * @param level
- */
-function fdebug(subitem, info, level) {
-  item = arguments.callee.caller.name ?
-    arguments.callee.caller.name : '---';
-  debug(MODULE, item, subitem, info, level);
-}
+var Fs = require('fs');
+var path = require('path');
 
 /**
  * Erzeugt String-Repräsentation der inneren Struktur einer JS-Variable
- * (Rekursion bis Ebene 2, coloriert)
+ * (Rekursion bis Ebene 2, coloriert)                                 F
  * @param {object} o Zu untersuchende JS-Variable.
  * @return {string}  String-Repräsentation
  */
@@ -149,7 +27,7 @@ exports.inspect = inspect;
  */
 String.prototype.trim = function() {
   return this.replace(/^\s+|\s+$/g,"");
-}
+};
 
 /**
  * Ergänzt für Zahlen n < 10 eine führende Null.
@@ -157,21 +35,10 @@ String.prototype.trim = function() {
  * @return {string} auf zwei Stellen ergänzte Zahl
  */
 function pad2(n) {
-  return n<10 ? '0'+n : n
+  return n<10 ? '0'+n : n;
 }
 
 exports.pad2 = pad2;
-
-/**
- * Liefert das systemübliche temporäre Verzeichnis, sofern definiert (TMPDIR),
- * ansonsten '/tmp'.
- * @return {string} temporäres Verzeichnis
- */
-function getTempDir() {
-  return process.env.TMPDIR ? process.env.TMPDIR : '/tmp'
-}
-
-exports.getTempDir = getTempDir;
 
 /**
  * Liefert ähnlich zu parseFloat eine Float-Zahl, die der String s repräsentiert.
@@ -182,10 +49,10 @@ exports.getTempDir = getTempDir;
  * @return {number} Float-Zahl
  */
 exports.getFloat = function(s, d) {
-  var _d = d == undefined ? 0.0 : d;
+  var _d = d === undefined ? 0.0 : d;
   var x = parseFloat(s);
   return isNaN(x) ? _d : x;
-}
+};
 /**
  * Liefert ähnlich zu parseInt eine Int-Zahl, die der String s repräsentiert.
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert
@@ -195,10 +62,10 @@ exports.getFloat = function(s, d) {
  * @return {number} Int-Zahl
  */
 exports.getInt = function(s, d) {
-  var _d = d == undefined ? 0 : d;
+  var _d = d === undefined ? 0 : d;
   var x = parseInt(s);
   return isNaN(x) ? _d : x;
-}
+};
 
 /**
  * Testet, ob das übergebene Objekt leer ist.
@@ -207,7 +74,7 @@ exports.getInt = function(s, d) {
  */
 var isEmpty = function(obj) {
   return Object.keys(obj).length === 0;
-}
+};
 
 exports.isEmpty = isEmpty;
 
@@ -223,77 +90,3 @@ function isBASE64(b) {
 }
 
 exports.isBASE64 = isBASE64;
-
-/**
- * Löscht rekursiv eine Verzeichnisstruktur (siehe: <a href="https://github.com/ryanmcgrath/wrench-js" target="_blank">wrench-js</a>).
- * @param {string} dir zu löschende Verzeichnisstruktur.
- * @param {function} clbk Aufruf bei Erfolg oder Fehler.
-*/
-function rmdirRecursive(dir, clbk){
-  fs.readdir(dir, function(err, files){
-    if (err) return clbk(err);
-    (function rmFile(err){
-      if (err) return clbk(err);
-      var filename = files.shift();
-      if (filename === null || typeof filename == 'undefined') {
-        fdebug('rmdir', dir);
-        return fs.rmdir(dir, clbk);
-      }
-      var file = dir+'/'+filename;
-      fs.stat(file, function(err, stat){
-        if (err) return clbk(err);
-        if (stat.isDirectory()) {
-          rmdirRecursive(file, rmFile);
-          fdebug('rmdir', file);
-        } else {
-          fs.unlink(file, rmFile);
-          fdebug('unlink', file);
-        }
-      });
-    })();
-  });
-};
-
-exports.rmdirRecursive = rmdirRecursive;
-
-/**
- * Erzeugt in einem temporären Verzeichnis eine Datei mit Inhalt.
- * @param {string} dir temporäres Verzeichnis
- * @param {string} name Name der Datei
- * @param {Buffer} buf Inhalt der Datei
- * @param {function} success Aufruf bei Erfolg
- * @param {function} error Aufruf im Fehlerfall
-*/
-function createTempFile(dir, name, buf, success, error) {
-  fs.mkdir(dir, '700', function (e) {
-    fdebug('create working directory', e ? e : dir);
-    if (e) {
-      error(e);
-    } else {
-      fs.open(dir + '/' + name, 'w', '600', function(e, fd) {
-        fdebug('file open', e ? e : name);
-        if (e) {
-          error(e);
-        } else {
-          fs.write(fd, buf, 0, buf.length, null, function(e, nb, buf){
-            fdebug('file write', e ? e : nb + ' Bytes');
-            if (e) {
-              error(e);
-            } else {
-              fs.close(fd, function(e){
-                fdebug('file close', e ? e : ' --> next step');
-                if (e) {
-                  error(e);
-                } else {
-                  success();
-                }
-              });
-            }
-          });
-        }
-      });
-    }
-  });
-}
-
-exports.createTempFile = createTempFile;

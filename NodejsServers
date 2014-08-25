@@ -13,7 +13,7 @@
 # Provides:          NodejsServers
 # Required-Start:    $network
 # Required-Stop:
-# Default-Start:     3 5
+# Default-Start:     2 3 5
 # Default-Stop:      0 1 2 6
 # Short-Description: NodejsServers daemon
 # Description:       The NodejsServers daemon provides http access to ports 55555/55565
