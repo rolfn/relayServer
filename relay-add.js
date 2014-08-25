@@ -358,7 +358,7 @@ exports.extractKeithleyTemp = extractKeithleyTemp;
  */
 
 function extractAxtran(s) {
-  var regex = /^([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})/;
+  var regex = /^([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})/;
   return parseFloat(s.replace(regex, "$1"));
 }
 exports.extractAxtran = extractAxtran;
@@ -373,7 +373,7 @@ exports.extractAxtran = extractAxtran;
  */
 
 function extractIm540(s) {
-  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
+  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
   return parseFloat(s.replace(regex, "$2"));
 }
 exports.extractIm540 = extractIm540;

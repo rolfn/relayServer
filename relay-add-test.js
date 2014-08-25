@@ -214,15 +214,12 @@ console.log(add.se1ValveClosed(v6zu, "V6"));
 console.log("auf");
 console.log(add.se1ValveClosed(v6auf, "V6"));
 
-
-
 /**
- * test der extractIM540 function
+ * Test der extractIM540 function
  */
-
-s = ['MES R\rMBAR 7.50E-08\r\n',
-     'MES R\rMBAR 7.49E-08\r\n',
-     'MES R\rMBAR 7.50E-08\r\n',
+s = ['BAR 7.50E-08\r\n',
+     'MES R\rMBAR 7.49E-08\n',
+     'MES R\rMBAR 750E-08\r\n',
      'MES R\rMBAR 7.50E-08\r\n',
      'MES R\rMBAR 7.50E-08\r\n',
      'MES R\rMBAR 7.50E-08\r\n',
@@ -232,5 +229,5 @@ s = ['MES R\rMBAR 7.50E-08\r\n',
      'MES R\rMBAR 7.50E-08\r\n'];
 
 
-console.log("extractIm540");
+console.log("-------- extractIm540-------- ");
 console.log(s.map(add.extractIm540));
