@@ -51,6 +51,7 @@ s = [
 console.log("---------------extractSRG3-----------:");
 console.log(s.map(add.extractSRG3));
 
+
 /**
  * Test der extractKeithleyTemp  function
  */
@@ -293,3 +294,25 @@ s = ['BAR 7.50E-08\r\n',
 
 console.log("-------- extractIm540-------- ");
 console.log(s.map(add.extractIm540));
+
+
+
+s = [' 1: MBAR  6.75E-01   \r',
+     ' 1: MBAR  6.75E-01   \r',
+     ' 1: MBAR  6.80E-01   \r',
+     ' 1: MBAR  6.80E-01   \r',
+     ' 2: MBAR  0.  E-03   \r',
+     ' 2: MBAR  0.  E-03   \r',
+     ' 2: MBAR  0.  E-03   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.2 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r',
+     ' 3: MBAR  1.3 E-06   \r'
+    ];
+console.log("---------------extractCombi-----------:");
+console.log(s.map(add.extractCombi));

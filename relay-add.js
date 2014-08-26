@@ -95,21 +95,28 @@ exports.calQsp = calQsp;
  * @return res Object   res.mv (Mittelwert) res.sd (Standardabweichung) und re.N (Länge)
  */
 function vlStat(x) {
-  if (x && x.length > 2) {
-    var res = {},
-    mv = 0,
-      sdhelp = 0,
-      n = x.length;
-    mv = x.reduce(function(a, b) {
-      return a + b;
-    }) / n;
-    res.mv = mv;
-    res.N = n;
-    x.map(function(i) {
-      sdhelp += Math.pow((i - mv), 2);
+
+  var res    = {mv:NaN,
+                sd:NaN};
+  if (x) {
+    var ck = checkNumArr(x);
+    if(ck.Arr.length > 2){
+      var y      = ck.Arr,
+          mv     = 0,
+          sdhelp = 0,
+          n      = y.length;
+
+      mv = y.reduce(function(a, b) {
+           return a + b;
+           }) / n;
+      res.mv = mv;
+      res.N = n;
+      y.map(function(i) {
+        sdhelp += Math.pow((i - mv), 2);
     });
-    sd = Math.sqrt(1 / (n - 1) * sdhelp);
-    res.sd = sd;
+
+      res.sd = Math.sqrt(1 / (n - 1) * sdhelp);
+    }
     return res;
   }
 }
@@ -220,15 +227,15 @@ exports.vlSlope = vlSlope;
  */
 function slope(y, x) {
   if (x.length == y.length) {
-    var ret = {},
-    sumX = 0,
-      XArr = [],
-      sumY = 0,
-      YArr = [],
-      remainN = 0,
-      SSxy = 0,
-      SSxx = 0,
-      SSyy = 0;
+    var ret      = {},
+        sumX     = 0,
+        XArr     = [],
+        sumY     = 0,
+        YArr     = [],
+        remainN  = 0,
+        SSxy     = 0,
+        SSxx     = 0,
+        SSyy     = 0;
     for (var i = 0; i < y.length; i++) {
       if (isNumber(y[i]) && isNumber(x[i])) {
         sumX = sumX + x[i];
@@ -238,8 +245,8 @@ function slope(y, x) {
         remainN++;
       }
     }
-    mvX = sumX / remainN;
-    mvY = sumY / remainN;
+    var mvX = sumX / remainN;
+    var mvY = sumY / remainN;
     for (var j = 0; j < YArr.length; j++) {
       SSxy = SSxy + (XArr[j] - mvX) * (YArr[j] - mvY);
       SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
@@ -471,6 +478,24 @@ function extractSRG3(s) {
 }
 exports.extractSRG3 = extractSRG3;
 
+/**
+ * Extrahiert Float-Zahl aus Combivac Antwort
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl
+ */
+
+function extractCombi(s) {
+  var regex = /^([1-3][\:]MBAR{0,2})([0-9]{0,2}\.?[0-9]{0,3}E[-+][0-9]{2})/
+
+  var n = strToNum(regex.exec(vlTrim(s)), 2)
+
+  return n == 0 ? NaN: n;
+
+}
+exports.extractCombi = extractCombi;
+
 
 /**
  * Testet, ob sich der übergebene Parameter in eine Zahl wandeln lässt. Siehe auch:
@@ -499,14 +524,14 @@ exports.isNumber = isNumber;
  *
  */
 function vlRes(t, v, u, c) {
-    var res = {
-  'Type': t,
-  'Value': v,
-  'Unit': u
+  var res = {
+    'Type': t,
+    'Value': v,
+    'Unit': u
     };
-    if (c) {
-  res.Comment = c;
-    }
+  if (c) {
+    res.Comment = c;
+  }
     return res;
 }
 exports.vlRes = vlRes;
