@@ -1,3 +1,9 @@
+* Mon Sep 01 2014 Rolf.Niepraschk@ptb.de
+- Server für gitlab hooks lahmgelegt; später Extrapaket.
+
+* Thu Aug 21 2014 Rolf.Niepraschk@ptb.de
+- Korrigierte Version von "vxi11.js"
+
 * Mon Aug 18 2014 Rolf.Niepraschk@ptb.de
 - Fehler in "vxi.js" ("timeout"), Sonderbehandlung "VxiTimeout=0"
 

@@ -7,8 +7,8 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '11.8.3',
-  DATE: '2014-08-18',
+  VERSION: '11.10.1',
+  DATE: '2014-09-01',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   GITLABHOOK_PORT: 3420,

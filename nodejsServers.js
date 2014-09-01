@@ -2,7 +2,7 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-04-30
+ * version: 2014-09-01
  */
 
 var cfg = require('./config.js');
@@ -36,6 +36,9 @@ logger.info('relay server listen (%d)\n', cfg.RELAY_PORT);
 // var server2 = http.createServer(dispatcher.start);
 // server2.listen(exports.DISPATCHER_PORT);
 
+
+// TODO: Entflechten. "gitlab-hook-Server" separat. Vorerst lahmgelegt.
+/*
 var glh = {
   port: cfg.GITLABHOOK_PORT,
   host: cfg.GITLABHOOK_HOST,
@@ -46,6 +49,7 @@ var glh = {
 var server3 = require('gitlabhook')(glh);
 server3.listen();
 if (server3.server) logger.info('webhook server listen (%d)\n', cfg.GITLABHOOK_PORT);
+*/
 
 /**
 <h4> Beispiele zur Kommunikation mit dem Relay-Server</h4>

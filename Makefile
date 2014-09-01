@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2014-06-25, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-09-01, Rolf.Niepraschk@ptb.de
 
 MAIN = vaclabServers
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
