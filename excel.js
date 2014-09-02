@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-12
+ * version: 2014-09-02
  */
 
 var cfg = require('./config.js');
@@ -8,6 +8,7 @@ var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
 var xlsx = require('node-xlsx');
+//TODO: deprecated node-xlsx@0.4.0: please use the xlsx package instead
 
 var logger = cfg.logger;
 

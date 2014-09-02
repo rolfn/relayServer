@@ -1,0 +1,7 @@
+#! /bin/sh
+
+VL_DIR=/usr/local/share/vaclab/nodejs
+
+NODE_PATH=$VL_DIR node $VL_DIR/vlLogging.js $1
+
+exit

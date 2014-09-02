@@ -1,13 +1,35 @@
-# nodejsServers2
+# relayServer
 
-Nodejs-basierte http-Server für Messaufgaben
+Nodejs-basierter http-Server für Messaufgaben
 
 Dies ist eine Neuimplementierung von "nodejsServers". Im Gegensatz zur alten
 Version soll hier in größerem Maße auf Modularität Wert gelegt werden.
 
-##  Relay-Server
+## Relay-Server
 
 Durch Zusenden von JSON-Daten per http-POST (Port 55555) kann dieser Server veranlasst werden, bestimmte Aktionen auszuführen und deren Ergebnis an die aufrufende Applikation zurückzusenden.
+
+### Vorbereitung zur Installation
+
+Die make-Aufrufe ```make``` bzw. ```make install``` erzeugen ein rpm-Paket mit allen Dateien, die notwendig sind, damit der Relay-Server als Dämon unter openSUSE (>12.2) laufen kann. Vorher muss einmalig ```npm install``` aufgerufen werden, damit die nötigen nodejs-Bibliotheken installiert werden. ```make install``` kopiert das fertige rpm-Paket in eine Dateistruktur, die geeignet ist, an unser openSUSE-rpm-Repositorium geschickt zu werden. Alternativ kann das rpm-Paket auch von Hand installiert werden.
+
+### Nach erfolgter Installation
+
+Um den Relay-Server als Linux-Dämon zu betreiben, sind folgende Schritte auszuführen (systemd-basiertes Betriebssystem):
+```bash
+systemctl enable relayServer.service
+systemctl start relayServer.service
+```
+und ggf.
+```bash
+systemctl status -l relayServer.service
+```
+
+Einem neuen Rechner sollte das vaclab-Repositorium bekannt gemacht werden, damit das Paket »relayServer« einfach installiert werden kann (einschließlich zukünftiger updates):
+```bash
+zypper ar http://a73434.berlin.ptb.de:5984/sys/repos/openSUSE_13.1/vaclab.repo
+zypper ref vaclab ; zypper in relayServer
+```
 
 ### Beispiele zur Kommunikation mit dem Relay-Server (Port 55555)
 
@@ -50,31 +72,6 @@ echo '{"Action":"LaTeX","Source":"\\documentclass{article}\\begin{document}
 echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
   curl -T - -X PUT http://localhost:55555
 ```
-##  GitLab-Webhook-Server
-
-Dieser Server ist über http auf dem Port 3240 erreichbar (Beispiel: `http://a73434.berlin.ptb.de:3420`). Die URL kann in GitLab einem bestimmten Repositorium als Webhook-Adresse zugeordnet werden. Nach erfolgter Git-Push-Operation, d.h. bei einer Erneuerung der versionierten Dateien des betreffenden Repositoriums auf dem GitLab-Server, wird dem Webhook-Server Daten zu diesem Ereignis übermittelt. Daraufhin werden Shell-Kommandos, die in der  Konfigurationsdatei `gitlabhook.conf` angegeben sind, ausgeführt. Enthält diese Datei keine gültige tasks-Definition, so unterbleibt das Starten des GitLab-Webhook-Server. Näheres siehe: [node-gitlab-hook](../../../../rolf.niepraschk/node-gitlab-hook/blob/master/README.md).
-
-### Beispiel des Inhaltes der Konfigurationsdatei
-
-Die Datei `gitlabhook.conf` wird geladen, wenn sie sich im Hauptverzeichnis dieses Projektes befindet (alternativ in `/etc/gitlabhook/` oder `/usr/local/etc/gitlabhook/`). Der folgende Inhalt einer solchen Datei zeigt als Beispiel, wie die zur home-page des Vakuumlabors gehörenden Dateien automatisch nach einem erfolgten `git push` an ihren Bestimmungsort kopiert werden:
-
-```javascript
-{
-  "tasks": {
-    "vaclabpage": [
-      "exec 1>/dev/null",
-      "exec 2>/dev/null",
-      "git clone %h",
-      "cd %r",
-      "cp -p --parents `git ls-files` /srv/www/htdocs/vaclabpage/"
-    ]
-  }
-}
-```
-
-Anmerkung: Da der als Dämon gestartete NodejsServers-Prozess unter dem Nutzer "wwwrun" und der Gruppe "www" läuft, muss das zu beschreibene Zielverzeichnis der Gruppe "www" gehören und zumindest für diese Gruppe Schreibrechte besitzen (`chmod g+w /srv/www/htdocs/vaclabpage`).
-
-
 
 
 

@@ -1,3 +1,6 @@
+* Tue Sep 02 2014 Rolf.Niepraschk@ptb.de
+- Code vom gitlab-hooks-Server weg; sonstige Bereinigung; neuer Name "relayServer"
+
 * Mon Sep 01 2014 Rolf.Niepraschk@ptb.de
 - Server für gitlab hooks lahmgelegt; später Extrapaket.
 

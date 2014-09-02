@@ -31,25 +31,6 @@ server1.listen(cfg.RELAY_PORT);
 ///logger.info('logging: %s', cfg.isDebug);
 logger.info('relay server listen (%d)\n', cfg.RELAY_PORT);
 
-// TODO: Nachdenken, ob das Konzept eines zweiten vorgelagerten Servers
-//       sinnvoll ist.
-// var server2 = http.createServer(dispatcher.start);
-// server2.listen(exports.DISPATCHER_PORT);
-
-
-// TODO: Entflechten. "gitlab-hook-Server" separat. Vorerst lahmgelegt.
-/*
-var glh = {
-  port: cfg.GITLABHOOK_PORT,
-  host: cfg.GITLABHOOK_HOST,
-  logger: logger,
-  configPathes: [__dirname, '/etc/gitlabhook', '/usr/local/etc/gitlabhook/']
-};
-
-var server3 = require('gitlabhook')(glh);
-server3.listen();
-if (server3.server) logger.info('webhook server listen (%d)\n', cfg.GITLABHOOK_PORT);
-*/
 
 /**
 <h4> Beispiele zur Kommunikation mit dem Relay-Server</h4>
@@ -77,7 +58,7 @@ echo '{"Action":"/usr/bin/Rscript", "Value":["foo","bar"],
 echo '{"Action":"TCP","Repeat":3,"Wait":2000,"Host":"e75493","Port":"23",
   "Value":"exit\r"}' | curl -T - -X PUT http://localhost:55555
 
-echo '{"Action":"HTTP","Url":"http://a73434.berlin.ptb.de"}' | \
+echo '{"Action":"HTTP","Url":"http://a73435.berlin.ptb.de:81"}' | \
   curl -T - -X PUT http://localhost:55555
 
 echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
