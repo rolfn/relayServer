@@ -9,6 +9,7 @@ var utils = require('./utils.js');
 var response = require('./response.js');
 var xlsx = require('node-xlsx');
 //TODO: deprecated node-xlsx@0.4.0: please use the xlsx package instead
+// ==> https://github.com/SheetJS/js-xlsx
 
 var logger = cfg.logger;
 

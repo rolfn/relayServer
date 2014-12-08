@@ -1,7 +1,7 @@
 Summary: Nodejs-basierte http-Server f√ºr Messaufgaben
 Name: relayServer
-Version: 11.11.1
-Release: 2 
+Version: 11.11.2
+Release: 1 
 License: ???
 Group: Productivity/Networking/Web/Servers
 BuildArch: noarch
@@ -2047,10 +2047,14 @@ Nodejs-basierte http-Server f√ºr Messaufgaben
 /usr/local/share/vaclab/nodejs/node_modules/temp/package.json
 /usr/local/share/vaclab/nodejs/node_modules/temp/test/temp-test.js
 /usr/local/share/vaclab/nodejs/node_modules/temp/.travis.yml
+/usr/local/share/vaclab/nodejs/node_modules/vxi11/foo.log
 /usr/local/share/vaclab/nodejs/node_modules/vxi11/README.md
 /usr/local/share/vaclab/nodejs/node_modules/vxi11/lib/vxi11.js
 /usr/local/share/vaclab/nodejs/node_modules/vxi11/LICENSE
+/usr/local/share/vaclab/nodejs/node_modules/vxi11/foo.aux
+/usr/local/share/vaclab/nodejs/node_modules/vxi11/foo.pdf
 /usr/local/share/vaclab/nodejs/node_modules/vxi11/package.json
+/usr/local/share/vaclab/nodejs/node_modules/vxi11/foo.tex
 /usr/local/share/vaclab/nodejs/node_modules/request/node_modules/oauth-sign/test.js
 /usr/local/share/vaclab/nodejs/node_modules/request/node_modules/oauth-sign/README.md
 /usr/local/share/vaclab/nodejs/node_modules/request/node_modules/oauth-sign/LICENSE
@@ -2316,8 +2320,11 @@ Nodejs-basierte http-Server f√ºr Messaufgaben
 /usr/local/bin/vlLogging
 %config(noreplace) 
 %changelog
+* Mon Oct 20 2014 Rolf.Niepraschk@ptb.de
+- ge‰ndertes vxi11-Modul (REQUEST_SIZE = 10000)
+
 * Tue Sep 02 2014 Rolf.Niepraschk@ptb.de
-- Code vom gitlab-hooks-Server weg; sonstige Bereinigigung; neuer Name "relayServer"
+- Code vom gitlab-hooks-Server weg; sonstige Bereinigung; neuer Name "relayServer"
 
 * Mon Sep 01 2014 Rolf.Niepraschk@ptb.de
 - Server f¸r gitlab hooks lahmgelegt; sp‰ter Extrapaket.

@@ -1,3 +1,6 @@
+* Mon Oct 20 2014 Rolf.Niepraschk@ptb.de
+- geändertes vxi11-Modul (REQUEST_SIZE = 10000)
+
 * Tue Sep 02 2014 Rolf.Niepraschk@ptb.de
 - Code vom gitlab-hooks-Server weg; sonstige Bereinigung; neuer Name "relayServer"
 

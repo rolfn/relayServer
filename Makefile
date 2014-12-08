@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-09-02, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-10-20, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 2 # >0!
+RELEASE = 1 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -84,7 +84,7 @@ spec : dist
 	@cat CHANGES >> $(SPEC_FILE)
 
 dist : rm_buildroot vxi11
-	git pull
+#	git pull
 #	npm install
 	mkdir -p $(BUILD_ROOT)/etc/init.d
 	mkdir -p $(BUILD_ROOT)/usr/local/bin
