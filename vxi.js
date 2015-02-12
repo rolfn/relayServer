@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-12
+ * version: 2014-08-19
  */
 
 var cfg = require('./config.js');
@@ -38,15 +38,8 @@ function call(pRef, js) {
       b.push(result);
       next();
     }, function(error) {
-      if (parseInt(params.readTimeout) === 0 &&
-        error.indexOf('DEVICE_READ: 15') > -1) {
-        logger.debug('Ignore ("readTimeout=0"): ' + error);
-        // spezieller Fall wird nicht als Fehler gewertet
-        response.prepareResult(pRef, js, null);
-      } else {
-        logger.error(error);
-        response.prepareError(pRef, js, error);
-      }
+      logger.error(error);
+      response.prepareError(pRef, js, error);
     });
   }
   var wait = js.Wait < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT : js.Wait;
