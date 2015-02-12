@@ -1,7 +1,7 @@
 Summary: Nodejs-basierte http-Server für Messaufgaben
 Name: relayServer
 Version: 11.11.2
-Release: 1 
+Release: 2 
 License: ???
 Group: Productivity/Networking/Web/Servers
 BuildArch: noarch
@@ -27,6 +27,7 @@ Nodejs-basierte http-Server für Messaufgaben
 
 %files
 %dir /etc
+%dir /etc/init
 %dir /etc/init.d
 %dir /usr
 %dir /usr/lib
@@ -2318,8 +2319,12 @@ Nodejs-basierte http-Server für Messaufgaben
 /usr/local/share/vaclab/nodejs/relay-add.js
 /usr/local/share/vaclab/nodejs/tools.js
 /usr/local/bin/vlLogging
+/etc/init/relayServer.conf
 %config(noreplace) 
 %changelog
+* Mon Dec 08 2014 Rolf.Niepraschk@ptb.de
+- "relayServer.conf" (upstart, Ubuntu)
+
 * Mon Oct 20 2014 Rolf.Niepraschk@ptb.de
 - ge�ndertes vxi11-Modul (REQUEST_SIZE = 10000)
 

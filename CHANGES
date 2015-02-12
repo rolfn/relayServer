@@ -1,3 +1,6 @@
+* Mon Dec 08 2014 Rolf.Niepraschk@ptb.de
+- "relayServer.conf" (upstart, Ubuntu)
+
 * Mon Oct 20 2014 Rolf.Niepraschk@ptb.de
 - geändertes vxi11-Modul (REQUEST_SIZE = 10000)
 

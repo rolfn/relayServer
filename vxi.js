@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-08-19
+ * version: 2015-02-12
  */
 
 var cfg = require('./config.js');
@@ -28,7 +28,7 @@ function call(pRef, js) {
 
   if (typeof js.lockDevice == 'boolean') params.lockDevice = js.lockDevice;
   if (!isNaN(parseInt(js.VxiTimeout))) params.readTimeout = js.VxiTimeout;
-  if (!isNaN(parseInt(js.readTimeout))) params.readTimeout = readTimeout;
+  if (!isNaN(parseInt(js.readTimeout))) params.readTimeout = js.readTimeout;
   if (!isNaN(parseInt(js.ioTimeout))) params.ioTimeout = js.ioTimeout;
   if (!isNaN(parseInt(js.lockTimeout))) params.lockTimeout = js.lockTimeout;
   if (js.termChar) params.termChar = js.termChar;

@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2014-10-20, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2014-12-08, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -42,6 +42,10 @@ rpm : spec
 
 src_rpm : spec
 	rpmbuild --buildroot $(PWD)/$(BUILD_ROOT) -bs $(SPEC_FILE)
+
+dep : rpm
+	alien --to-deb --scripts $(MAIN)-$(VERSION)-$(RELEASE).noarch.rpm
+# erfordert root-Privilegien !?
 
 spec : dist
 	@echo "Summary: $(SUMMARY)" > $(SPEC_FILE)
@@ -92,10 +96,12 @@ dist : rm_buildroot vxi11
 	mkdir -p $(BUILD_ROOT)/usr/local/share/vaclab/nodejs
 	mkdir -p $(BUILD_ROOT)/usr/lib/node_modules
 	mkdir -p $(BUILD_ROOT)/usr/lib/systemd/system
+	mkdir -p $(BUILD_ROOT)/etc/init
 	cp -p vlLogging $(BUILD_ROOT)/usr/local/bin/
 	cp -p $(JS_SOURCE) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -pLr $(NODE_MODULES) $(BUILD_ROOT)/usr/local/share/vaclab/nodejs/
 	cp -p $(MAIN).service $(BUILD_ROOT)/usr/lib/systemd/system/
+	cp -p $(MAIN).conf $(BUILD_ROOT)/etc/init/  # "upstart" (Ubuntu)
 
 docs : $(DOC_DIR)/index.html
 
