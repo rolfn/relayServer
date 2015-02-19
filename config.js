@@ -7,8 +7,8 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '11.11.2',
-  DATE: '2014-10-20',
+  VERSION: '11.12.0',
+  DATE: '2015-02-19',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   WEBSOCKET_PORT: 9001,
@@ -17,7 +17,7 @@ module.exports = {
   MIN_EXEC_WAIT: 50, // msec // ???
   MIN_VXI11_WAIT: 50, // msec
   MIN_TCP_WAIT: 250, // msec // ???
-  DEFAULT_TCP_TIMEOUT: 2000, // msec
+  DEFAULT_TCP_TIMEOUT: 10000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
   DEFAULT_XLSX_NAME: 'data.xlsx',
