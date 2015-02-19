@@ -73,5 +73,18 @@ echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
   curl -T - -X PUT http://localhost:55555
 ```
 
+## Test
+
+Die unter ```./test``` befindlichen unit-Tests werden im
+»relayServer«-Stammverzeichnis mittels:
+
+```bash
+npm test
+```
+
+gestartet. Es entsteht zusätzlich ein coverage-Report
+```./coverage/lcov-report/index.html```
+
+
 
 
