@@ -1,3 +1,6 @@
+* Fri Feb 13 2015 Rolf.Niepraschk@ptb.de
+- "VxiTimeout=0" (Behandlung von fälschlichen Timeout-Meldungen)
+
 * Mon Dec 08 2014 Rolf.Niepraschk@ptb.de
 - "relayServer.conf" (upstart, Ubuntu)
 
