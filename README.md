@@ -85,6 +85,8 @@ npm test
 gestartet. Es entsteht zusätzlich ein coverage-Report
 ```./coverage/lcov-report/index.html```
 
+Nur VXI11 Funktionalität:
 
-
-
+```bash
+npm run test-vxi11
+```

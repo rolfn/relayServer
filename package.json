@@ -26,6 +26,7 @@
     "istanbul":">=0.3.0"
   },
   "scripts": {
-    "test":"istanbul cover _mocha -- -R spec"
+      "test":"istanbul cover _mocha -- -R spec",
+      "test-vxi11":"mocha test/relay.vxi11.test.js" 
   }
 }
