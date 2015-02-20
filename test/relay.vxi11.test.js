@@ -1,51 +1,25 @@
 var assert    = require("assert")
-  , _         = require("underscore")
   , http      = require("http")
+  , _         = require("underscore")
+  , hlp       = require("./hlp.js")
   , cfg       = require('../config.js')
 
-cfg.logger = require('vlogger')()
+cfg.logger = require('vlogger')();
 
 var relay     = require("../relay.js")
-  , testport  = 55556
-  , server    = http.createServer(relay.start);
+   , server    = http.createServer(relay.start);
 
-var con = {hostname: "localhost",
-           port: cfg.RELAY_PORT,
-           path: "/",
-           method: 'POST',
-           headers: {
-             'Content-Type': 'application/json'
-           }
-          };
-
-var  httpreq = function(con, cb){
-  var req = http.request(con, function(res) {
-              res.setEncoding("utf8");
-              res.on("data",   cb);
-              res.on("end", function() {
-                console.log("req.end ");
-              } );
-              res.on("error", function(e) {
-                console.log("res.error " + e);
-              });
-            });
-
-  req.on("error", function(e) {
-    console.log("req.error " + e);
-  });
-  return req;
-};
-
-describe('relay', function(){
-  before("run the server before start", function (done) {
-    server.listen(testport, function(){
-      console.log("start& listen");
+describe('test of relayServer VXI11 functionality', function(){
+  before("run the server before start", function(done){
+    server.listen(hlp.testport, function(){
+      console.log("start&listen to testserver@port: " + hlp.testport);
       done();
     });
   });
-  after("shut down when everything is done", function (done) {
+
+  after("shut down when everything is done", function(done){
     server.close(function(){
-      console.log("shut down");
+      console.log("shut down testserver@port: " + hlp.testport);
       done();
     });
   });
@@ -59,8 +33,9 @@ describe('relay', function(){
                   "Device":"gpib0,8",
                   "Value": ":digit 5.5"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
+
                   assert.equal(_.isObject(data) , true);
                   assert.equal(_.isString(data.Result) , true);
                   done()
@@ -80,7 +55,7 @@ describe('relay', function(){
                   "Device":"gpib0,8",
                   "Value": ":meas:func"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
                   assert.equal(data.Result.substring(0, 9) , "MEASURING");
                   done()
@@ -101,9 +76,8 @@ describe('relay', function(){
                   "Device":"gpib0,10",
                   "Value": ":digit 5.5"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(_.isObject(data) , true);
                   assert.equal(_.isString(data.Result) , true);
 
@@ -124,7 +98,7 @@ describe('relay', function(){
                   "Device":"gpib0,10",
                   "Value": ":meas:func"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
                   assert.equal(data.Result.substring(0, 9) , "MEASURING");
                   done()
@@ -144,9 +118,8 @@ describe('relay', function(){
                   "Device":"gpib0,9",
                   "Value": ":digit 5.5"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(_.isObject(data) , true);
                   assert.equal(_.isString(data.Result) , true);
 
@@ -167,7 +140,7 @@ describe('relay', function(){
                   "Device":"gpib0,9",
                   "Value": ":meas:func"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
                   assert.equal(data.Result.substring(0, 9) , "MEASURING");
                   done()
@@ -188,9 +161,8 @@ describe('relay', function(){
                   "Device":"gpib0,2",
                   "Value": "P0\n"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(_.isObject(data) , true);
                   assert.equal(_.isString(data.Result) , true);
 
@@ -210,9 +182,8 @@ describe('relay', function(){
                   "Device":"gpib0,10",
                   "Value": "*IDN?"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(data.Result.substring(0, 8) , "KEITHLEY");
 
                   done()
@@ -232,9 +203,8 @@ describe('relay', function(){
                   "Device":"gpib0,5",
                   "Value": "*IDN?"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(data.Result.substring(0, 15) , "HEWLETT-PACKARD");
 
                   done()
@@ -253,9 +223,8 @@ describe('relay', function(){
                   "Device":"gpib0,18",
                   "Value": "*IDN?"};
 
-      var req = httpreq(con, function(d){
+      var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(data.Result.substring(0, 2) , "00");
 
                   done()
@@ -265,6 +234,4 @@ describe('relay', function(){
       req.end();
     });
   });
-
-
 });

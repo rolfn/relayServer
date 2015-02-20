@@ -91,6 +91,12 @@ Nur VXI11 Funktionalität:
 npm run test-vxi11
 ```
 
+Nur TCP Funktionalität:
+
+```bash
+npm run test-tcp
+```
+
 Nur postprocessing-Zusatzfunktionen:
 
 ```bash
