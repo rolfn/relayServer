@@ -7,8 +7,8 @@
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '11.12.0',
-  DATE: '2015-02-19',
+  VERSION: '11.12.1',
+  DATE: '2015-02-20',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   WEBSOCKET_PORT: 9001,

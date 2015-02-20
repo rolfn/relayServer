@@ -1,3 +1,6 @@
+* Fri Feb 20 2015 Rolf.Niepraschk@ptb.de
+- Neue Version vxi11-Bibliothek ("null" bei fehlender Geräteantwort)
+
 * Fri Feb 13 2015 Rolf.Niepraschk@ptb.de
 - "VxiTimeout=0" (Behandlung von fälschlichen Timeout-Meldungen)
 
