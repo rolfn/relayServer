@@ -454,7 +454,7 @@ exports.extractAxtran = extractAxtran;
  */
 
 function extractIm540(s) {
-  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.?[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
+  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
 
   return strToNum(regex.exec(s), 2);
 }

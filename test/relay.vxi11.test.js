@@ -62,6 +62,27 @@ describe('relay', function(){
       var req = httpreq(con, function(d){
                   var data = JSON.parse(d);
                   assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.Result) , true);
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+  describe('#Action:VXI11', function(){
+    it('should read value from FM3 1T CDG MKS', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "VxiTimeout": 0,
+                  "Host": "e75481",
+                  "Device":"gpib0,8",
+                  "Value": ":meas:func"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+                  assert.equal(data.Result.substring(0, 9) , "MEASURING");
                   done()
                 });
 
@@ -72,17 +93,20 @@ describe('relay', function(){
 
 
   describe('#Action:VXI11', function(){
-    it('should initialize range X0.1 at FM3 1T CDG MKS', function(done){
+    it('should initialize digits at FM3 10T CDG MKS', function(done){
 
       var task = {"Action":"VXI11" ,
                   "VxiTimeout": 0,
                   "Host": "e75481",
-                  "Device":"gpib0,8",
-                  "Value": ":sens:scan(@1):gain X0.1"};
+                  "Device":"gpib0,10",
+                  "Value": ":digit 5.5"};
 
       var req = httpreq(con, function(d){
                   var data = JSON.parse(d);
+
                   assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.Result) , true);
+
                   done()
                 });
 
@@ -90,4 +114,157 @@ describe('relay', function(){
       req.end();
     });
   });
+
+  describe('#Action:VXI11', function(){
+    it('should read value from FM3 10T CDG MKS', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "VxiTimeout": 0,
+                  "Host": "e75481",
+                  "Device":"gpib0,10",
+                  "Value": ":meas:func"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+                  assert.equal(data.Result.substring(0, 9) , "MEASURING");
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+  describe('#Action:VXI11', function(){
+    it('should initialize digits at FM3 1000T CDG MKS', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "VxiTimeout": 0,
+                  "Host": "e75481",
+                  "Device":"gpib0,9",
+                  "Value": ":digit 5.5"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+
+                  assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.Result) , true);
+
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+  describe('#Action:VXI11', function(){
+    it('should read value from FM3 1000T CDG MKS', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "VxiTimeout": 0,
+                  "Host": "e75481",
+                  "Device":"gpib0,9",
+                  "Value": ":meas:func"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+                  assert.equal(data.Result.substring(0, 9) , "MEASURING");
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+
+  describe('#Action:VXI11', function(){
+    it('should initialize the F250@e75465', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "VxiTimeout": 0,
+                  "Host": "e75465",
+                  "Device":"gpib0,2",
+                  "Value": "P0\n"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+
+                  assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.Result) , true);
+
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+  describe('#Action:VXI11', function(){
+    it('should connect to SE1 Keithley', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "Host": "e75465",
+                  "Device":"gpib0,10",
+                  "Value": "*IDN?"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+
+                  assert.equal(data.Result.substring(0, 8) , "KEITHLEY");
+
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+
+  describe('#Action:VXI11', function(){
+    it('should connect to CE3 Agilent', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "Host": "e75481",
+                  "Device":"gpib0,5",
+                  "Value": "*IDN?"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+
+                  assert.equal(data.Result.substring(0, 15) , "HEWLETT-PACKARD");
+
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+  describe('#Action:VXI11', function(){
+    it('should connect to VS-CE3/FM3', function(done){
+
+      var task = {"Action":"VXI11" ,
+                  "Host": "e75481",
+                  "Device":"gpib0,18",
+                  "Value": "*IDN?"};
+
+      var req = httpreq(con, function(d){
+                  var data = JSON.parse(d);
+
+                  assert.equal(data.Result.substring(0, 2) , "00");
+
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+    });
+  });
+
+
 });

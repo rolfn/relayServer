@@ -123,12 +123,21 @@ describe('relay-add.Device', function(){
   });
 
   describe('#extractIm540', function(){
-    it('should return clean numbers or NaN', function(){
-
+    it('should return clean numbers or NaN; test 1', function(){
       assert.equal( _.isNaN(add.extractIm540("BAR 7.50E-08\r\n")),true);
-      assert.equal( _.isNaN(add.extractIm540("MES R\rMBAR 750E-08\r\n")),true);
+    });
+  });
 
-      assert.equal( add.extractIm540("MES R\rMBAR 7.49E-08"), 7.49E-08);
+  describe('#extractIm540', function(){
+    it('should return clean numbers or NaN; test 2', function(){
+      assert.equal( _.isNaN(add.extractIm540("MES R\rMBAR 750E-08\r\n")),true);
+    });
+  });
+
+  describe('#extractIm540', function(){
+    it('should return clean numbers or NaN; test 3', function(){
+
+      assert.equal( add.extractIm540("MES R\rMBAR 7.49E-08\r\n"), 7.49E-08);
 
     });
   });

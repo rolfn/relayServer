@@ -90,3 +90,9 @@ Nur VXI11 Funktionalität:
 ```bash
 npm run test-vxi11
 ```
+
+Nur postprocessing-Zusatzfunktionen:
+
+```bash
+npm run test-relay-add
+```

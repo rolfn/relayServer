@@ -27,6 +27,7 @@
   },
   "scripts": {
       "test":"istanbul cover _mocha -- -R spec",
-      "test-vxi11":"mocha test/relay.vxi11.test.js" 
+      "test-vxi11":"mocha --slow 200 test/relay.vxi11.test.js",
+      "test-relay-add":"mocha  test/relay-add.*" 
   }
 }
