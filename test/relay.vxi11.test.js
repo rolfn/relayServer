@@ -35,9 +35,8 @@ describe('test of relayServer VXI11 functionality', function(){
 
       var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
                   assert.equal(_.isObject(data) , true);
-                  assert.equal(_.isString(data.Result) , true);
+                  assert.equal(_.isNull(data.Result) , true);
                   done()
                 });
 
@@ -79,7 +78,7 @@ describe('test of relayServer VXI11 functionality', function(){
       var req = hlp.req( function(d){
                   var data = JSON.parse(d);
                   assert.equal(_.isObject(data) , true);
-                  assert.equal(_.isString(data.Result) , true);
+                  assert.equal(_.isNull(data.Result) , true);
 
                   done()
                 });
@@ -121,7 +120,7 @@ describe('test of relayServer VXI11 functionality', function(){
       var req = hlp.req( function(d){
                   var data = JSON.parse(d);
                   assert.equal(_.isObject(data) , true);
-                  assert.equal(_.isString(data.Result) , true);
+                  assert.equal(_.isNull(data.Result) , true);
 
                   done()
                 });
@@ -164,7 +163,7 @@ describe('test of relayServer VXI11 functionality', function(){
       var req = hlp.req( function(d){
                   var data = JSON.parse(d);
                   assert.equal(_.isObject(data) , true);
-                  assert.equal(_.isString(data.Result) , true);
+                  assert.equal(_.isNull(data.Result) , true);
 
                   done()
                 });

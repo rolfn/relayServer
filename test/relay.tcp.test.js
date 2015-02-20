@@ -71,4 +71,28 @@ describe('test of relayServer TCP functionality', function(){
     });
   });
 
+  describe('#Action:TCP', function(){
+    it('should connect to MKS Flow Controller SE1/CE3/FM3 (e75491)', function(done){
+
+      var task = {"Action":"TCP" ,
+                  "VxiTimeout": 0,
+                  "Host": "e75491",
+                  "Port": 10002,
+                  "Value": "?ID\r"};
+
+      var req = hlp.req( function(d){
+                  var data = JSON.parse(d);
+                  assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.Result) , true);
+                  assert.equal(data.Result.substring(0, 2) , "PR");
+
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+
+    });
+  });
+
 });

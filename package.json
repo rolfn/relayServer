@@ -13,7 +13,7 @@
     "socket.io-client": "~0.9.16",
     "stack-trace": "~0.0.9",
     "vlogger": ">0.0.1",
-    "vxi11": ">0.0.11",
+    "vxi11": ">=0.0.26",
     "winston": "~0.7.3",
     "vwebsocket": ">0.0.0",
     "nodemailer": "~0.6.3",
@@ -29,6 +29,7 @@
       "test":"istanbul cover _mocha -- -R spec",
       "test-vxi11":"mocha --slow 200 test/relay.vxi11.test.js",
       "test-tcp":"mocha --slow 200 test/relay.tcp.test.js",
-      "test-relay-add":"mocha  test/relay-add.*" 
+      "test-relay-add":"mocha  test/relay-add.*", 
+      "test-rscript":"mocha --slow 1000 test/relay.rscript.test.js"
   }
 }

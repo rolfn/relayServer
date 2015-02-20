@@ -75,30 +75,25 @@ echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
 
 ## Test
 
-Die unter ```./test``` befindlichen unit-Tests werden im
+Nach einem Auffrischen der vxi11-Bibliothek:
+
+```bash
+npm update vxi11
+```
+
+können die unter ```./test``` befindlichen unit-Tests werden im
 »relayServer«-Stammverzeichnis mittels:
 
 ```bash
 npm test
 ```
 
-gestartet. Es entsteht zusätzlich ein coverage-Report
+gestartet werden. Es entsteht zusätzlich ein coverage-Report
 ```./coverage/lcov-report/index.html```
 
-Nur VXI11 Funktionalität:
 
-```bash
-npm run test-vxi11
-```
+* nur VXI11 Funktionalität: ```bash npm run test-vxi11```
+* nur TCP Funktionalität: ```bash npm run test-tcp```
+* nur postprocessing-Zusatzfunktionen: ```bash npm run test-relay-add```
+* nur Rscript Funktionalität: ```bash npm run test-rscript```
 
-Nur TCP Funktionalität:
-
-```bash
-npm run test-tcp
-```
-
-Nur postprocessing-Zusatzfunktionen:
-
-```bash
-npm run test-relay-add
-```
