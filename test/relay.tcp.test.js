@@ -3,27 +3,36 @@ var assert    = require("assert")
   , _         = require("underscore")
   , hlp       = require("./hlp.js")
   , cfg       = require('../config.js')
+  , testhost  = process.env.TESTHOST;
 
 cfg.logger = require('vlogger')();
 
-var relay     = require("../relay.js")
-   , server    = http.createServer(relay.start);
 
 describe('test of relayServer TCP functionality', function(){
 
-  before("run the server before start", function(done){
-    server.listen(hlp.testport, function(){
-      console.log("start& listen");
-      done();
-    });
-  });
 
-  after("shut down when everything is done", function(done){
-    server.close(function(){
-      console.log("shut down");
-      done();
+  if(_.isUndefined(testhost)){
+
+    var relay     = require("../relay.js")
+      , server    = http.createServer(relay.start);
+
+    before("run the server before start", function(done){
+      server.listen(hlp.testport, function(){
+        console.log("start& listen");
+        done();
+      });
     });
-  });
+
+    after("shut down when everything is done", function(done){
+      server.close(function(){
+        console.log("shut down");
+        done();
+      });
+    });
+  }else{
+    console.log("test installed server at: " + testhost)
+  }
+
 
   describe('#Action:TCP', function(){
     it('should connect to Corvus_1 (e75468)', function(done){

@@ -3,30 +3,36 @@ var assert    = require("assert")
   , _         = require("underscore")
   , hlp       = require("./hlp.js")
   , cfg       = require('../config.js')
+  , testhost  = process.env.TESTHOST;
 
 cfg.logger = require('vlogger')();
 
-var relay     = require("../relay.js")
-   , server    = http.createServer(relay.start);
-
 describe('test of relayServer Rscript functionality', function(){
 
-  before("run the server before start", function(done){
-    server.listen(hlp.testport, function(){
-      console.log("start& listen");
-      done();
-    });
-  });
+  if(_.isUndefined(testhost)){
 
-  after("shut down when everything is done", function(done){
-    server.close(function(){
-      console.log("shut down");
-      done();
+    var relay     = require("../relay.js")
+      , server    = http.createServer(relay.start);
+
+    before("run the server before start", function(done){
+      server.listen(hlp.testport, function(){
+        console.log("start& listen");
+        done();
+      });
     });
-  });
+
+    after("shut down when everything is done", function(done){
+      server.close(function(){
+        console.log("shut down");
+        done();
+      });
+    });
+  }else{
+    console.log("test installed server at: " + testhost)
+  }
 
   describe('#Action:Rscript', function(){
-    it('should connect to Corvus_1 (e75468)', function(done){
+    it('should connect to /usr/local/lib/r4vl/test', function(done){
 
       var task = {"Action":"/usr/bin/Rscript" ,
                   "Value": [
@@ -35,9 +41,8 @@ describe('test of relayServer Rscript functionality', function(){
 
       var req = hlp.req( function(d){
                   var data = JSON.parse(d);
-
-                  //            assert.equal(_.isObject(data) , true);
-                  //            assert.equal(_.isString(data.Result) , true);
+                  assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.Result) , true);
                   done()
                 });
 
