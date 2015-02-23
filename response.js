@@ -132,6 +132,7 @@ exports.prepareResult = prepareResult;
 function prepareError(pRef, js, data) {
   js.OutputType = 'json';
   var jsonRes = {error:data};
+  if (js.exitCode) jsonRes.exitCode = js.exitCode;
   sendResponse(pRef, js, jsonRes);
 }
 

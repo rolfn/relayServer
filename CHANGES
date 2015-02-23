@@ -1,3 +1,6 @@
+* Mon Feb 23 2015 Rolf.Niepraschk@ptb.de
+- Fehlerbehandlung bei "external" korrigiert.
+
 * Fri Feb 20 2015 Rolf.Niepraschk@ptb.de
 - Neue Version vxi11-Bibliothek ("null" bei fehlender Gerteantwort)
 
@@ -109,8 +112,6 @@
 * Thu Jan 17 2013 Rolf.Niepraschk@ptb.de
 - js-Code weitgehend dokumentiert und formatiert.
 - Erzeugung von temporärer Datei ausgelagert ("tools.createTempFile")
-* Mon Feb 23 2015 Rolf.Niepraschk@ptb.de
-- Fehlerbehandlung bei "external" korrigiert.
 
 * Wed Jan 16 2013 Rolf.Niepraschk@ptb.de
 - "getEnv" durch "process.env" ersetzt. "ldap" wegen "undefined symbol"
