@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2015-02-23
  */
 
 var exec = require('child_process').exec;
@@ -75,7 +75,7 @@ function call(pRef, js, postFunc) {
           var s = 'error:' + error;
           logger.error('exitCode:', error.code);
           js.exitCode = error.code;
-          b.push(s);
+          response.prepareError(pRef, js, error.toString());
         } else {
           logger.debug('time_success: %d', new Date().getTime());
           var res;
