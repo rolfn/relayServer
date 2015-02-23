@@ -1,20 +1,20 @@
 * Fri Feb 20 2015 Rolf.Niepraschk@ptb.de
-- Neue Version vxi11-Bibliothek ("null" bei fehlender Geräteantwort)
+- Neue Version vxi11-Bibliothek ("null" bei fehlender Gerteantwort)
 
 * Fri Feb 13 2015 Rolf.Niepraschk@ptb.de
-- "VxiTimeout=0" (Behandlung von fälschlichen Timeout-Meldungen)
+- "VxiTimeout=0" (Behandlung von fÃ¤lschlichen Timeout-Meldungen)
 
 * Mon Dec 08 2014 Rolf.Niepraschk@ptb.de
 - "relayServer.conf" (upstart, Ubuntu)
 
 * Mon Oct 20 2014 Rolf.Niepraschk@ptb.de
-- geändertes vxi11-Modul (REQUEST_SIZE = 10000)
+- gendertes vxi11-Modul (REQUEST_SIZE = 10000)
 
 * Tue Sep 02 2014 Rolf.Niepraschk@ptb.de
 - Code vom gitlab-hooks-Server weg; sonstige Bereinigung; neuer Name "relayServer"
 
 * Mon Sep 01 2014 Rolf.Niepraschk@ptb.de
-- Server für gitlab hooks lahmgelegt; später Extrapaket.
+- Server fÃ¼r gitlab hooks lahmgelegt; spÃ¤ter Extrapaket.
 
 * Thu Aug 21 2014 Rolf.Niepraschk@ptb.de
 - Korrigierte Version von "vxi11.js"
@@ -29,10 +29,10 @@
 - VXI-11-node-Module: Fehler "socket.destroy()"
 
 * Mon Jun 02 2014 Rolf.Niepraschk@ptb.de
-- Weitere Parameter für "vxi11.js"
+- Weitere Parameter fr "vxi11.js"
 
 * Tue May 27 2014 Rolf.Niepraschk@ptb.de
-- "getVaclabServer" zugefügt
+- "getVaclabServer" zugefgt
 
 * Thu May 22 2014 Rolf.Niepraschk@ptb.de
 - VXI-11-Modul: encoding ('utf8', 'base64', 'binary')
@@ -50,7 +50,7 @@
 - "ShortFormat"
 
 * Thu May 08 2014 Rolf.Niepraschk@ptb.de
-- http-Header-Erzeugung geändert; excel-Erzeugung ("XLSX-OUT" und "XLSX-IN")
+- http-Header-Erzeugung gendert; excel-Erzeugung ("XLSX-OUT" und "XLSX-IN")
 
 * Tue May 06 2014 Rolf.Niepraschk@ptb.de
 - Read-Error-Nummer
@@ -71,10 +71,10 @@
 - Action "UDP"
 
 * Thu Mar 20 2014 Rolf.Niepraschk@ptb.de
-- Ergänzungen in "relay-add.js"
+- Ergnzungen in "relay-add.js"
 
 * Tue Feb 11 2014 Rolf.Niepraschk@ptb.de
-- Im Startscript Runlevel 2 zugefügt
+- Im Startscript Runlevel 2 zugefgt
 
 * Fri Jan 24 2014 Rolf.Niepraschk@ptb.de
 - Neuer logger-Transport "vWebsocket". Zugriff nun via "vlLogging".

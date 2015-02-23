@@ -33,7 +33,6 @@ INSTALL_DIRS_ROOT = $(INSTALL_DIRS_PARENT)_attachments/
 OS_RELEASES = openSUSE_11.4  openSUSE_12.2  openSUSE_12.3  openSUSE_13.1  SLE_11_SP3
 INSTALL_DIRS = $(addsuffix /noarch, $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
 
-
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de" -d "2012-08-30"
 
@@ -48,7 +47,7 @@ dep : rpm
 # erfordert root-Privilegien !?
 
 spec : dist
-	@echo "Summary: $(SUMMARY)" > $(SPEC_FILE)
+	@LANG=de_DE.UTF-8 echo "Summary: $(SUMMARY)" > $(SPEC_FILE)
 	@echo "Name: $(MAIN)" >> $(SPEC_FILE)
 	@echo "Version: $(VERSION)" >> $(SPEC_FILE)
 	@echo "Release: $(RELEASE)" >> $(SPEC_FILE)
@@ -78,10 +77,9 @@ spec : dist
 	@echo "%files" >> $(SPEC_FILE)
 	@find $(BUILD_ROOT)/* -type d -name '*' -print | sed 's/^$(BUILD_ROOT)/%dir /' \
     >> $(SPEC_FILE)
-	@find $(BUILD_ROOT) -type f -name '*' -print | sed 's/^$(BUILD_ROOT)//' \
-    >> $(SPEC_FILE)
-	@find $(BUILD_ROOT) -type l -name '*' -print | sed 's/^$(BUILD_ROOT)//' \
-    >> $(SPEC_FILE)
+# mindestens hier sind quotes bei Dateinamen nötig
+	@find $(BUILD_ROOT) -type f -name '*' -exec echo '"{}" ' \; | \
+	  sed -e 's/$(BUILD_ROOT)//' >> $(SPEC_FILE)
 	@echo -n "%config(noreplace) " >> $(SPEC_FILE)
 	@echo "" >> $(SPEC_FILE)
 	@echo "%changelog" >> $(SPEC_FILE)

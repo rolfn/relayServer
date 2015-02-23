@@ -48,8 +48,8 @@ echo '{"Action":"RANDOM"}' | \
 echo '{"Action":"TIME","Repeat":3,"Wait":2000}' | \
   curl -T - -X PUT http://localhost:55555
 
-echo '{"Action":"/usr/local/bin/vxiTransceiver","Host":"e75481",
-  "Device":"gpib0,5","Value":"*IDN?"}' | curl -T - -X PUT http://localhost:55555
+echo '{"Action":"VXI11","Host":"e75465","Device":"gpib0,2","Value":"T\n",
+  "readTimeout":0}' | curl -T - -X PUT http://localhost:55555
 
 echo '{"Action":"/usr/bin/Rscript", "Value":["foo","bar"],"Body":"print(17+4)"}' | \
   curl -T - -X PUT http://localhost:55555
