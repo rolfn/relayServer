@@ -13,6 +13,7 @@ var logger = cfg.logger;
 
 /**
  * Konfiguration der für nodemailer nötigen Datenstrukturen und Vesenden einer E-Mail.
+ * @method call
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */

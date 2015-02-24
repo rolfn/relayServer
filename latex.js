@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-08
+ * version: 2015-02-24
  */
 
 var cfg = require('./config.js');
@@ -14,7 +14,19 @@ var tmp = require('temp'); tmp.track();
 
 var logger = cfg.logger;
 
+ /**
+   * Funktion, die dem repeat-Ablauf übergeben wird und die eigentliche Arbeit erledigt
+   * @method doIt
+   * @param {string[]} b
+   * @param {function} next
+   */
 function call(pRef, js) {
+  /**
+   * Nachbearbeitung (LaTeX-Fehlerdokument, Aufräumen usw.)
+   * @method post
+   * @param {object} pRef
+   * @param {object} js
+   */
   function post(pRef, js) {
     var texFile = js.execStr.split(' ').pop();
     var resultFile = path.join(js.WorkingDir,
@@ -61,6 +73,11 @@ function call(pRef, js) {
     });
   }
 
+  /**
+   * Liefert den Programmnamen des TeX-Compilers
+   * @method getCmd
+   * @return name
+   */
   function getCmd() {
     if (!!!js.Command) return cfg.DEFAULT_TEX_CMD;
     if (cfg.TEX_CMDS.indexOf(js.Command) === -1) return null;

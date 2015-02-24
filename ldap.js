@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: version: 2015-02-24
  */
 
 // noch ungetestet in der modularen Variante!
@@ -13,10 +13,22 @@ var zlib = require('zlib');
 
 var logger = cfg.logger;
 
+/**
+ * Description
+ * @method end
+ * @param {object} pRef
+ * @param {object} js
+ */
 function end(pRef, js) {
   prepareResult(pRef, js, {Success:js.Success,Data:js.Data});
 }
 
+/**
+ * Description
+ * @method unbind
+ * @param {object} pRef
+ * @param {object} js
+ */
 function unbind(pRef, js) {
   js.client.unbind(function(e) {
     if (e) {
@@ -28,6 +40,13 @@ function unbind(pRef, js) {
   });
 }
 
+/**
+ * Description
+ * @method search2
+ * @param {object} pRef
+ * @param {object} js
+ * @param {function} last
+ */
 function search2(pRef, js, last) {
   var opts = {
     filter:js.Filter,
@@ -72,6 +91,13 @@ function search2(pRef, js, last) {
 
 }
 
+/**
+ * Description
+ * @method search1
+ * @param {object} pRef
+ * @param {object} js
+ * @param {function} last
+ */
 function search1(pRef, js, last) {
   js.client = ldap.createClient({url: 'ldap://' + js.Host + ':' + js.Port});
   js.Success = false;
@@ -87,6 +113,12 @@ function search1(pRef, js, last) {
   });
 }
 
+/**
+ * Description
+ * @method auth3
+ * @param {object} pRef
+ * @param {object} js
+ */
 function auth3(pRef, js) {
   if (js.DN === undefined) {
     js.Data = ('Search failure or wrong username');
@@ -108,6 +140,12 @@ function auth3(pRef, js) {
   }
 }
 
+/**
+ * Description
+ * @method auth2
+ * @param {object} pRef
+ * @param {object} js
+ */
 function auth2(pRef, js) {
   zlib.inflate(js.Passwd, function(err, buf) {
     if (err) {
@@ -119,7 +157,12 @@ function auth2(pRef, js) {
   });
 }
 
-/* http://ldapjs.org/client.html */
+/**
+ * http://ldapjs.org/client.html
+ * @method auth1
+ * @param {object} pRef
+ * @param {object} js
+ */
 function auth1(pRef, js) {
   // Später nach vollständigem DN für "CN=username" suchen.
   js.Filter = 'cn=' + js.Name;

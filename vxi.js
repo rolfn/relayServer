@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-13
+ * version: 2015-02-24
  */
 
 var cfg = require('./config.js');
@@ -14,6 +14,7 @@ var logger = cfg.logger;
 /**
  * Konfiguration der nötigen Datenstrukturen und Aufnahme der VXI-Kommunikation.
  * Wait/Repeat wird unterstützt.
+ * @method call
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
@@ -33,6 +34,12 @@ function call(pRef, js) {
   if (!isNaN(parseInt(js.lockTimeout))) params.lockTimeout = js.lockTimeout;
   if (js.termChar) params.termChar = js.termChar;
 
+  /**
+   * Funktion, die dem repeat-Ablauf übergeben wird und die eigentliche Arbeit erledigt
+   * @method doIt
+   * @param {string[]} b
+   * @param {function} next
+   */
   function doIt(b, next) {
     vxi(params, function(result) {
       b.push(result);
