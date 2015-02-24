@@ -49,4 +49,25 @@ describe('test of relayServer Rscript functionality', function(){
     });
   });
 
+  describe('#Action:Rscript', function(){
+    it('should answer with error', function(done){
+
+      var task = {"Action":"/usr/bin/Rscript" ,
+                  "Value": [
+                    "/usr/local/lib/r4vl/not-there.R"
+                  ]};
+
+      var req = hlp.req( function(d){
+                  var data = JSON.parse(d);
+                  assert.equal(_.isObject(data) , true);
+                  assert.equal(_.isString(data.error) , true);
+                  done()
+                });
+
+      req.write(JSON.stringify(task));
+      req.end();
+
+    });
+  });
+
 });
