@@ -91,9 +91,15 @@ npm test
 gestartet werden. Es entsteht zusätzlich ein coverage-Report
 ```./coverage/lcov-report/index.html```
 
-
 * nur VXI11 Funktionalität: ```bash npm run test-vxi11```
 * nur TCP Funktionalität: ```bash npm run test-tcp```
 * nur postprocessing-Zusatzfunktionen: ```bash npm run test-relay-add```
 * nur Rscript Funktionalität: ```bash npm run test-rscript```
+
+Zum Testen eines bereits laufenden relayServers sind folgende scripte
+vorbereitet:
+
+* ```bash npm run test-ce3-inst```
+* ```bash npm run test-rolf-inst```
+* ```bash npm run test-thomas-inst```
 
