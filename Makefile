@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2015-02-19, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2015-02-23, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
@@ -11,9 +11,9 @@ DESCRIPTION = $(SUMMARY)
 PACKAGER = "Rolf Niepraschk"
 #BUILDARCH = $(shell arch)
 BUILDARCH = "noarch"
-JS_TEST = relay-add-test.js
+###JS_TEST = relay-add-test.js
 JS_SOURCE = $(wildcard *.js)
-JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
+###JS_SOURCE := $(filter-out $(JS_TEST),$(JS_SOURCE))
 NODE_MODULES = node_modules
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
@@ -103,6 +103,7 @@ dist : rm_buildroot vxi11
 
 docs : $(DOC_DIR)/index.html
 
+# TODO: Evtl. unnötig! Oder symlinks?
 # Umkopieren, damit Rekursion von "dox-foundation" unschädlich ist.
 $(DOC_SRC) : $(JS_SOURCE) $(JS_TEST)
 	@mkdir -p "$@"

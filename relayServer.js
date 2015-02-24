@@ -2,25 +2,11 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-09-01
+ * version: 2015-02-24
  */
 
 var cfg = require('./config.js');
-var winston = require('winston');
-require('vwebsocket');
-var logger = cfg.logger = require('vlogger')({
-  transports: [
-    new winston.transports.vWebsocket({
-      level: 'debug',
-      port: cfg.WEBSOCKET_PORT,
-      handleExceptions: true,
-      colorize: true,
-      prettyPrint: true
-    })
-  ]
-});
-winston.remove(winston.transports.Console);
-
+var logger = cfg.logger;
 var http = require('http');
 var relay = require('./relay.js');
 // var dispatcher = require('./dispatcher.js');

@@ -72,7 +72,6 @@ function call(pRef, js, postFunc) {
       function (error, stdout, stderr) {
         if (error) {
           logger.error('error: %s (%d / %d)', error, stderr.length, stdout.length);
-          var s = 'error:' + error;
           logger.error('exitCode:', error.code);
           js.exitCode = error.code;
           response.prepareError(pRef, js, error.toString());

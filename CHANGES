@@ -1,8 +1,11 @@
+* Tue Feb 24 2015 Rolf.Niepraschk@ptb.de
+- logger-Definition nach "config.js"
+
 * Mon Feb 23 2015 Rolf.Niepraschk@ptb.de
 - Fehlerbehandlung bei "external" korrigiert.
 
 * Fri Feb 20 2015 Rolf.Niepraschk@ptb.de
-- Neue Version vxi11-Bibliothek ("null" bei fehlender Gerteantwort)
+- Neue Version vxi11-Bibliothek ("null" bei fehlender Geräteantwort)
 
 * Fri Feb 13 2015 Rolf.Niepraschk@ptb.de
 - "VxiTimeout=0" (Behandlung von fälschlichen Timeout-Meldungen)

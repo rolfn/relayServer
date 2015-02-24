@@ -1,14 +1,14 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2015-02-24
  */
-
 
 /**
  * Datenstruktur mit Default-Werten
  */
 module.exports = {
-  VERSION: '11.12.2',
-  DATE: '2015-02-23',
+  VERSION: '11.12.3',
+  DATE: '2015-02-24',
   RELAY_PORT: 55555,
   DISPATCHER_PORT: 55565,
   WEBSOCKET_PORT: 9001,
@@ -43,6 +43,19 @@ module.exports = {
   theRepeats: {}
 };
 
-//for (var i in cfg) exports[i] = cfg[i];
-//delete cfg;
+var winston = require('winston');
+require('vwebsocket');
+module.exports.logger = require('vlogger')({
+  transports: [
+    new winston.transports.vWebsocket({
+      level: 'debug',
+      port: module.exports.WEBSOCKET_PORT,
+      handleExceptions: true,
+      colorize: true,
+      prettyPrint: true
+    })
+  ]
+});
+winston.remove(winston.transports.Console);
+
 
