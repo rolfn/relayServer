@@ -2,13 +2,9 @@ var assert    = require("assert")
   , http      = require("http")
   , _         = require("underscore")
   , hlp       = require("./hlp.js")
-  , cfg       = require('../config.js')
   , testhost  = process.env.TESTHOST;
 
-cfg.logger = require('vlogger')();
-
 describe('test of relayServer VXI11 functionality', function(){
-
 
   if(_.isUndefined(testhost)){
 

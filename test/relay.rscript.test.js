@@ -2,10 +2,7 @@ var assert    = require("assert")
   , http      = require("http")
   , _         = require("underscore")
   , hlp       = require("./hlp.js")
-  , cfg       = require('../config.js')
   , testhost  = process.env.TESTHOST;
-
-cfg.logger = require('vlogger')();
 
 describe('test of relayServer Rscript functionality', function(){
 
