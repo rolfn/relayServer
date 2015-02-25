@@ -14,3 +14,4 @@ var server = http.createServer(relay.start);
 server.listen(cfg.RELAY_PORT);
 logger.info('relay server listen (%d)\n', cfg.RELAY_PORT);
 
+// https://github.com/smartcomments/smartcomments

@@ -19,7 +19,8 @@ BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 DOC_CMD=/usr/bin/dox-foundation
 DOC_DIR=$(MAIN)
-DOC_SRC=.
+DOC_SRC=.,test
+DOC_IGNORE=tmp,node_modules,coverage
 DOC_DB=vaclab_doc
 DOC_SERVER=a73434.berlin.ptb.de
 DOC_SERVER_PORT=5984
@@ -102,16 +103,16 @@ dist : rm_buildroot vxi11
 	cp -p $(MAIN).conf $(BUILD_ROOT)/etc/init/  # "upstart" (Ubuntu)
 
 docs :
-	$(DOC_CMD) --debug --title "$(MAIN) (ver. $(VERSION))" \
-  --source .,test --target $(MAIN) --ignore tmp,node_modules,coverage
-	cp -pr $(MAIN)/* _attachments/
-	rm -rf $(MAIN)
+	rm -rf $(MAIN) ; mkdir $(MAIN)
+	$(DOC_CMD) --debug --title "$(MAIN) $(VERSION)" \
+	  --source $(DOC_SRC) --target $(MAIN) --ignore $(DOC_IGNORE)
 
 docs-install : docs
+	mv $(MAIN) _attachments
 	echo $(MAIN) > _id
 	erica -v --is-ddoc false --docid $(MAIN) push $(DOC_DB_URL)
 	$(COMPACT) $(DOC_DB_URL)/_compact
-	rm -rf _attachments/*
+	rm -rf $(MAIN) _attachments
 
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean
