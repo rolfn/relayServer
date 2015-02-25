@@ -103,16 +103,15 @@ dist : rm_buildroot vxi11
 	cp -p $(MAIN).conf $(BUILD_ROOT)/etc/init/  # "upstart" (Ubuntu)
 
 docs :
-	rm -rf $(MAIN) ; mkdir $(MAIN)
-	$(DOC_CMD) --debug --title "$(MAIN) $(VERSION)" \
-	  --source $(DOC_SRC) --target $(MAIN) --ignore $(DOC_IGNORE)
+	rm -rf $(DOC_DIR) ; mkdir $(DOC_DIR)
+	$(DOC_CMD) --debug --title "$(DOC_DIR) $(VERSION)" \
+	  --source $(DOC_SRC) --target $(DOC_DIR) --ignore $(DOC_IGNORE)
 
 docs-install : docs
-	mv $(MAIN) _attachments
-	echo $(MAIN) > _id
-	erica -v --is-ddoc false --docid $(MAIN) push $(DOC_DB_URL)
+	mv $(DOC_DIR) _attachments
+	erica -v --is-ddoc false --docid $(DOC_DIR) push $(DOC_DB_URL)
 	$(COMPACT) $(DOC_DB_URL)/_compact
-	rm -rf $(MAIN) _attachments
+	rm -rf $(DOC_DIR) _attachments
 
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean
