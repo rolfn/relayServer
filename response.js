@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-08
+ * version: 2015-02-24
  */
 
 var cfg = require('./config.js');
@@ -22,6 +22,7 @@ try {
 
 /**
  * Aufbereitung der zu sendenden Daten; html-Header erzeugen; Daten senden.
+ * @method sendResponse
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  * @param {object} _data zu sendende Daten
@@ -51,6 +52,7 @@ function sendResponse(pRef, js, _data) {
 
 /**
  * Aufbereitung der zu sendenden Daten im Erfolgsfall, Postprocessing.
+ * @method prepareResult
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  * @param {object} data zu sendende Daten
@@ -125,6 +127,7 @@ exports.prepareResult = prepareResult;
 
 /**
  * Aufbereitung der zu sendenden Daten im Fehlerfall.
+ * @method prepareError
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  * @param {object} data zu sendende Daten

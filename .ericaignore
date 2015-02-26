@@ -1,0 +1,10 @@
+[
+  ".*\.~*~",
+  "NOTIZEN.*",
+  "Makefile.*",
+  "^(?!_attachments).*$",
+  "^_attachments/js/diwan2-.*(?<!-min.js)$",
+  "^_attachments/js/kanapee-.*(?<!-min.js)$",
+  "^_attachments/css/.*\.less",
+  "^lib"
+]

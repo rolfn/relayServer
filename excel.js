@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-09-02
+ * version: 2015-02-24
  */
 
 var cfg = require('./config.js');
@@ -13,6 +13,12 @@ var xlsx = require('node-xlsx');
 
 var logger = cfg.logger;
 
+/**
+ * Description
+ * @method simplify
+ * @param {object} d
+ * @return d
+ */
 function simplify(d) {
   for (var i=0; i<d.worksheets.length; i++) {
     for (var j=0; j<d.worksheets[i].data.length; j++) {
@@ -26,8 +32,9 @@ function simplify(d) {
 }
 
 /**
- * Konfiguration der nötigen Datenstrukturen.
+ * Erzeugt aus JS-Struktur Excel-Struktur
  * Wait/Repeat wird nicht unterstützt.
+ * @method toXLSX
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
@@ -51,6 +58,12 @@ function toXLSX(pRef, js) {
   }
 }
 
+/**
+ * Erzeugt aus Excel-Struktur JS-Struktur
+ * @method fromXLSX
+ * @param {object} pRef interne Serverdaten (req, res, ...)
+ * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
+ */
 function fromXLSX(pRef, js) {
   try {
     logger.debug('Value.length: %d', js.Value.length);

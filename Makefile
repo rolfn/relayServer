@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2015-02-23, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2015-02-24, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1 # >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -18,8 +18,9 @@ NODE_MODULES = node_modules
 BUILD_ROOT = dist
 SPEC_FILE = $(MAIN).spec
 DOC_CMD=/usr/bin/dox-foundation
-DOC_DIR=_attachments
-DOC_SRC=doc_src
+DOC_DIR=$(MAIN)
+DOC_SRC=.,test
+DOC_IGNORE=tmp,node_modules,coverage
 DOC_DB=vaclab_doc
 DOC_SERVER=a73434.berlin.ptb.de
 DOC_SERVER_PORT=5984
@@ -101,26 +102,16 @@ dist : rm_buildroot vxi11
 	cp -p $(MAIN).service $(BUILD_ROOT)/usr/lib/systemd/system/
 	cp -p $(MAIN).conf $(BUILD_ROOT)/etc/init/  # "upstart" (Ubuntu)
 
-docs : $(DOC_DIR)/index.html
-
-# TODO: Evtl. unnötig! Oder symlinks?
-# Umkopieren, damit Rekursion von "dox-foundation" unschädlich ist.
-$(DOC_SRC) : $(JS_SOURCE) $(JS_TEST)
-	@mkdir -p "$@"
-	cp $+ $@
-
-$(DOC_DIR)/index.html : $(DOC_SRC)
-	echo "###############################################"
-	@mkdir -p "$(DOC_DIR)"
-	$(DOC_CMD) --debug --title "$(MAIN) (ver. $(VERSION))" --source $(DOC_SRC) \
-	  --target "$(DOC_DIR)"
-	@$(RM) -r $(DOC_SRC)
+docs :
+	rm -rf $(DOC_DIR) ; mkdir $(DOC_DIR)
+	$(DOC_CMD) --debug --title "$(DOC_DIR) $(VERSION)" \
+	  --source $(DOC_SRC) --target $(DOC_DIR) --ignore $(DOC_IGNORE)
 
 docs-install : docs
-	echo $(MAIN) > _id
-	erica -v --is-ddoc --docid $(MAIN) push $(DOC_DB_URL)
+	mv $(DOC_DIR) _attachments
+	erica -v --is-ddoc false --docid $(DOC_DIR) push $(DOC_DB_URL)
 	$(COMPACT) $(DOC_DB_URL)/_compact
-	$(RM) $(DOC_DIR)/*.js.html $(DOC_DIR)/index.html
+	rm -rf $(DOC_DIR) _attachments
 
 clean : rm_buildroot
 	$(MAKE) -C $(VXI11_SRC) clean
