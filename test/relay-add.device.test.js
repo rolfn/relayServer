@@ -35,25 +35,6 @@ describe('relay-add.Device', function(){
     });
   });
 
-  describe('#extractKeithleyTemp', function(){
-    it('should return clean numbers or NaN, returned string should have sign', function(){
-      assert.equal( _.isNaN(add.extractKeithleyTemp("+1.13830698E+00VDC,1.13830698E+00+9.9E37SECS,+9571748RDNG#\n")), true);
-      assert.equal( _.isNaN(add.extractKeithleyTemp("2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n")), true);
-
-      assert.equal( add.extractKeithleyTemp("+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n"), 2.37396679E+01);
-      assert.equal( add.extractKeithleyTemp("-2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n"), -2.37396679E+01);
-    });
-  });
-
-  describe('#extractKeithleyVolt', function(){
-    it('should return clean numbers or NaN, returned string should have sign', function(){
-      assert.equal( _.isNaN(add.extractKeithleyVolt("-1.77311995E-05,+1210.560SECS,+09883RDNG#\n")), true);
-      assert.equal( _.isNaN(add.extractKeithleyVolt("1.77311995E-05,+1210.560SECS,+09883RDNG#\n")), true);
-
-      assert.equal( add.extractKeithleyVolt("-1.80353454E-05VDC,+1210.666SECS,+09884RDNG#\n"), -1.80353454E-05);
-      assert.equal( add.extractKeithleyVolt("+1.80353454E-05VDC,+1210.666SECS,+09884RDNG#\n"), 1.80353454E-05);
-    });
-  });
 
   describe('#extractVM212DCR', function(){
     it('should return clean numbers or NaN', function(){
@@ -148,10 +129,78 @@ describe('relay-add.Device', function(){
       assert.equal( _.isNaN(add.extractCombi(" 2: MBAR  0.  E-03   \r")),true);
       assert.equal( _.isNaN(add.extractCombi(" 2: MBAR    E-03   ")), true);
       assert.equal( _.isNaN(add.extractCombi("BAR  6.75E-01   \r")), true);
-
       assert.equal( add.extractCombi(" 1: MBAR  6.75E-01   \r"), 6.75E-01);
-
     });
   });
+
+  describe('#extractKeithleyTemp', function(){
+    it('should return clean numbers or NaN, returned string should have sign', function(){
+      assert.equal( _.isNaN(add.extractKeithleyTemp("+1.13830698E+00VDC,1.13830698E+00+9.9E37SECS,+9571748RDNG#\n")), true);
+      assert.equal( _.isNaN(add.extractKeithleyTemp("2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n")), true);
+
+      assert.equal( add.extractKeithleyTemp("+2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n"), 2.37396679E+01);
+      assert.equal( add.extractKeithleyTemp("-2.37396679E+01,2.37396679E+01+9.9E37SECS,+9571749RDNG#\n"), -2.37396679E+01);
+    });
+  });
+
+  describe('#extractKeithleyVolt', function(){
+    it('should return clean numbers or NaN, returned string should have sign', function(){
+      assert.equal( _.isNaN(add.extractKeithleyVolt("-1.77311995E-05,+1210.560SECS,+09883RDNG#\n")), true);
+      assert.equal( _.isNaN(add.extractKeithleyVolt("1.77311995E-05,+1210.560SECS,+09883RDNG#\n")), true);
+
+      assert.equal( add.extractKeithleyVolt("-1.80353454E-05VDC,+1210.666SECS,+09884RDNG#\n"), -1.80353454E-05);
+      assert.equal( add.extractKeithleyVolt("+1.80353454E-05VDC,+1210.666SECS,+09884RDNG#\n"), 1.80353454E-05);
+    });
+  });
+
+  describe('#extractKeithleyTempScan', function(){
+    it('should return mean value by channel key', function(){
+
+      var res = add.extractKeithleyTempScan({"0":"+2.25772018E+01_C,+0.000SECS,+00000RDNG#,"
+                                                + "+2.25894833E+01_C,+0.469SECS,+00001RDNG#,"
+                                                + "+2.25676708E+01_C,+0.938SECS,+00002RDNG#,"
+                                                + "+2.27207241E+01_C,+1.407SECS,+00003RDNG#,"
+                                                + "+2.25786743E+01_C,+1.876SECS,+00004RDNG#,"
+                                                + "+2.25920391E+01_C,+2.450SECS,+00005RDNG#,"
+                                                + "+2.25677280E+01_C,+2.919SECS,+00006RDNG#,"
+                                                + "+2.27227287E+01_C,+3.388SECS,+00007RDNG#,"
+                                                + "+2.25797749E+01_C,+3.857SECS,+00008RDNG#,"
+                                                + "+2.25934544E+01_C,+4.326SECS,+00009RDNG#\n",
+                                             "1":"+2.25772018E+01_C,+0.000SECS,+00000RDNG#,"
+                                                + "+2.25894833E+01_C,+0.469SECS,+00001RDNG#,"
+                                                + "+2.25676708E+01_C,+0.938SECS,+00002RDNG#,"
+                                                + "+2.27207241E+01_C,+1.407SECS,+00003RDNG#,"
+                                                + "+2.25786743E+01_C,+1.876SECS,+00004RDNG#,"
+                                                + "+2.25920391E+01_C,+2.450SECS,+00005RDNG#,"
+                                                + "+2.25677280E+01_C,+2.919SECS,+00006RDNG#,"
+                                                + "+2.27227287E+01_C,+3.388SECS,+00007RDNG#,"
+                                                + "+2.25797749E+01_C,+3.857SECS,+00008RDNG#,"
+                                                + "+2.25934544E+01_C,+4.326SECS,+00009RDNG#\n",
+                                             "2":"+2.25772018E+01_C,+0.000SECS,+00000RDNG#,"
+                                                + "+2.25894833E+01_C,+0.469SECS,+00001RDNG#,"
+                                                + "+2.25676708E+01_C,+0.938SECS,+00002RDNG#,"
+                                                + "+2.27207241E+01_C,+1.407SECS,+00003RDNG#,"
+                                                + "+2.25786743E+01_C,+1.876SECS,+00004RDNG#,"
+                                                + "+2.25920391E+01_C,+2.450SECS,+00005RDNG#,"
+                                                + "+2.25677280E+01_C,+2.919SECS,+00006RDNG#,"
+                                                + "+2.27227287E+01_C,+3.388SECS,+00007RDNG#,"
+                                                + "+2.25797749E+01_C,+3.857SECS,+00008RDNG#,"
+                                                + "+2.25934544E+01_C,+4.326SECS,+00009RDNG#\n"}
+                                            , "(@101:110)")
+
+
+      assert.equal( res["101"].mv - 2.25772018E+01< 1e-6, true )
+      assert.equal( res["102"].mv - 2.25894833E+01< 1e-6, true )
+      assert.equal( res["103"].mv - 2.25676708E+01< 1e-6, true )
+      assert.equal( res["104"].mv - 2.27207241E+01< 1e-6, true )
+      assert.equal( res["105"].mv - 2.25786743E+01< 1e-6, true )
+      assert.equal( res["106"].mv - 2.25920391E+01< 1e-6, true )
+      assert.equal( res["107"].mv - 2.25677280E+01< 1e-6, true )
+      assert.equal( res["108"].mv - 2.27227287E+01< 1e-6, true )
+      assert.equal( res["109"].mv - 2.25797749E+01< 1e-6, true )
+      assert.equal( res["110"].mv - 2.25934544E+01< 1e-6, true ) ;
+    });
+  });
+
 
 });

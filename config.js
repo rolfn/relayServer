@@ -6,11 +6,10 @@
 /**
  * Datenstruktur mit Default-Werten
  */
-module.exports = {
-  VERSION: '11.12.3',
+var cfg = {
+  VERSION: '11.12.4',
   DATE: '2015-02-24',
   RELAY_PORT: 55555,
-  DISPATCHER_PORT: 55565,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 10000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
@@ -45,11 +44,11 @@ module.exports = {
 
 var winston = require('winston');
 require('vwebsocket');
-module.exports.logger = require('vlogger')({
+cfg.logger = require('vlogger')({
   transports: [
     new winston.transports.vWebsocket({
       level: 'debug',
-      port: module.exports.WEBSOCKET_PORT,
+      port: cfg.WEBSOCKET_PORT,
       handleExceptions: true,
       colorize: true,
       prettyPrint: true
@@ -58,4 +57,4 @@ module.exports.logger = require('vlogger')({
 });
 winston.remove(winston.transports.Console);
 
-
+module.exports = cfg;

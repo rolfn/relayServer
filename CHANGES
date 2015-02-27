@@ -1,4 +1,10 @@
 * Tue Feb 24 2015 Rolf.Niepraschk@ptb.de
+- html-Erzeugung zur Dokumentation
+
+* Tue Feb 24 2015 Rolf.Niepraschk@ptb.de
+- update "node-xlsx"; Funktionskommentare ergänzt
+
+* Tue Feb 24 2015 Rolf.Niepraschk@ptb.de
 - logger-Definition nach "config.js"
 
 * Mon Feb 23 2015 Rolf.Niepraschk@ptb.de
