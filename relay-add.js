@@ -573,7 +573,8 @@ exports.extractKeithleyTemp = extractKeithleyTemp;
 
 
 /**
- * Erstellt Array aus Scan Resultat
+ * Erstellt Array aus Scan Resultaten wie sie vom Keithley 2700
+ * geliefert werden
  *
  * @author wactbprot
  * @param  String str String mit enthaltener Zahl.
