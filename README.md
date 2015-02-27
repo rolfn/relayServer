@@ -89,7 +89,7 @@ npm test
 ```
 
 gestartet werden. Es entsteht zusätzlich ein coverage-Report
-```./coverage/lcov-report/index.html```
+unter ./coverage/lcov-report/index.html
 
 * nur VXI11 Funktionalität: ```bash npm run test-vxi11```
 * nur TCP Funktionalität: ```bash npm run test-tcp```
