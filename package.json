@@ -26,15 +26,15 @@
     "istanbul":">=0.3.0"
   },
   "scripts": {
-      "test":"istanbul cover _mocha -- -R spec",
-      "test-all":"mocha --slow 200 test/*.js",
+      "coverage":"istanbul cover _mocha -- -R spec",
+      "test":"mocha --slow 2000 -t 10000 test/*.js",
       "test-vxi11":"mocha --slow 200 test/relay.vxi11.test.js",
       "test-tcp":"mocha --slow 200 test/relay.tcp.test.js",
       "test-udp":"mocha --slow 10000 -t 10000 test/relay.udp.test.js",
       "test-relay-add":"mocha  test/relay-add.*", 
       "test-rscript":"mocha --slow 1000 test/relay.rscript.test.js",
-      "test-ce3-inst":"env TESTHOST=e73462.berlin.ptb.de npm run test-all",
-      "test-rolf-inst":"env TESTHOST=i75434.berlin.ptb.de npm run test-all",
-      "test-thomas-inst":"env TESTHOST=e73461.berlin.ptb.de npm run test-all"
+      "test-ce3-inst":"env TESTHOST=e73462.berlin.ptb.de npm run test",
+      "test-rolf-inst":"env TESTHOST=i75434.berlin.ptb.de npm run test",
+      "test-thomas-inst":"env TESTHOST=e73461.berlin.ptb.de npm run test"
   }
 }
