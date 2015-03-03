@@ -25,12 +25,13 @@ function call(pRef, js) {
     var client = dgram.createSocket('udp4');
 
     client.on('error', function (e) {
-      logger.error(e.toString());
+      var s = e.toString();
+      logger.error(s);
       client.close();
       response.prepareError(pRef, js, s);
     });
-    client.send(buf, 0, buf.length, port, host, function(err, bytes) {
-      if (!err) {
+    client.send(buf, 0, buf.length, port, host, function(e, bytes) {
+      if (!e) {
         logger.debug('%d Bytes sended: %s', bytes, buf.toString('utf8', 0, bytes));
         if (!timeout) {
           // Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
@@ -40,8 +41,10 @@ function call(pRef, js) {
           next();
         }
       } else {
-        logger.error(err);
-        response.prepareError(pRef, js, err);
+        var s = e.toString();
+        logger.error(s);
+        client.close();
+        response.prepareError(pRef, js, s);
       }
     });
 
