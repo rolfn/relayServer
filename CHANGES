@@ -1,3 +1,6 @@
+* Tue Mar 03 2015 Rolf.Niepraschk@ptb.de
+- "UDP" kann auch empfangen. Timeout-Logik
+
 * Tue Feb 24 2015 Rolf.Niepraschk@ptb.de
 - html-Erzeugung zur Dokumentation
 

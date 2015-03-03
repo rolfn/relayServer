@@ -57,6 +57,9 @@ echo '{"Action":"/usr/bin/Rscript", "Value":["foo","bar"],"Body":"print(17+4)"}'
 echo '{"Action":"TCP","Repeat":3,"Wait":2000,"Host":"e75493","Port":"23",
   "Value":"exit\r"}' | curl -T - -X PUT http://localhost:55555
 
+echo '{"Action":"UDP","Host":"172.30.56.30","Port":"2362","Value":"*IDN?"}' | \
+  curl -T - -X PUT http://localhost:55555
+
 echo '{"Action":"HTTP","Url":"http://a73434.berlin.ptb.de"}' | \
   curl -T - -X PUT http://localhost:55555
 
