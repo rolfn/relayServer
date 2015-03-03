@@ -32,15 +32,16 @@ function call(pRef, js) {
     client.send(buf, 0, buf.length, port, host, function(err, bytes) {
       if (!err) {
         logger.debug('%d Bytes sended: %s', bytes, buf.toString('utf8', 0, bytes));
+        if (!timeout) {
+          // Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
+          logger.debug('send "OK" back ("timeout==0")');
+          b.push('OK');
+          client.close();
+          next();
+        }
       } else {
         logger.error(err);
         response.prepareError(pRef, js, err);
-      }
-      if (!timeout) {// Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
-        logger.debug('send "OK" back ("timeout==0")');
-        b.push('OK');
-        client.close();
-        next();
       }
     });
 

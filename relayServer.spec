@@ -1,7 +1,7 @@
 Summary: Nodejs-basierte http-Server für Messaufgaben
 Name: relayServer
-Version: 11.12.4
-Release: 2 
+Version: 11.12.5
+Release: 1 
 License: ???
 Group: Productivity/Networking/Web/Servers
 BuildArch: noarch
@@ -4519,6 +4519,9 @@ Nodejs-basierte http-Server für Messaufgaben
 "/etc/init/relayServer.conf" 
 %config(noreplace) 
 %changelog
+* Tue Mar 03 2015 Rolf.Niepraschk@ptb.de
+- "UDP" kann auch empfangen. Timeout-Logik
+
 * Tue Feb 24 2015 Rolf.Niepraschk@ptb.de
 - html-Erzeugung zur Dokumentation
 
