@@ -96,6 +96,7 @@ unter ./coverage/lcov-report/index.html
 
 * nur VXI11 Funktionalität: ```bash npm run test-vxi11```
 * nur TCP Funktionalität: ```bash npm run test-tcp```
+* nur UDP Funktionalität: ```bash npm run test-udp```
 * nur postprocessing-Zusatzfunktionen: ```bash npm run test-relay-add```
 * nur Rscript Funktionalität: ```bash npm run test-rscript```
 
