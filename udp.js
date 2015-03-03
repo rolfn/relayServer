@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-03-21
+ * version: 2015-03-03
  */
 
 var cfg = require('./config.js');
@@ -20,13 +20,12 @@ var logger = cfg.logger;
 function call(pRef, js) {
   function doIt(b, next) {
     var host = js.Host, port = tools.getInt(js.Port);
-    var result = [], buf = new Buffer((js.Value) ? js.Value : '');
+    var buf = new Buffer((js.Value) ? js.Value : '');
     var timeout = tools.getInt(js.Timeout, cfg.DEFAULT_UDP_TIMEOUT);
     var client = dgram.createSocket('udp4');
 
     client.on('error', function (e) {
-      var s = e.toString();
-      logger.error(s);
+      logger.error(e.toString());
       client.close();
       response.prepareError(pRef, js, s);
     });
@@ -55,7 +54,7 @@ function call(pRef, js) {
         } catch(err) {
         }
       }, timeout);
-    } else {
+    } else {// Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
       logger.debug('send "OK" back ("timeout==0")');
       b.push('OK');
       client.close();
