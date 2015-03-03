@@ -36,6 +36,12 @@ function call(pRef, js) {
         logger.error(err);
         response.prepareError(pRef, js, err);
       }
+      if (!timeout) {// Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
+        logger.debug('send "OK" back ("timeout==0")');
+        b.push('OK');
+        client.close();
+        next();
+      }
     });
 
     if (timeout) {
@@ -54,11 +60,6 @@ function call(pRef, js) {
         } catch(err) {
         }
       }, timeout);
-    } else {// Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
-      logger.debug('send "OK" back ("timeout==0")');
-      b.push('OK');
-      client.close();
-      next();
     }
 
   }
