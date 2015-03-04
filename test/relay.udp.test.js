@@ -36,7 +36,6 @@ describe('test of relayServer UDP functionality', function(){
 		  "Value": "*CLS"};
 	
 	var req = hlp.req( function(d){
-            console.log(d)
             setTimeout(function(){
 		done()
 	    }, 1000);
@@ -57,11 +56,14 @@ describe('test of relayServer UDP functionality', function(){
 		  "Value": "QPRR?"};
 	
 	var req = hlp.req( function(d){
-            //      var data = JSON.parse(d);
-	   // assert.equal(_.isObject(data) , true);
-           // assert.equal(_.isString(data.Result) , true);
-	    console.log(d)
-            done()
+                  var data = JSON.parse(d);
+
+	    assert.equal(_.isObject(data) , true);
+            assert.equal(_.isString(data.Result) , true);
+	    
+            setTimeout(function(){
+		done()
+	    }, 1000);   
         });
 	
 	req.write(JSON.stringify(task));

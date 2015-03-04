@@ -91,9 +91,10 @@ können die unter ```./test``` befindlichen unit-Tests werden im
 npm test
 ```
 
-gestartet werden. Es entsteht zusätzlich ein coverage-Report
-unter ./coverage/lcov-report/index.html
+gestartet werden. Für die erstellung eines coverage-Report
+unter ./coverage/lcov-report/index.html gibt es  ```bash npm run coverage```.
 
+Folgene Einzeltests stehen zur Verfügung:
 * nur VXI11 Funktionalität: ```bash npm run test-vxi11```
 * nur TCP Funktionalität: ```bash npm run test-tcp```
 * nur UDP Funktionalität: ```bash npm run test-udp```
