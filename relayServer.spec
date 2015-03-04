@@ -1,7 +1,7 @@
 Summary: Nodejs-basierte http-Server für Messaufgaben
 Name: relayServer
 Version: 11.12.5
-Release: 2 
+Release: 3
 License: ???
 Group: Productivity/Networking/Web/Servers
 BuildArch: noarch

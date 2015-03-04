@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2015-02-24, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2015-03-03, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 3 # >0!
+RELEASE = 3# >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -43,9 +43,10 @@ rpm : spec
 src_rpm : spec
 	rpmbuild --buildroot $(PWD)/$(BUILD_ROOT) -bs $(SPEC_FILE)
 
-dep : rpm
-	alien --to-deb --scripts $(MAIN)-$(VERSION)-$(RELEASE).noarch.rpm
-# erfordert root-Privilegien !?
+deb : rpm
+	rm -rf deb && mkdir deb && cd deb ; \
+	fakeroot alien --verbose --to-deb --scripts \
+	  $$HOME/rpmbuild/RPMS/noarch/$(MAIN)-$(VERSION)-$(RELEASE).noarch.rpm
 
 spec : dist
 	@LANG=de_DE.UTF-8 echo "Summary: $(SUMMARY)" > $(SPEC_FILE)
@@ -86,7 +87,7 @@ spec : dist
 	@echo "%changelog" >> $(SPEC_FILE)
 	@cat CHANGES >> $(SPEC_FILE)
 
-dist : rm_buildroot vxi11
+dist : rm_buildroot
 #	git pull
 #	npm install
 	mkdir -p $(BUILD_ROOT)/etc/init.d
@@ -137,10 +138,11 @@ debug :
 	@echo $(JS_SOURCE)
 	@echo $(INSTALL_DIRS)
 
-install : rpm
+install : rpm deb
 	@echo "=== INSTALL ==="
 	@target=$(shell ls -1t $$HOME/rpmbuild/RPMS/noarch/*.rpm | head -1) ; \
 	$(foreach i, $(INSTALL_DIRS), cp -pv $$target $i ;)
+	cp deb/*.deb $(INSTALL_DIRS_ROOT)/ubuntu
 	make -C $(INSTALL_DIRS_PARENT)
 
 .PHONY : dist vxi11 arch clean rpm src_rpm spec
