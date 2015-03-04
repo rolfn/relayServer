@@ -202,5 +202,14 @@ describe('relay-add.Device', function(){
     });
   });
 
+  describe('#extractPPC', function(){
+    it('should return clean numbers or NaN, returned string should have sign', function(){
+	assert.equal( _.isNaN(add.extractPPC("ar/s,1013.111 mbara,0,0.1014\n16 mbar\r\n")), true);
+        assert.equal( add.extractPPC("R,1014.147 mbara,0.000    mb\nar/s,1013.103 mbara,0,0.101416 mbar\r\n"), 1014.147);
+
+	assert.equal( add.extractPPC("R,4.263    mbara,0.008    mb\nar/s,1013.404 mbara,0,0.048778 mbar\r\n"), 4.263);
+	
+    });
+  });
 
 });
