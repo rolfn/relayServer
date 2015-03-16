@@ -300,7 +300,7 @@ var strToNum = function(numStr, pos){
   }
   return res;
 };
-
+exports.strToNum = strToNum;
 /**
  * Entfernt einfach alle whitespaces im String
  */
@@ -466,8 +466,7 @@ function extractPPC(s) {
   var regex = /^(R\,)([+-]?[0-9]{1,4}\.?[0-9]{1,3})\s*mbar/
 
   var n = strToNum(regex.exec(s), 2)
-
-  return n == 0 ? NaN: n;
+  return n;
 
 }
 exports.extractPPC = extractPPC;

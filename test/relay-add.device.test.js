@@ -208,7 +208,10 @@ describe('relay-add.Device', function(){
         assert.equal( add.extractPPC("R,1014.147 mbara,0.000    mb\nar/s,1013.103 mbara,0,0.101416 mbar\r\n"), 1014.147);
 
 	assert.equal( add.extractPPC("R,4.263    mbara,0.008    mb\nar/s,1013.404 mbara,0,0.048778 mbar\r\n"), 4.263);
-	
+
+    });
+    it('should return 0.0', function(){
+      assert.equal(add.extractPPC("R,0.000    mbara,0.008    mb\nar/s,1013.404 mbara,0,0.048778 mbar\r\n"), 0)
     });
   });
 
