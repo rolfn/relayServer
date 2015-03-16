@@ -25,15 +25,15 @@
  * @return Object Zielfluß bzw Setpoint für Regler 1&2
  */
 function calQsp(psoll, pist, mq){
-
+  var ret = {};
   if (psoll                    &&
       pist                     &&
       typeof psoll == "number" &&
       typeof pist  == "number"   ){
     mq      = mq || 0.018; // [mq] = mbar/s/sccm 0.018 passt ~ für SE1 und FM3
     // FM3 war:  mq = Vopen ? 0.0133 : 0.0155,
-    var ret     = {},
-        ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
+
+   var  ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
         bord    = 0.7,         // Start Regelung rel. Abw. von psoll
         sscbord = 2.0,        // Start 2. Regler
         eps     = 0.005,        // Ende Regelung rel. Abw. von psoll
@@ -80,6 +80,11 @@ function calQsp(psoll, pist, mq){
       }
       return ret;
     }
+  }else{
+    ret.pfill_ok = false;
+    ret.sp1 = 0;
+    ret.sp2 = 0;
+    return ret;
   }
 }
 exports.calQsp = calQsp;
