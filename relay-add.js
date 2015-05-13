@@ -592,6 +592,22 @@ var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(,)/;
 }
 exports.extractKeithleyTemp = extractKeithleyTemp;
 
+/**
+ * Extrahiert Float-Zahl aus String
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractMKT50(s) {
+var regex = /^([\r\n\w0-9\s+-a-z]*R1=\s\+)([0-9]{3}\.?[0-9]{3,5})/;
+//R1= +108.75799 Ohm
+  console.log(regex.exec(s))
+  return strToNum(regex.exec(s), 2);
+
+}
+exports.extractMKT50 = extractMKT50;
+
 
 /**
  * Erstellt Array aus Scan Resultaten wie sie vom Keithley 2700
