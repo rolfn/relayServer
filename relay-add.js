@@ -25,15 +25,15 @@
  * @return Object Zielfluß bzw Setpoint für Regler 1&2
  */
 function calQsp(psoll, pist, mq){
-
+  var ret = {};
   if (psoll                    &&
       pist                     &&
       typeof psoll == "number" &&
       typeof pist  == "number"   ){
     mq      = mq || 0.018; // [mq] = mbar/s/sccm 0.018 passt ~ für SE1 und FM3
     // FM3 war:  mq = Vopen ? 0.0133 : 0.0155,
-    var ret     = {},
-        ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
+
+   var  ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
         bord    = 0.7,         // Start Regelung rel. Abw. von psoll
         sscbord = 2.0,        // Start 2. Regler
         eps     = 0.005,        // Ende Regelung rel. Abw. von psoll
@@ -80,6 +80,11 @@ function calQsp(psoll, pist, mq){
       }
       return ret;
     }
+  }else{
+    ret.pfill_ok = false;
+    ret.sp1 = 0;
+    ret.sp2 = 0;
+    return ret;
   }
 }
 exports.calQsp = calQsp;
@@ -295,7 +300,7 @@ var strToNum = function(numStr, pos){
   }
   return res;
 };
-
+exports.strToNum = strToNum;
 /**
  * Entfernt einfach alle whitespaces im String
  */
@@ -449,6 +454,22 @@ function extractCombi(s) {
 }
 exports.extractCombi = extractCombi;
 
+/**
+ * Extrahiert Float-Zahl aus PPC4 Antwort
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl
+ */
+
+function extractPPC(s) {
+  var regex = /^(R\,)([+-]?[0-9]{1,4}\.?[0-9]{1,3})\s*mbar/
+
+  var n = strToNum(regex.exec(s), 2)
+  return n;
+
+}
+exports.extractPPC = extractPPC;
 
 /**
  * Testet, ob sich der übergebene Parameter in eine Zahl wandeln lässt. Siehe auch:
@@ -570,6 +591,22 @@ var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(,)/;
 
 }
 exports.extractKeithleyTemp = extractKeithleyTemp;
+
+/**
+ * Extrahiert Float-Zahl aus String
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractMKT50(s) {
+var regex = /^([\r\n\w0-9\s+-a-z]*R1=\s\+)([0-9]{3}\.?[0-9]{3,5})/;
+//R1= +108.75799 Ohm
+  console.log(regex.exec(s))
+  return strToNum(regex.exec(s), 2);
+
+}
+exports.extractMKT50 = extractMKT50;
 
 
 /**

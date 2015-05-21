@@ -202,5 +202,32 @@ describe('relay-add.Device', function(){
     });
   });
 
+  describe('#extractPPC', function(){
+    it('should return clean numbers or NaN, returned string should have sign', function(){
+	assert.equal( _.isNaN(add.extractPPC("ar/s,1013.111 mbara,0,0.1014\n16 mbar\r\n")), true);
+        assert.equal( add.extractPPC("R,1014.147 mbara,0.000    mb\nar/s,1013.103 mbara,0,0.101416 mbar\r\n"), 1014.147);
+
+	assert.equal( add.extractPPC("R,4.263    mbara,0.008    mb\nar/s,1013.404 mbara,0,0.048778 mbar\r\n"), 4.263);
+
+    });
+    it('should return 0.0', function(){
+      assert.equal(add.extractPPC("R,0.000    mbara,0.008    mb\nar/s,1013.404 mbara,0,0.048778 mbar\r\n"), 0)
+    });
+  });
+
+
+  describe('#extractMKT50', function(){
+    it('should return a number', function(){
+      assert.equal(add.extractMKT50(".76233 Ohm\r\nR2= not valid\r\nT\n1= not valid\r\nT2= not valid\r\nSENSOR1= No Calibration\r\nSENSOR2= No Calibration\r\n13.05.15  15:09:02\r\nR1= +108.76230 Ohm\r\nR2= not valid\r\nT"), 108.76230);
+      assert.equal(add.extractMKT50('13.05.15  15:21:51\r\nR1= +108\n.75919 Ohm\r\nR2= not valid\r\nT1= not valid\r\nT2= not valid\r\nSENSOR1= No Calibration\r\nSENSOR2= No Calibration\r\n13.05.15  15:25:19\r\nR1= +108.76006 Ohm\r\nR2= not valid\r\nT1= not valid\r\nT2= not valid\r'),108.76006)
+    });
+
+    it('should return a NaN', function(){
+      assert.equal(_.isNaN(add.extractMKT50('1= not valid\r\nT2= not valid\r\n\nSENSOR1= No Calibration\r\nSENSOR2= No Calibration\r\n')), true);
+      assert.equal(_.isNaN(add.extractMKT50('\nSENSOR1= No Calibration\r\nSE\nNSOR2= No Calibration\r\n')), true);
+    });
+  });
+
+
 
 });
