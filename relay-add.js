@@ -608,9 +608,7 @@ exports.extractKeithleyTemp = extractKeithleyTemp;
  * @return Number Zahl.
  */
 function extractMKT50(s) {
-var regex = /^([\r\n\w0-9\s+-a-z]*R1=\s\+)([0-9]{3}\.?[0-9]{3,5})/;
-//R1= +108.75799 Ohm
-  console.log(regex.exec(s))
+var regex = /^([\=\r\n\w0-9\s+-a-z]*T2=\s*\+)([0-9]{2}\.?[0-9]{3,5})/;
   return strToNum(regex.exec(s), 2);
 
 }
