@@ -488,16 +488,17 @@ exports.isNumber = isNumber;
  *
  * Funktion erzeugt die üblich gewordene
  * Type-,  Value-, Unit- (Comment-) Struktur.
+ * Struktur wird mit SdValue und N erweitert.
  *
  * @author wactbprot
  * @param t String  Type
- * @param v Number|Array  Value
+ * @param v Number | Array  Value
  * @param u String  Unit
  * @param c String  Comment
  * @return Object vaclab-Struktur
  *
  */
-function vlRes(t, v, u, c) {
+function vlRes(t, v, u, c, s, n) {
   var res = {
     'Type': t,
     'Value': v,
@@ -506,6 +507,13 @@ function vlRes(t, v, u, c) {
   if (c) {
     res.Comment = c;
   }
+  if (s || isNaN(s)) {
+    res.SdValue = s;
+  }
+  if (n) {
+    res.N = n;
+  }
+
     return res;
 }
 exports.vlRes = vlRes;
