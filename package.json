@@ -1,6 +1,6 @@
 {
-  "name": "nodejsServers2",
-  "relayServer": "11.11.1",
+  "name": "relayserver",
+  "relayServer": "11.12.8",
   "description": "Nodejs-basierter http-Server für Messaufgaben",
   "author": {
     "name": "Rolf Niepraschk",
@@ -31,7 +31,7 @@
       "test-vxi11":"mocha --slow 200 test/relay.vxi11.test.js",
       "test-tcp":"mocha --slow 200 test/relay.tcp.test.js",
       "test-udp":"mocha --slow 10000 -t 10000 test/relay.udp.test.js",
-      "test-relay-add":"mocha  test/relay-add.*", 
+      "test-relay-add":"mocha  test/relay-add.*",
       "test-rscript":"mocha --slow 1000 test/relay.rscript.test.js",
       "test-ce3-inst":"env TESTHOST=e73462.berlin.ptb.de npm run test",
       "test-rolf-inst":"env TESTHOST=i75434.berlin.ptb.de npm run test",
