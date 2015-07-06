@@ -5,7 +5,7 @@ var assert = require("assert")
 describe('relay-add.Stats', function(){
 
   describe('#vlStat', function(){
-    it('should return mean (.mv), standard deviation (.sd) and length (.N)', function(){
+      it('should return mean (.mv), standard deviation (.sd) and length (.N)', function(){
       var arr =  [1.14223873,
                   0.01283644,
                  -0.45056385,
@@ -121,6 +121,28 @@ describe('relay-add.Stats', function(){
       assert.equal(res.R       , 0.14522397936082404);
       assert.equal(res.Cx      , -2384.819343645524 );
 
+    });
+  });
+
+    describe('#vlSlope', function(){
+	it('should return also min max', function(){
+
+	    var raw_vec = [ "MEASURING  190.64E-3",
+			    "MEASURING  290.64E-3",
+			    "MEASURING  390.64E-3",
+			  ],
+	    t_start = [ 1348666058346,
+			1348666059342,
+			1348666060345
+                      ],
+	    t_stop = [ 1348666058399,
+                       1348666059377,
+                       1348666060379
+                     ];
+	    var vec = raw_vec.map(add.extractMKSCDG)
+            , res = add.vlSlope(vec,t_start,t_stop);
+	    assert.equal(res.min, 0.19064);
+	    assert.equal(res.max, 0.39064 );
     });
   });
 
