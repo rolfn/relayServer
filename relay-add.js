@@ -231,8 +231,8 @@ exports.vlSlope = vlSlope;
  * @return ret Object mit  Mittelwert X, Mittelwert Y, Korrelationskoeff R, Achsenabschnitt Cx, Steigungen bx, by
  */
 function slope(y, x) {
-  if (x.length == y.length) {
-    var ret      = {},
+    if (x.length == y.length) {
+	var ret      = {},
         sumX     = 0,
         XArr     = [],
         sumY     = 0,
@@ -241,31 +241,33 @@ function slope(y, x) {
         SSxy     = 0,
         SSxx     = 0,
         SSyy     = 0;
-    for (var i = 0; i < y.length; i++) {
-      if (isNumber(y[i]) && isNumber(x[i])) {
-        sumX = sumX + x[i];
-        XArr.push(x[i]);
-        sumY = sumY + y[i];
-        YArr.push(y[i]);
-        remainN++;
-      }
+	for (var i = 0; i < y.length; i++) {
+	    if (isNumber(y[i]) && isNumber(x[i])) {
+		sumX = sumX + x[i];
+		XArr.push(x[i]);
+		sumY = sumY + y[i];
+		YArr.push(y[i]);
+		remainN++;
+	    }
+	}
+	var mvX = sumX / remainN;
+	var mvY = sumY / remainN;
+	for (var j = 0; j < YArr.length; j++) {
+	    SSxy = SSxy + (XArr[j] - mvX) * (YArr[j] - mvY);
+	    SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
+	    SSyy = SSyy + Math.pow(YArr[j] - mvY, 2);
+	}
+	ret.remainN = remainN;
+	ret.min = Math.min.apply(null, 	YArr);
+	ret.max = Math.max.apply(null, 	YArr);
+	ret.mvX = mvX;
+	ret.mvY = mvY;
+	ret.bx = SSxy / SSxx;
+	ret.by = SSxy / SSyy;
+	ret.R = (SSxy * SSxy) / (SSxx * SSyy);
+	ret.Cx = mvY - ret.bx * mvX;
+	return ret;
     }
-    var mvX = sumX / remainN;
-    var mvY = sumY / remainN;
-    for (var j = 0; j < YArr.length; j++) {
-      SSxy = SSxy + (XArr[j] - mvX) * (YArr[j] - mvY);
-      SSxx = SSxx + Math.pow(XArr[j] - mvX, 2);
-      SSyy = SSyy + Math.pow(YArr[j] - mvY, 2);
-    }
-    ret.remainN = remainN;
-    ret.mvX = mvX;
-    ret.mvY = mvY;
-    ret.bx = SSxy / SSxx;
-    ret.by = SSxy / SSyy;
-    ret.R = (SSxy * SSxy) / (SSxx * SSyy);
-    ret.Cx = mvY - ret.bx * mvX;
-    return ret;
-  }
 }
 exports.slope = slope;
 
