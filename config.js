@@ -6,8 +6,8 @@
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '11.12.8',
-  DATE: '2015-06-22',
+  VERSION: '11.12.9',
+  DATE: '2015-07-09',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 30000, // msec
