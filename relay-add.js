@@ -101,8 +101,9 @@ exports.calQsp = calQsp;
  */
 function vlStat(x) {
 
-  var res    = {mv:NaN,
-                sd:NaN};
+  var res = {N: NaN,
+             mv:NaN,
+             sd:NaN};
   if (x) {
     var ck = checkNumArr(x);
     if(ck.Arr.length > 2){
