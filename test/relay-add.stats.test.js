@@ -45,6 +45,32 @@ describe('relay-add.Stats', function(){
     });
   });
 
+  describe('#vlStat', function(){
+    it('should respond with defined .sd', function(){
+      var arr =  [NaN, NaN, NaN, NaN];
+      console.log(add.vlStat(arr))
+      assert.equal(_.isUndefined(add.vlStat(arr).sd), false);
+
+    });
+  });
+
+  describe('#vlStat', function(){
+    it('should respond with defined .mv', function(){
+      var arr =  [NaN, NaN, NaN, NaN];
+      assert.equal(_.isUndefined(add.vlStat(arr).mv), false);
+
+    });
+  });
+
+  describe('#vlStat', function(){
+    it('should respond with defined .N', function(){
+      var arr =  [NaN, NaN, NaN, NaN];
+      console.log(add.vlStat(arr))
+      assert.equal(_.isUndefined(add.vlStat(arr).N), false);
+
+    });
+  });
+
   describe('#vlSlope', function(){
     it('should return slope and params', function(){
 
