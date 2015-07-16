@@ -37,37 +37,27 @@ describe('relay-add.Stats', function(){
       assert.equal(add.vlStat(arr).mv,  0.07972092500000003);
       assert.equal(add.vlStat(arr).sd, 1.078706836758906);
       assert.equal(add.vlStat(arr).N, 10);
+    });
 
+    it('should handle NaN', function(){
       assert.equal(add.vlStat([1, NaN, 1, 1]).N, 3);
       assert.equal(add.vlStat([1, NaN, 1, 1]).mv, 1);
       assert.equal(add.vlStat([1, NaN, 1, 1]).sd, 0);
-
     });
-  });
 
-  describe('#vlStat', function(){
     it('should respond with defined .sd', function(){
       var arr =  [NaN, NaN, NaN, NaN];
-      console.log(add.vlStat(arr))
       assert.equal(_.isUndefined(add.vlStat(arr).sd), false);
-
     });
-  });
 
-  describe('#vlStat', function(){
     it('should respond with defined .mv', function(){
       var arr =  [NaN, NaN, NaN, NaN];
       assert.equal(_.isUndefined(add.vlStat(arr).mv), false);
-
     });
-  });
 
-  describe('#vlStat', function(){
     it('should respond with defined .N', function(){
       var arr =  [NaN, NaN, NaN, NaN];
-      console.log(add.vlStat(arr))
       assert.equal(_.isUndefined(add.vlStat(arr).N), false);
-
     });
   });
 
@@ -75,66 +65,66 @@ describe('relay-add.Stats', function(){
     it('should return slope and params', function(){
 
 
- var raw_vec = [ "MEASURING  290.64E-3",
-                 "MEASURIN3",
-                 "MEASURING 290.67E-3",
-                 "MEASURING  290",
-                 "MEASURING  290.65E-3",
-                 "MEASURING 90.64E-3",
-                 "MEASURING  290.63E-3",
-                 "MEASURING  290.64E-3",
-                 "MEASURING  290.64E-3",
-                 "MEASURING  290.65E-3",
-                 "MEASURING  290.67E-3",
-                 "MEASURING  290.65E-3",
-                 "MEASURING  290.70E-3",
-                 "MEASURING  290.64E-3",
-                 "MEASURING  290.62E-3",
-                 "MEASURING  290.68E-3",
-                 "MEASURING  290.63E-3",
-                 "MEASURING  290.67E-3",
-                 "MEASURING  290.69E-3",
-                 "MEASURING  .05"],
-     t_start = [ 1348666058346,
-                 1348666059342,
-                 1348666060345,
-                 1348666061059,
-                 1348666062062,
-                 1348666063064,
-                 1348666064065,
-                 1348666065069,
-                 1348666066072,
-                 1348666067075,
-                 1348666068077,
-                 1348666069080,
-                 1348666070082,
-                 1348666071084,
-                 1348666072087,
-                 1348666073095,
-                 1348666074099,
-                 1348666075102,
-                 1348666076103,
-                 1348666077106 ],
-     t_stop = [ 1348666058399,
-                1348666059377,
-                1348666060379,
-                1348666061091,
-                1348666062094,
-                1348666063096,
-                1348666064098,
-                1348666065124,
-                1348666066115,
-                1348666067107,
-                1348666068113,
-                1348666069112,
-                1348666070135,
-                1348666071117,
-                1348666072119,
-                1348666073127,
-                1348666074135,
-                1348666075139,
-                1348666076145,
-                1348666077140 ];
+      var raw_vec = [ "MEASURING  290.64E-3",
+                      "MEASURIN3",
+                      "MEASURING 290.67E-3",
+                      "MEASURING  290",
+                      "MEASURING  290.65E-3",
+                      "MEASURING 90.64E-3",
+                      "MEASURING  290.63E-3",
+                      "MEASURING  290.64E-3",
+                      "MEASURING  290.64E-3",
+                      "MEASURING  290.65E-3",
+                      "MEASURING  290.67E-3",
+                      "MEASURING  290.65E-3",
+                      "MEASURING  290.70E-3",
+                      "MEASURING  290.64E-3",
+                      "MEASURING  290.62E-3",
+                      "MEASURING  290.68E-3",
+                      "MEASURING  290.63E-3",
+                      "MEASURING  290.67E-3",
+                      "MEASURING  290.69E-3",
+                      "MEASURING  .05"],
+          t_start = [ 1348666058346,
+                      1348666059342,
+                      1348666060345,
+                      1348666061059,
+                      1348666062062,
+                      1348666063064,
+                      1348666064065,
+                      1348666065069,
+                      1348666066072,
+                      1348666067075,
+                      1348666068077,
+                      1348666069080,
+                      1348666070082,
+                      1348666071084,
+                      1348666072087,
+                      1348666073095,
+                      1348666074099,
+                      1348666075102,
+                      1348666076103,
+                      1348666077106 ],
+          t_stop = [ 1348666058399,
+                     1348666059377,
+                     1348666060379,
+                     1348666061091,
+                     1348666062094,
+                     1348666063096,
+                     1348666064098,
+                     1348666065124,
+                     1348666066115,
+                     1348666067107,
+                     1348666068113,
+                     1348666069112,
+                     1348666070135,
+                     1348666071117,
+                     1348666072119,
+                     1348666073127,
+                     1348666074135,
+                     1348666075139,
+                     1348666076145,
+                     1348666077140 ];
 
       var vec = raw_vec.map(add.extractMKSCDG)
         , res = add.vlSlope(vec,t_start,t_stop);
