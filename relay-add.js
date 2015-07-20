@@ -65,10 +65,10 @@ function calQsp(psoll, pist, mq){
         ret.pfill_ok = false;
         if (q * f && q * f < sscbord) {
           ret.sp1 = q * f;
-          ret.sp2 = q * f / 100;
+          ret.sp2 = q * f / 200;
         }
         if (q * f && q * f > sscbord) {
-          ret.sp1 = q * f / 100;
+          ret.sp1 = q * f / 200;
           ret.sp2 = q * f;
         }
       }
