@@ -48,6 +48,7 @@ function calQsp(psoll, pist, mq){
         f        = md * ret.dp / bord;
 
     if (typeof ret.dp == "number") {
+
       // Gas
       if (ret.dp > bord) {
         if (q && q < sscbord) {
@@ -56,8 +57,8 @@ function calQsp(psoll, pist, mq){
 	  ret.sp2 = 0;
         }
         if (q && q > sscbord){
-	  ret.sp1 = q / 10;
-	  ret.sp2 = q;
+	  ret.sp1 = q ;
+	  ret.sp2 = q / 10;
         }
       }
       // Kupplung
@@ -68,8 +69,8 @@ function calQsp(psoll, pist, mq){
           ret.sp2 = q * f / 200;
         }
         if (q * f && q * f > sscbord) {
-          ret.sp1 = q * f / 200;
-          ret.sp2 = q * f;
+          ret.sp1 = q * f ;
+          ret.sp2 = q * f / 100;
         }
       }
       // Bremse
