@@ -1,3 +1,6 @@
+* Wed Jul 29 2015 Rolf.Niepraschk@ptb.de
+- Bei node-Aufruf "--expose_gc" weg
+
 * Thu Jul 09 2015 Rolf.Niepraschk@ptb.de
 - Fehler in email-Modul
 
