@@ -36,7 +36,7 @@ function calQsp(psoll, pist, mq){
    var  ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
         bord    = 0.7,         // Start Regelung rel. Abw. von psoll
         sscbord = 2.0,        // Start 2. Regler
-        eps     = 0.005,        // Ende Regelung rel. Abw. von psoll
+        eps     = 0.003,        // Ende Regelung rel. Abw. von psoll
         md      = 1;           // Dämpf./verst. der Regel.
 
     // genauere Einstellung durch psoll * (1 + eps)
@@ -45,7 +45,7 @@ function calQsp(psoll, pist, mq){
     // es dauert theor. ts sec bis psoll erreicht wird,
     // wenn der Druck mit mq ansteigt
     var q        = psoll / ts / mq,
-        f        = md * ret.dp / bord;
+        f        = md * ret.dp;
 
     if (typeof ret.dp == "number") {
 
@@ -58,7 +58,7 @@ function calQsp(psoll, pist, mq){
         }
         if (q && q > sscbord){
 	  ret.sp1 = q ;
-	  ret.sp2 = q / 10;
+	  ret.sp2 = q / 2;
         }
       }
       // Kupplung
@@ -66,11 +66,11 @@ function calQsp(psoll, pist, mq){
         ret.pfill_ok = false;
         if (q * f && q * f < sscbord) {
           ret.sp1 = q * f;
-          ret.sp2 = q * f / 200;
+          ret.sp2 = 0;
         }
         if (q * f && q * f > sscbord) {
           ret.sp1 = q * f ;
-          ret.sp2 = q * f / 100;
+          ret.sp2 = q * f / 2;
         }
       }
       // Bremse
