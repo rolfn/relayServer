@@ -1,15 +1,15 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-24
+ * version: 2015-07-31
  */
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var vm = require('vm');
 var addon = null;
-
+var util = require('util');
 var logger = cfg.logger;
-
+var sandbox = {};
 /**
  * Wenn vorhanden, Datei "relay-add.js" laden.
  */
@@ -50,6 +50,7 @@ function sendResponse(pRef, js, _data) {
   return;
 }
 
+
 /**
  * Aufbereitung der zu sendenden Daten im Erfolgsfall, Postprocessing.
  * @method prepareResult
@@ -81,7 +82,6 @@ function prepareResult(pRef, js, data) {
       js.PostProcessing.join('') : js.PostProcessing;
     logger.debug('evalStr: %s', evalStr);
 
-    var sandbox = {};
     sandbox._x = x;
     if (jsonRes.t_start !== undefined) {
       sandbox._t_start = jsonRes.t_start;
@@ -93,15 +93,18 @@ function prepareResult(pRef, js, data) {
     }
     if (addon !== undefined) sandbox._ = addon;
     logger.debug('addon: ', addon);
+
+    // vm nach:
+    // http://www.hacksparrow.com/scripting-a-node-js-app.html
+    var script = vm.createScript(evalStr);
     try{
-      // Benutzer-JS-Anweisungen innerhalb der sandbox ausführen.
-      vm.runInNewContext(evalStr, sandbox);
+      script.runInNewContext(sandbox);
     } catch(err) {
       prepareError(pRef, js, 'Postprocessing failed: ' + err);
     }
+
     // sandbox-Variablen der Rückgabe-Struktur zuweisen.
     for (var key in sandbox) {
-      // "runInNewContext" bringt Funktion "gc" mit.
       if (key != 'gc') {
         logger.debug('sandbox[%s]', key, sandbox[key]);
         // temporäre Variablen ignorieren
@@ -122,7 +125,6 @@ function prepareResult(pRef, js, data) {
     sendResponse(pRef, js, jsonRes);
   }
 }
-
 exports.prepareResult = prepareResult;
 
 /**
@@ -140,4 +142,3 @@ function prepareError(pRef, js, data) {
 }
 
 exports.prepareError = prepareError;
-
