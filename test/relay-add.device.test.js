@@ -218,11 +218,16 @@ describe('relay-add.Device', function(){
 
   describe('#extractMKT50', function(){
     it('should return a number', function(){
-      assert.equal(add.extractMKT50("1= not valid\r\nT2=  +22.3584 \nC\r\nSENSOR1= No:00000001\r\nSENSOR2= No:00000001\r\n"), 22.3584)
+      assert.equal(add.extractMKT50("31.07.15  09:16:32\r\nR1= +108.56190 Ohm\r\nR2= not valid\r\nT1=  +21.9098 C\r\nT2= not valid\r\nSENSOR1= No:00000001\r\nSENSOR2= No:00000001\r\n"), 21.9098);
+    });
+
+    it('should return a number', function(){
+      assert.equal(add.extractMKT50( '31.07.15  09:44:32\r\nR1= +108.55855 Ohm\r\nR2= not valid\r\nT1=  +21.9012 C\r\nT2= not valid\r\nSENSOR1= No:00000001\r\nSENSOR2= No:00000001\r\n'), 21.9012);
     });
 
     it('should return a NaN', function(){
       //      assert.equal(_.isNaN(add.extractMKT50('')), true);
     });
   });
+
 });

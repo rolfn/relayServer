@@ -611,12 +611,10 @@ exports.extractKeithleyTemp = extractKeithleyTemp;
  * @return Number Zahl.
  */
 function extractMKT50(s) {
-var regex = /^([\=\r\n\w0-9\s+-a-z]*T2=\s*\+)([0-9]{2}\.?[0-9]{3,5})/;
+  var regex = /(T1=\s*\+)([0-9]{2}\.?[0-9]{3,5})/;
   return strToNum(regex.exec(s), 2);
-
 }
 exports.extractMKT50 = extractMKT50;
-
 
 /**
  * Erstellt Array aus Scan Resultaten wie sie vom Keithley 2700
