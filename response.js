@@ -10,6 +10,7 @@ var addon = null;
 var util = require('util');
 var logger = cfg.logger;
 var sandbox = {};
+
 /**
  * Wenn vorhanden, Datei "relay-add.js" laden.
  */
@@ -82,35 +83,42 @@ function prepareResult(pRef, js, data) {
       js.PostProcessing.join('') : js.PostProcessing;
     logger.debug('evalStr: %s', evalStr);
 
-    sandbox._x = x;
+    var id = pRef.jobId;
+    sandbox[id] = {};
+
+    sandbox[id]._x = x;
     if (jsonRes.t_start !== undefined) {
-      sandbox._t_start = jsonRes.t_start;
+      sandbox[id]._t_start = jsonRes.t_start;
       delete jsonRes.t_start; //???
     }
     if (jsonRes.t_stop !== undefined) {
-      sandbox._t_stop = jsonRes.t_stop;
+      sandbox[id]._t_stop = jsonRes.t_stop;
       delete jsonRes.t_stop;
     }
-    if (addon !== undefined) sandbox._ = addon;
+    if (addon !== undefined) sandbox[id]._ = addon;
     logger.debug('addon: ', addon);
 
     // vm nach:
     // http://www.hacksparrow.com/scripting-a-node-js-app.html
     var script = vm.createScript(evalStr);
     try{
-      script.runInNewContext(sandbox);
+      script.runInNewContext(sandbox[id]);
     } catch(err) {
       prepareError(pRef, js, 'Postprocessing failed: ' + err);
     }
 
     // sandbox-Variablen der Rückgabe-Struktur zuweisen.
-    for (var key in sandbox) {
-      if (key != 'gc') {
-        logger.debug('sandbox[%s]', key, sandbox[key]);
-        // temporäre Variablen ignorieren
-        if (key[0] != '_') jsonRes[key] = sandbox[key];
+    for (var key in sandbox[id]) {
+      if (key[0] != '_') {// temporäre Variablen ignorieren
+        logger.debug('sandbox[%s][%s]', id, key, sandbox[id][key]);
+        jsonRes[key] = sandbox[id][key];
+        delete sandbox[id][key];
       }
     }
+
+    delete sandbox[id]['_'];
+    delete sandbox[id];
+
   } else {
     jsonRes.Result = x;
   }
