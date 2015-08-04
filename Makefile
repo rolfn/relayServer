@@ -1,9 +1,9 @@
 
-# Rolf Niepraschk, 2015-03-03, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2015-08-04, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = 1# >0!
+RELEASE = 2 # >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
