@@ -1,3 +1,6 @@
+* Tue Aug 04 2015 Rolf.Niepraschk@ptb.de
+- Weitere Verbesserung des Speichermangements
+
 * Mon Aug 03 2015 Rolf.Niepraschk@ptb.de
 - Memory-Leak bei Preprocessing behoben
 
