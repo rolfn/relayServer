@@ -1,4 +1,7 @@
 * Tue Aug 04 2015 Rolf.Niepraschk@ptb.de
+- Test auf "gc" in Rückgabestruktur wieder rein.
+
+* Tue Aug 04 2015 Rolf.Niepraschk@ptb.de
 - Weitere Verbesserung des Speichermangements
 
 * Mon Aug 03 2015 Rolf.Niepraschk@ptb.de

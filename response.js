@@ -109,14 +109,15 @@ function prepareResult(pRef, js, data) {
 
     // sandbox-Variablen der Rückgabe-Struktur zuweisen.
     for (var key in sandbox[id]) {
-      if (key[0] != '_') {// temporäre Variablen ignorieren
+      if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
         logger.debug('sandbox[%s][%s]', id, key, sandbox[id][key]);
         jsonRes[key] = sandbox[id][key];
-        delete sandbox[id][key];
+        delete sandbox[id][key]; // nötig?
       }
     }
 
-    delete sandbox[id]['_'];
+    delete sandbox[id]['_']; // nötig?
+    if (sandbox[id]['gc']) delete sandbox[id]['gc']; // nötig?
     delete sandbox[id];
 
   } else {
