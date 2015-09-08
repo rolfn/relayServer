@@ -131,7 +131,7 @@ function start(_req, _res) {
   });
   _res.connection.on('close', function () {
     logger.info('close connection: %d', new Date().getTime());
-    if (gc) gc();
+    if (typeof gc == 'function') gc();
   });
 }
 

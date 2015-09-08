@@ -6,7 +6,7 @@
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '11.12.10',
+  VERSION: '11.13.2',
   DATE: '2015-08-03',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
