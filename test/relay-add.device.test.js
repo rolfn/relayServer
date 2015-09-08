@@ -61,6 +61,7 @@ describe('relay-add.Device', function(){
       assert.equal( add.extractF250("A 23.234C\r\n"),23.234);
       assert.equal( add.extractF250("A 33.234C\r\n"),33.234);
 
+      assert.equal( add.extractF250("A  22.79C\r\n"),22.79);
 
     });
   });

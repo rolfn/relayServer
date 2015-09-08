@@ -370,7 +370,7 @@ exports.extractMKSCDG = extractMKSCDG;
  * @return Number Zahl.
  */
 function extractF250(s) {
-  var regex = /^(A\s)([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/;
+  var regex = /^(A\s{1,2})([2-3]{2}\.?[0-9]{2,3})(C\r\n)$/;
 
   return strToNum(regex.exec(s),2);
 }
