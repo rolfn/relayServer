@@ -129,8 +129,9 @@ function call(pRef, js) {
       _vxi11.call(pRef, js);
       break;
     case 'MODBUS':
-      //_modbus.call(pRef, js);
-      response.prepareError(pRef, js, 'not working!');
+      logger.log('XXXXXXXXXXXXXXXXXX MODBUS');
+      _modbus.call(pRef, js);
+      //response.prepareError(pRef, js, 'not working!');
       break;
     case 'XLSX-OUT':
       _excel.toXLSX(pRef, js);

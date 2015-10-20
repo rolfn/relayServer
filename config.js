@@ -6,8 +6,8 @@
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '11.13.2',
-  DATE: '2015-08-03',
+  VERSION: '12.0.1',
+  DATE: '2015-10-20',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 30000, // msec
@@ -20,6 +20,8 @@ var cfg = {
   DEFAULT_UDP_TIMEOUT: 30000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
+  DEFAULT_MODBUS_PORT: 502,
+  DEFAULT_MODBUS_OUTMODE: 'Uint16',
   DEFAULT_XLSX_NAME: 'data.xlsx',
   DEFAULT_TEX_RUNS: 2,
   DEFAULT_TEX_CMD: 'pdflatex',
