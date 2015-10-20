@@ -18,6 +18,7 @@ var _email = require('./email.js');
 var _latex = require('./latex.js'); // TODO: Überarbeiten!
 var _vxi11 = require('./vxi.js');
 var _excel = require('./excel.js');
+var _modbus = require('./modbus.js');
 
 var logger = cfg.logger;
 
@@ -126,6 +127,10 @@ function call(pRef, js) {
       break;
     case 'VXI11':
       _vxi11.call(pRef, js);
+      break;
+    case 'MODBUS':
+      //_modbus.call(pRef, js);
+      response.prepareError(pRef, js, 'not working!');
       break;
     case 'XLSX-OUT':
       _excel.toXLSX(pRef, js);
