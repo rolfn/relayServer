@@ -16,6 +16,7 @@ var cfg = {
   MIN_VXI11_WAIT: 50, // msec
   MIN_TCP_WAIT: 250, // msec // ???
   MIN_UDP_WAIT: 250, // msec
+  MIN_MODBUS_WAIT: 250, // msec
   DEFAULT_TCP_TIMEOUT: 30000, // msec
   DEFAULT_UDP_TIMEOUT: 30000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',

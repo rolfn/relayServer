@@ -106,7 +106,6 @@ function call(pRef, js) {
   function atEnd() {
     setTimeout(function() {// ???
       logger.debug('master destroy');
-      console.log('master destroy');
       master.destroy();
     }, 200);
   }
@@ -117,35 +116,21 @@ function call(pRef, js) {
   }
 
   function doIt(b, next) {
-    var modbusCall = false;
-    console.log('FunctionCode: ' + functioncode);
-    switch (functioncode) {
-      case 'ReadCoils':
-        modbusCall = 'readCoils';
-        error('not implemented!');
-      break;
-      case 'ReadHoldingRegisters':
-        modbusCall = 'readHoldingRegisters';
-      break;
-      case 'WriteSingleRegister':
-        modbusCall = 'writeSingleRegister';
-        error('coming soon');
-      break;
-      default: error('unknown function code');
-    }
-    if (modbusCall) {
+    logger.debug('FunctionCode: ' + functioncode);
+    var fc = functioncode[0].toLowerCase() + functioncode.slice(1);
+    if (master[fc]) {
       var options = {
         interval: -1,
         onComplete: function(err, resp) {
           //error('coming soon');
         },
         onError: function(err) {
-          console.log('onError: ' + err);
+          logger.error('onError: ' + err);
           error(err);  // err.message
         }
       };
       master.once('connected', function() {
-        var t1 = master[modbusCall](address, quantity, {
+        var t1 = master[fc](address, quantity, {
           interval: -1,
           onComplete: function(err, resp) {
             if (err) {
@@ -154,7 +139,6 @@ function call(pRef, js) {
               console.error(resp.toString());
             } else {
               var values = resp.getValues();
-              console.log('onComplete: ');
               logger.debug(resp.toString());
               // values = Big-Endian (most significant byte first)
               var view8 = correctEndian(new Uint8Array(values));
@@ -200,13 +184,12 @@ function call(pRef, js) {
                 response.prepareResult(pRef, js, bitArr1b);
               }
             }
-            //master.destroy();
           },
           onResponse: function(resp) {// ???
             //console.log('onResponse: ' + util.inspect(resp));
           },
           onError: function(err) {
-            console.log('onError: ' + util.inspect(err));
+            logger.error('onError: ' + util.inspect(err));
           },
 
         });
@@ -215,10 +198,10 @@ function call(pRef, js) {
           master.destroy();
         }, 100);
       });
-    }
+    } else response.prepareError(pRef, js, 'unknown function code');
   }
 
-  var wait = js.Wait < cfg.MIN_TCP_WAIT ? cfg.MIN_TCP_WAIT : js.Wait;
+  var wait = js.Wait < cfg.MIN_MODBUS_WAIT ? cfg.MIN_MODBUS_WAIT : js.Wait;
   utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
     response.prepareResult(pRef, js, repeatResult);
   }, pRef, js);
