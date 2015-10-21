@@ -117,7 +117,7 @@ function call(pRef, js) {
       destroyMaster();
     });
 
-    function onCompleteCommon(err, resp) {
+    function onCompleteCommon(err, resp, func) {
       var msg = false;
       destroyMaster();
       if (err) {
@@ -125,77 +125,80 @@ function call(pRef, js) {
       } else if (resp.isException()) {
         msg = resp.toString();
       }
-      if (msg) {
+      if (msg) {// error
         logger.error(msg);
         response.prepareError(pRef, js, msg);
-      } else logger.debug(resp.toString());
-    }
-    function onCompleteBuffer(err, resp) {
-      onCompleteCommon(err, resp);
-      var values = resp.getValues();// Big-Endian (most significant byte first)
-      var view8 = correctEndian(new Uint8Array(values));
-      var reduce = false; // TODO: Anders machen!
-      if (reduce) view8 = reduceElements(view8);
-      var arrBuf = view8.buffer;
-      var view16 = new Uint16Array(arrBuf);
-      if (false) {
-        console.log('OutMod: "Uint8"');
-        console.log(JSON.stringify(Array.from(view8)));
-        console.log('OutMod: "Uint16"');
-        console.log(JSON.stringify(Array.from(view16)));
-        console.log('OutMod: "16Bits"');
-        var bitArr1a = [];
-        for (var i=0; i<view16.length; i++) {
-          bitArr1a.push(Uint16toBitArray(view16[i]));
-        }
-        console.log(JSON.stringify(bitArr1a));
-        console.log('OutMod: "8Bits"');
-        var bitArr1b = [];
-        for (var i=0; i<view16.length; i++) {
-          bitArr1b.push(Uint16toBitArray(view16[i], true));
-        }
-        console.log(JSON.stringify(bitArr1b));
-        console.log('OutMod: "16Bits*"');
-        var bitArr2a = [];
-        bitArr2a = Uint16toBitArray(view16);
-        console.log(JSON.stringify(bitArr2a));
-        console.log('OutMod: "8Bits*"');
-        var bitArr2b = [];
-        bitArr2b = Uint16toBitArray(view16, true);
-        console.log(JSON.stringify(bitArr2b));
       } else {
-        var bitArr1b = [];
-        for (var i=0; i<view16.length; i++) {
-          bitArr1b.push(Uint16toBitArray(view16[i]));
-        }
-        for (var i=0; i<view16.length; i++) {
-          console.log((i + address) + ':\t' + bitArr1b[i]);
-        }
-        b.push(bitArr1b);
+        logger.debug(resp.toString());
+        b.push(func());
         next();
       }
     }
-    function onCompleteStates(err, resp) {
-      onCompleteCommon(err, resp);
-      b.push('[incomplete] ' + resp.toString());
-      next();
+    function onCompleteBuffer(err, resp) {
+      onCompleteCommon(err, resp, function() {
+        var values = resp.getValues();// Big-Endian (most significant byte first)
+        var view8 = correctEndian(new Uint8Array(values));
+        var reduce = false; // TODO: Anders machen!
+        if (reduce) view8 = reduceElements(view8);
+        var arrBuf = view8.buffer;
+        var view16 = new Uint16Array(arrBuf);
+        if (false) {
+          console.log('OutMod: "Uint8"');
+          console.log(JSON.stringify(Array.from(view8)));
+          console.log('OutMod: "Uint16"');
+          console.log(JSON.stringify(Array.from(view16)));
+          console.log('OutMod: "16Bits"');
+          var bitArr1a = [];
+          for (var i=0; i<view16.length; i++) {
+            bitArr1a.push(Uint16toBitArray(view16[i]));
+          }
+          console.log(JSON.stringify(bitArr1a));
+          console.log('OutMod: "8Bits"');
+          var bitArr1b = [];
+          for (var i=0; i<view16.length; i++) {
+            bitArr1b.push(Uint16toBitArray(view16[i], true));
+          }
+          console.log(JSON.stringify(bitArr1b));
+          console.log('OutMod: "16Bits*"');
+          var bitArr2a = [];
+          bitArr2a = Uint16toBitArray(view16);
+          console.log(JSON.stringify(bitArr2a));
+          console.log('OutMod: "8Bits*"');
+          var bitArr2b = [];
+          bitArr2b = Uint16toBitArray(view16, true);
+          console.log(JSON.stringify(bitArr2b));
+        } else {
+          var bitArr1b = [];
+          for (var i=0; i<view16.length; i++) {
+            bitArr1b.push(Uint16toBitArray(view16[i]));
+          }
+          for (var i=0; i<view16.length; i++) {
+            console.log((i + address) + ':\t' + bitArr1b[i]);
+          }
+          return bitArr1b;
+        }
+      });
     }
-    function onCompleteOther(err, resp) {
-      onCompleteCommon(err, resp);
-      response.prepareResult(pRef, js, resp.toString());
-      b.push(resp.toString());
-      next();
+    function onCompleteStates(err, resp) {
+      onCompleteCommon(err, resp, function() {
+        return  '[incomplete] ' + resp.toString();
+      });
+    }
+    function onCompleteDefault(err, resp) {
+      onCompleteCommon(err, resp, function() {
+        return resp.toString();
+      });
     }
     var options = {
       interval: -1,
-      onComplete: onCompleteOther,
+      onComplete: onCompleteDefault,
       onError: function(err) {// TODO: nötig?
         logger.error('onError: ' + err);
         response.prepareError(pRef, js, err);// err.message ???
       }
     };
     master.once('connected', function() {
-      console.log('fc: ' + fc);
+      logger.debug('fc: ' + fc);
       switch (fc) {
         case 'readInputRegisters':
         case 'readHoldingRegisters':
