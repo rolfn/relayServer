@@ -43,7 +43,8 @@ if (os.endianness() === 'LE') {
   }
 }
 
-function reduceElements(b) {
+function reduceElements(b, skip) {
+  // TODO: skip > 1 unterstützen
   var len = 2 * Math.round(b.length / 4);
   // byte length of the later Uint16Array must be a multiple of 2
   var bb = new Uint8Array(len), j=0;
@@ -78,6 +79,7 @@ function call(pRef, js) {
   quantity = tools.getInt(js.Quantity, 1), value = tools.getInt(js.Value),
   outmode = js.OutMode ? js.OutMode.trim() : cfg.DEFAULT_MODBUS_OUTMODE,
   port = tools.getInt(js.Port, cfg.DEFAULT_MODBUS_PORT),
+  skip = tools.getInt(js.Skip, 0),
   fc = js.FunctionCode.trim();
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
@@ -138,59 +140,37 @@ function call(pRef, js) {
       onCompleteCommon(err, resp, function() {
         var values = resp.getValues();// Big-Endian (most significant byte first)
         var view8 = correctEndian(new Uint8Array(values));
-        var reduce = false; // TODO: Anders machen!
-        if (reduce) view8 = reduceElements(view8);
+        if (skip == 1) view8 = reduceElements(view8, skip);
         var arrBuf = view8.buffer;
         var view16 = new Uint16Array(arrBuf);
+        var result;
+        logger.debug('outmode: ' + outmode);
         switch (outmode) {
-          case 'Uint8':
+          case '8Bits':  // Array of 8-Bits Array
+            result = [];
+            for (var i=0; i<view16.length; i++) {
+              result.push(Uint16toBitArray(view16[i], true));
+            }
             break;
-          case 'Uint16':
+          case '16Bits': // Array of 16-Bits Array
+            result = [];
+            for (var i=0; i<view16.length; i++) {
+              result.push(Uint16toBitArray(view16[i]));
+            }
             break;
-          case '16Bits':
+          case '8Bits*': //  Array of mutiple of 8 Bits
+            result = Uint16toBitArray(view16, true);
             break;
-          case '8Bits':
+          case '16Bits*': // Array of mutiple of 16 Bits
+            result = Uint16toBitArray(view16);
             break;
-          case '16Bits*':
+          case 'Uint8': // Array of 8-Bit Integers
+            result = Array.from(view8);
             break;
-          case '8Bits*':
-            break;
+          default: // 'Uint16'; Array of 16-Bit Integers
+            result = Array.from(view16);
         }
-        if (false) {
-          console.log('OutMod: "Uint8"');
-          console.log(JSON.stringify(Array.from(view8)));
-          console.log('OutMod: "Uint16"');
-          console.log(JSON.stringify(Array.from(view16)));
-          console.log('OutMod: "16Bits"');
-          var bitArr1a = [];
-          for (var i=0; i<view16.length; i++) {
-            bitArr1a.push(Uint16toBitArray(view16[i]));
-          }
-          console.log(JSON.stringify(bitArr1a));
-          console.log('OutMod: "8Bits"');
-          var bitArr1b = [];
-          for (var i=0; i<view16.length; i++) {
-            bitArr1b.push(Uint16toBitArray(view16[i], true));
-          }
-          console.log(JSON.stringify(bitArr1b));
-          console.log('OutMod: "16Bits*"');
-          var bitArr2a = [];
-          bitArr2a = Uint16toBitArray(view16);
-          console.log(JSON.stringify(bitArr2a));
-          console.log('OutMod: "8Bits*"');
-          var bitArr2b = [];
-          bitArr2b = Uint16toBitArray(view16, true);
-          console.log(JSON.stringify(bitArr2b));
-        } else {
-          var bitArr1b = [];
-          for (var i=0; i<view16.length; i++) {
-            bitArr1b.push(Uint16toBitArray(view16[i]));
-          }
-          for (var i=0; i<view16.length; i++) {
-            console.log((i + address) + ':\t' + bitArr1b[i]);
-          }
-          return bitArr1b;
-        }
+        return result;
       });
     }
     function onCompleteStates(err, resp) {
