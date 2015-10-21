@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-10-20
+ * version: 2015-10-21
  */
 
 var cfg = require('./config.js');
@@ -13,6 +13,13 @@ var modbus = require('h5.modbus');
 
 var logger = cfg.logger;
 
+/**
+ * Liefert aus einem 16Bit-Interger-Wert ein Array mit 16 Werten, die
+ * je nach Bit "0" oder "1" betragen. Ist "onlyLowByte" true, besteht das Array
+ * nur aus 8 Werten, die den niederwertigen 8 Bits entsprechen.
+ * @param {number} x
+ * @param {boolean} onlyLowByte
+ */
 function Uint16toBitArray(x, onlyLowByte) {
   var ret = [], y = 0x0001, sh = onlyLowByte ? 8 : 16;
   function _Uint16toBitArray(_x) {
@@ -28,6 +35,9 @@ function Uint16toBitArray(x, onlyLowByte) {
   return ret;
 }
 
+/**
+ * Vertauscht das zweite mit dem ersten Byte usw.
+ */
 if (os.endianness() === 'LE') {
   var correctEndian = function(b) {
     for(var i=0, tmp; i<b.length; i+=2) {
@@ -43,10 +53,15 @@ if (os.endianness() === 'LE') {
   }
 }
 
+/**
+ * Liefert neues Array, bei dem jeweils skip Elemente ignoriert werden.
+ * @param {Uint8Array} b
+ * @param {number} skip
+ */
 function reduceElements(b, skip) {
   // TODO: skip > 1 unterstützen
   var len = 2 * Math.round(b.length / 4);
-  // byte length of the later Uint16Array must be a multiple of 2
+  // byte length of the later Uint16Array must be multiple of 2
   var bb = new Uint8Array(len), j=0;
   for(var i=0; i<b.length; i+=4) {
     bb[j++] = b[i];
@@ -83,9 +98,10 @@ function call(pRef, js) {
   fc = js.FunctionCode.trim();
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
+  // "fc" entspricht nun den Namen der relevanten Funktionen
 
   function doIt(b, next) {
-    logger.debug('FunctionCode: ' + fc);
+    logger.debug('modbus function: ' + fc);
     function destroyMaster() {
       setTimeout(function() {
         master.destroy();
@@ -130,9 +146,9 @@ function call(pRef, js) {
       if (msg) {// error
         logger.error(msg);
         response.prepareError(pRef, js, msg);
-      } else {
+      } else {// gültige Antwort
         logger.debug(resp.toString());
-        b.push(func());
+        b.push(func()); // Funktion muss aufbereitete Antwort zurückliefern
         next();
       }
     }
@@ -141,33 +157,33 @@ function call(pRef, js) {
         var values = resp.getValues();// Big-Endian (most significant byte first)
         var view8 = correctEndian(new Uint8Array(values));
         if (skip == 1) view8 = reduceElements(view8, skip);
-        var arrBuf = view8.buffer;
+        // TODO: skip > 1 unterstützen
+        var arrBuf = view8.buffer, result;
         var view16 = new Uint16Array(arrBuf);
-        var result;
         logger.debug('outmode: ' + outmode);
         switch (outmode) {
-          case '8Bits':  // Array of 8-Bits Array
+          case '8Bits':  // Array of 8-Bits-Array
             result = [];
             for (var i=0; i<view16.length; i++) {
               result.push(Uint16toBitArray(view16[i], true));
             }
             break;
-          case '16Bits': // Array of 16-Bits Array
+          case '16Bits': // Array of 16-Bits-Array
             result = [];
             for (var i=0; i<view16.length; i++) {
               result.push(Uint16toBitArray(view16[i]));
             }
             break;
-          case '8Bits*': //  Array of mutiple of 8 Bits
+          case '8Bits*': // Array of mutiple of 8 Bits
             result = Uint16toBitArray(view16, true);
             break;
           case '16Bits*': // Array of mutiple of 16 Bits
             result = Uint16toBitArray(view16);
             break;
-          case 'Uint8': // Array of 8-Bit Integers
+          case 'Uint8': // Array of 8-Bit-Integers
             result = Array.from(view8);
             break;
-          default: // 'Uint16'; Array of 16-Bit Integers
+          default: // 'Uint16'; Array of 16-Bit-Integers
             result = Array.from(view16);
         }
         return result;
