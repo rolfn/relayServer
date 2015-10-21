@@ -82,19 +82,29 @@ function call(pRef, js) {
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
 
-  var master = modbus.createMaster({
-    transport: {
-      type: 'ip',
-      connection: {
-        type: 'tcp',
-        host: host,
-        port: port
-      }
-    },
-    retryOnException: false // default: true
-  });
+  function doIt(b, next) {
+    logger.debug('FunctionCode: ' + fc);
+    function destroyMaster() {
+      setTimeout(function() {
+        master.destroy();
+      }, 1);
+    }
+    var master = modbus.createMaster({
+      transport: {
+        type: 'ip',
+        connection: {
+          type: 'tcp',
+          host: host,
+          port: port
+        }
+      },
+      retryOnException: false // default: true
+    });
 
-  if (fc && master[fc]) {
+    if (!(fc && master[fc])) {
+      destroyMaster();
+      response.prepareError(pRef, js, 'wrong function code');
+    }
 
     master.on('connected', function() {
       logger.debug('connected');
@@ -102,139 +112,118 @@ function call(pRef, js) {
     master.on('disconnected', function() {
       logger.debug('disconnected');
     });
-    master.on('error', function(err) {//
+    master.on('error', function(err) {
       logger.error(err.message);
-      master.destroy();
+      destroyMaster();
     });
 
-    function atEnd() {
-      setTimeout(function() {// ???
-        logger.debug('master destroy');
-        master.destroy();
-      }, 200);
+    function onCompleteCommon(err, resp) {
+      var msg = false;
+      destroyMaster();
+      if (err) {
+        msg = err.message;
+      } else if (resp.isException()) {
+        msg = resp.toString();
+      }
+      if (msg) {
+        logger.error(msg);
+        response.prepareError(pRef, js, msg);
+      } else logger.debug(resp.toString());
     }
-
-    function error(msg) {
-      atEnd();
-      response.prepareError(pRef, js, msg);
+    function onCompleteBuffer(err, resp) {
+      onCompleteCommon(err, resp);
+      var values = resp.getValues();// Big-Endian (most significant byte first)
+      var view8 = correctEndian(new Uint8Array(values));
+      var reduce = false; // TODO: Anders machen!
+      if (reduce) view8 = reduceElements(view8);
+      var arrBuf = view8.buffer;
+      var view16 = new Uint16Array(arrBuf);
+      if (false) {
+        console.log('OutMod: "Uint8"');
+        console.log(JSON.stringify(Array.from(view8)));
+        console.log('OutMod: "Uint16"');
+        console.log(JSON.stringify(Array.from(view16)));
+        console.log('OutMod: "16Bits"');
+        var bitArr1a = [];
+        for (var i=0; i<view16.length; i++) {
+          bitArr1a.push(Uint16toBitArray(view16[i]));
+        }
+        console.log(JSON.stringify(bitArr1a));
+        console.log('OutMod: "8Bits"');
+        var bitArr1b = [];
+        for (var i=0; i<view16.length; i++) {
+          bitArr1b.push(Uint16toBitArray(view16[i], true));
+        }
+        console.log(JSON.stringify(bitArr1b));
+        console.log('OutMod: "16Bits*"');
+        var bitArr2a = [];
+        bitArr2a = Uint16toBitArray(view16);
+        console.log(JSON.stringify(bitArr2a));
+        console.log('OutMod: "8Bits*"');
+        var bitArr2b = [];
+        bitArr2b = Uint16toBitArray(view16, true);
+        console.log(JSON.stringify(bitArr2b));
+      } else {
+        var bitArr1b = [];
+        for (var i=0; i<view16.length; i++) {
+          bitArr1b.push(Uint16toBitArray(view16[i]));
+        }
+        for (var i=0; i<view16.length; i++) {
+          console.log((i + address) + ':\t' + bitArr1b[i]);
+        }
+        b.push(bitArr1b);
+        next();
+      }
     }
-
-    function doIt(b, next) {
-      logger.debug('FunctionCode: ' + fc);
-      function commonResponse(err, resp) {
-        var msg = false;
-        if (err) {
-          msg = err.message;
-        } else if (resp.isException()) {
-          msg = resp.toString();
-        }
-        if (msg) {
-          logger.error(msg);
-          response.prepareError(pRef, js, msg);
-        }
-      }
-      function bufferResponse(err, resp) {
-        commonResponse(err, resp);
-        var values = resp.getValues();
-        logger.debug(resp.toString());
-        // values = Big-Endian (most significant byte first)
-        var view8 = correctEndian(new Uint8Array(values));
-        var reduce = false; // TODO: Anders machen!
-        if (reduce) view8 = reduceElements(view8);
-        var arrBuf = view8.buffer;
-        var view16 = new Uint16Array(arrBuf);
-        // console.log(util.inspect(view8));
-        // console.log(util.inspect(view16));
-        if (false) {
-          console.log('OutMod: "Uint8"');
-          console.log(JSON.stringify(Array.from(view8)));
-          console.log('OutMod: "Uint16"');
-          console.log(JSON.stringify(Array.from(view16)));
-          console.log('OutMod: "16Bits"');
-          var bitArr1a = [];
-          for (var i=0; i<view16.length; i++) {
-            bitArr1a.push(Uint16toBitArray(view16[i]));
-          }
-          console.log(JSON.stringify(bitArr1a));
-          console.log('OutMod: "8Bits"');
-          var bitArr1b = [];
-          for (var i=0; i<view16.length; i++) {
-            bitArr1b.push(Uint16toBitArray(view16[i], true));
-          }
-          console.log(JSON.stringify(bitArr1b));
-          console.log('OutMod: "16Bits*"');
-          var bitArr2a = [];
-          bitArr2a = Uint16toBitArray(view16);
-          console.log(JSON.stringify(bitArr2a));
-          console.log('OutMod: "8Bits*"');
-          var bitArr2b = [];
-          bitArr2b = Uint16toBitArray(view16, true);
-          console.log(JSON.stringify(bitArr2b));
-        } else {
-          var bitArr1b = [];
-          for (var i=0; i<view16.length; i++) {
-            bitArr1b.push(Uint16toBitArray(view16[i]));
-          }
-          for (var i=0; i<view16.length; i++) {
-            console.log((i + address) + ':\t' + bitArr1b[i]);
-          }
-          response.prepareResult(pRef, js, bitArr1b);
-        }
-      }
-      function statesResponse(err, resp) {
-        //commonResponse(err, resp);
-        response.prepareError(pRef, js, 'XXX still not implemented');
-      }
-      function otherResponse(err, resp) {
-        commonResponse(err, resp);
-        response.prepareResult(pRef, js, resp.toString());
-      }
-      var options = {
-        interval: -1,
-        onComplete: function(err, resp) {
-          //error('coming soon');
-        },
-        onError: function(err) {
-          logger.error('onError: ' + err);
-          error(err);  // err.message
-        }
-      };
-      master.once('connected', function() {
-        console.log('fc: ' + fc);
-        switch (fc) {
-          case 'readInputRegisters':
-          case 'readHoldingRegisters':
-            options.onComplete = bufferResponse;
-            master[fc](address, quantity, options);
-            break;
-          case 'readCoils':
-          case 'readDiscreteInputs':
-            options.onComplete = statesResponse;
-            master[fc](address, quantity, options);
-            break;
-          case 'writeSingleRegister':
-            options.onComplete = otherResponse;
-            master[fc](address, value, options);
-            break;
-          case 'writeSingleCoil':
-            options.onComplete = otherResponse;
-            master[fc](address, !!value, options);
-            break;
-          default: response.prepareError(pRef, js, 'still not implemented');
-        }
-      });
-      setTimeout(function() {// TODO: Woanders hin (wegen repeat) !!!
-        master.destroy();
-      }, 100);
+    function onCompleteStates(err, resp) {
+      onCompleteCommon(err, resp);
+      b.push('[incomplete] ' + resp.toString());
+      next();
     }
+    function onCompleteOther(err, resp) {
+      onCompleteCommon(err, resp);
+      response.prepareResult(pRef, js, resp.toString());
+      b.push(resp.toString());
+      next();
+    }
+    var options = {
+      interval: -1,
+      onComplete: onCompleteOther,
+      onError: function(err) {// TODO: nötig?
+        logger.error('onError: ' + err);
+        response.prepareError(pRef, js, err);// err.message ???
+      }
+    };
+    master.once('connected', function() {
+      console.log('fc: ' + fc);
+      switch (fc) {
+        case 'readInputRegisters':
+        case 'readHoldingRegisters':
+          options.onComplete = onCompleteBuffer;
+          master[fc](address, quantity, options);
+          break;
+        case 'readCoils':
+        case 'readDiscreteInputs':
+          options.onComplete = onCompleteStates;
+          master[fc](address, quantity, options);
+          break;
+        case 'writeSingleRegister':
+          master[fc](address, value, options);
+          break;
+        case 'writeSingleCoil':
+          master[fc](address, !!value, options);
+          break;
+        default:
+          destroyMaster();
+          response.prepareError(pRef, js, 'not implemented');
+      }
+    });
+  }
 
-    var wait = js.Wait < cfg.MIN_MODBUS_WAIT ? cfg.MIN_MODBUS_WAIT : js.Wait;
-    utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
-      response.prepareResult(pRef, js, repeatResult);
-    }, pRef, js);
-
-  } else response.prepareError(pRef, js, 'unknown function code');
-
+  var wait = js.Wait < cfg.MIN_MODBUS_WAIT ? cfg.MIN_MODBUS_WAIT : js.Wait;
+  utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
+    response.prepareResult(pRef, js, repeatResult);
+  }, pRef, js);
 }
 
 exports.call = call;
