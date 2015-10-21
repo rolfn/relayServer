@@ -57,13 +57,14 @@ exports.getFloat = function(s, d) {
  * Liefert ähnlich zu parseInt eine Int-Zahl, die der String s repräsentiert.
  * Misslingt die Wandlung, so wird der Wert von d geliefert. Der Rückgabewert
  * ist also in jedem Fall eine Int-Zahl.
- * @param {string} s die Zahl als String.
+ * @param {string} s die Zahl als String (auch Number oder Boolean).
  * @param {number} d default-Wert (ohne Angabe 0).
  * @return {number} Int-Zahl
  */
 exports.getInt = function(s, d) {
+  var _s = typeof s === 'boolean' ? (s ? 1 : 0) : s
   var _d = d === undefined ? 0 : d;
-  var x = parseInt(s);
+  var x = parseInt(_s);
   return isNaN(x) ? _d : x;
 };
 
