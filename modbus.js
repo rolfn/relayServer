@@ -142,6 +142,20 @@ function call(pRef, js) {
         if (reduce) view8 = reduceElements(view8);
         var arrBuf = view8.buffer;
         var view16 = new Uint16Array(arrBuf);
+        switch (outmode) {
+          case 'Uint8':
+            break;
+          case 'Uint16':
+            break;
+          case '16Bits':
+            break;
+          case '8Bits':
+            break;
+          case '16Bits*':
+            break;
+          case '8Bits*':
+            break;
+        }
         if (false) {
           console.log('OutMod: "Uint8"');
           console.log(JSON.stringify(Array.from(view8)));
