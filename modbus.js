@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-10-21
+ * version: 2015-10-22
  */
 
 var cfg = require('./config.js');
@@ -60,6 +60,8 @@ if (os.endianness() === 'LE') {
  */
 function reduceElements(b, skip) {
   // TODO: skip > 1 unterstützen
+  // if (skip < 0 || skip >= b.length) return b;
+  if (skip != 1) return b;
   var len = 2 * Math.round(b.length / 4);
   // byte length of the later Uint16Array must be multiple of 2
   var bb = new Uint8Array(len), j=0;
@@ -98,7 +100,13 @@ function call(pRef, js) {
   fc = js.FunctionCode.trim();
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
-  // "fc" entspricht nun den Namen der relevanten Funktionen
+  // "fc" entspricht nun dem Namen der relevanten Funktionen
+
+  if (quantity < 1 || quantity > 125) {
+    response.prepareError(pRef, js,
+      'Quantity must be a number between 1 and 125.');
+    return;
+  }
 
   function doIt(b, next) {
     logger.debug('modbus function: ' + fc);
@@ -131,8 +139,9 @@ function call(pRef, js) {
       logger.debug('disconnected');
     });
     master.on('error', function(err) {
-      logger.error(err.message);
       destroyMaster();
+      logger.error(err.message);
+      response.prepareError(pRef, js, err.message);
     });
 
     function onCompleteCommon(err, resp, func) {
@@ -147,6 +156,7 @@ function call(pRef, js) {
         logger.error(msg);
         response.prepareError(pRef, js, msg);
       } else {// gültige Antwort
+        //logger.debug(require('util').inspect(resp));
         logger.debug(resp.toString());
         b.push(func()); // Funktion muss aufbereitete Antwort zurückliefern
         next();
@@ -155,33 +165,28 @@ function call(pRef, js) {
     function onCompleteBuffer(err, resp) {
       onCompleteCommon(err, resp, function() {
         var values = resp.getValues();// Big-Endian (most significant byte first)
-        var view8 = correctEndian(new Uint8Array(values));
-        if (skip == 1) view8 = reduceElements(view8, skip);
-        // TODO: skip > 1 unterstützen
+        var view8 = reduceElements(correctEndian(new Uint8Array(values)), skip);
         var arrBuf = view8.buffer, result;
         var view16 = new Uint16Array(arrBuf);
         logger.debug('outmode: ' + outmode);
         switch (outmode) {
-          case '8Bits':  // Array of 8-Bits-Array
+          case '8Bits':  // Array of Bit-Arrays (8 Bits)
             result = [];
             for (var i=0; i<view16.length; i++) {
               result.push(Uint16toBitArray(view16[i], true));
             }
             break;
-          case '16Bits': // Array of 16-Bits-Array
+          case '16Bits': // Array of Bit-Arrays (16 Bits)
             result = [];
             for (var i=0; i<view16.length; i++) {
               result.push(Uint16toBitArray(view16[i]));
             }
             break;
-          case '8Bits*': // Array of mutiple of 8 Bits
+          case '8Bits*': // Bit-Array (Quantity * 8 Bits)
             result = Uint16toBitArray(view16, true);
             break;
-          case '16Bits*': // Array of mutiple of 16 Bits
+          case '16Bits*': // Bit-Array (Quantity * 16 Bits)
             result = Uint16toBitArray(view16);
-            break;
-          case 'Uint8': // Array of 8-Bit-Integers
-            result = Array.from(view8);
             break;
           default: // 'Uint16'; Array of 16-Bit-Integers
             result = Array.from(view16);
@@ -191,7 +196,8 @@ function call(pRef, js) {
     }
     function onCompleteStates(err, resp) {
       onCompleteCommon(err, resp, function() {
-        return  '[incomplete] ' + resp.toString();
+        var result = resp.getStates().map(Number);
+        return result;
       });
     }
     function onCompleteDefault(err, resp) {
