@@ -102,12 +102,6 @@ function call(pRef, js) {
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
   // "fc" entspricht nun dem Namen der relevanten Funktionen
 
-  if (quantity < 1 || quantity > 125) {
-    response.prepareError(pRef, js,
-      'Quantity must be a number between 1 and 125.');
-    return;
-  }
-
   function doIt(b, next) {
     logger.debug('modbus function: ' + fc);
     function destroyMaster() {
@@ -196,8 +190,7 @@ function call(pRef, js) {
     }
     function onCompleteStates(err, resp) {
       onCompleteCommon(err, resp, function() {
-        var result = resp.getStates().map(Number);
-        return result;
+        return resp.getStates().map(Number);
       });
     }
     function onCompleteDefault(err, resp) {
@@ -213,18 +206,32 @@ function call(pRef, js) {
         response.prepareError(pRef, js, err);// err.message ???
       }
     };
+
+    function checkQuantity(n, min, max) {
+      var ret = quantity >= min && quantity <= max;
+      if (!ret) {
+        response.prepareError(pRef, js,
+          'Quantity must be a number between ' + min + ' and ' + max);
+      }
+      return ret;
+    }
+
     master.once('connected', function() {
       logger.debug('fc: ' + fc);
       switch (fc) {
         case 'readInputRegisters':
         case 'readHoldingRegisters':
-          options.onComplete = onCompleteBuffer;
-          master[fc](address, quantity, options);
+          if (checkQuantity(quantity, 1, 125)) {
+            options.onComplete = onCompleteBuffer;
+            master[fc](address, quantity, options);
+          }
           break;
         case 'readCoils':
         case 'readDiscreteInputs':
-          options.onComplete = onCompleteStates;
-          master[fc](address, quantity, options);
+          if (checkQuantity(quantity, 1, 2000)) {
+            options.onComplete = onCompleteStates;
+            master[fc](address, quantity, options);
+          }
           break;
         case 'writeSingleRegister':
           master[fc](address, value, options);
