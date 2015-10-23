@@ -1,5 +1,5 @@
 
-# Rolf Niepraschk, 2015-08-04, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2015-10-23, Rolf.Niepraschk@ptb.de
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)

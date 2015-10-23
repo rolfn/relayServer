@@ -1,3 +1,6 @@
+* Fri Oct 23 2015 Rolf.Niepraschk@ptb.de
+- Unterstützung für "Modbus TCP"
+
 * Tue Aug 04 2015 Rolf.Niepraschk@ptb.de
 - Test auf "gc" in Rückgabestruktur wieder rein.
 
