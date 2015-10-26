@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-10-22
+ * version: 2015-10-23
  */
 
 var cfg = require('./config.js');
@@ -9,7 +9,7 @@ var utils = require('./utils.js');
 var response = require('./response.js');
 var net = require('net');
 var os = require('os');
-var modbus = require('h5.modbus');
+var modbus = require('h5.modbus'); // https://github.com/morkai/h5.modbus
 
 var logger = cfg.logger;
 
@@ -53,21 +53,20 @@ if (os.endianness() === 'LE') {
   }
 }
 
-/**
+**
  * Liefert neues Array, bei dem jeweils skip Elemente ignoriert werden.
- * @param {Uint8Array} b
+ * @param {Uint16Array} b
  * @param {number} skip
  */
 function reduceElements(b, skip) {
   // TODO: skip > 1 unterstützen
-  // if (skip < 0 || skip >= b.length) return b;
+  // if (skip < 0 || skip > b.length-1) return b;
   if (skip != 1) return b;
-  var len = 2 * Math.round(b.length / 4);
-  // byte length of the later Uint16Array must be multiple of 2
-  var bb = new Uint8Array(len), j=0;
-  for(var i=0; i<b.length; i+=4) {
+  var len = 2 * Math.round(b.length / 2);
+  // byte length of the resulting Uint16Array must be multiple of 2
+  var bb = new Uint16Array(len), j=0;
+  for(var i=0; i<b.length; i+=2) {
     bb[j++] = b[i];
-    bb[j++] = b[i+1];
   }
   return bb;
 }
@@ -159,9 +158,9 @@ function call(pRef, js) {
     function onCompleteBuffer(err, resp) {
       onCompleteCommon(err, resp, function() {
         var values = resp.getValues();// Big-Endian (most significant byte first)
-        var view8 = reduceElements(correctEndian(new Uint8Array(values)), skip);
+        var view8 = correctEndian(new Uint8Array(values));
         var arrBuf = view8.buffer, result;
-        var view16 = new Uint16Array(arrBuf);
+        var view16 = reduceElements(new Uint16Array(arrBuf), skip);
         logger.debug('outmode: ' + outmode);
         switch (outmode) {
           case '8Bits':  // Array of Bit-Arrays (8 Bits)
