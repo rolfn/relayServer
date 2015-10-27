@@ -153,8 +153,7 @@ function call(pRef, js) {
         //logger.debug(require('util').inspect(resp));
         logger.debug(resp.toString());
         var x = func(); // Funktion muss aufbereitete Antwort zurückliefern
-        if (x.length == 1) x = x[0]; // 1-Element-Array zu Element
-        b.push(x);
+        b.push(x.length == 1 ? x[0] : x); // 1-Element-Array zu Element
         next();
       }
     }
