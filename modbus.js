@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-10-23
+ * version: 2015-10-27
  */
 
 var cfg = require('./config.js');
@@ -54,7 +54,7 @@ if (os.endianness() === 'LE') {
 }
 
 /**
- * Liefert neues Array, bei dem jeweils skip Elemente ignoriert werden.
+ * Liefert neues Array, bei dem jeweils skip 16-Werte ignoriert werden.
  * @param {Uint8Array} b
  * @param {number} skip
  */
@@ -152,7 +152,9 @@ function call(pRef, js) {
       } else {// gültige Antwort
         //logger.debug(require('util').inspect(resp));
         logger.debug(resp.toString());
-        b.push(func()); // Funktion muss aufbereitete Antwort zurückliefern
+        var x = func(); // Funktion muss aufbereitete Antwort zurückliefern
+        if (x.length == 1) x = x[0]; // 1-Element-Array zu Element
+        b.push(x);
         next();
       }
     }
