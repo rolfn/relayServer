@@ -14,11 +14,12 @@ var modbus = require('h5.modbus');  // https://github.com/morkai/h5.modbus
 var logger = cfg.logger;
 
 /**
- * Liefert aus einem 16Bit-Interger-Wert ein Array mit 16 Werten, die
+ * Liefert aus einem 16Bit-Integer-Wert ein Array mit 16 Werten, die
  * je nach Bit "0" oder "1" betragen. Ist "onlyLowByte" true, besteht das Array
  * nur aus 8 Werten, die den niederwertigen 8 Bits entsprechen.
  * @param {number} x
  * @param {boolean} onlyLowByte
+ * @return {array}
  */
 function Uint16toBitArray(x, onlyLowByte) {
   var ret = [], y = 0x0001, sh = onlyLowByte ? 8 : 16;
@@ -31,6 +32,20 @@ function Uint16toBitArray(x, onlyLowByte) {
     _Uint16toBitArray(x);
   } else {// Array
     for (var i=0; i<x.length; i++) _Uint16toBitArray(x[i]);
+  }
+  return ret;
+}
+
+/**
+ * Liefert aus einem Array mit maximal 0/1-Werten einen 16Bit-Integer-Wert.
+ * @param {array} x
+ * @return {number}
+ */
+function bitArrayToUint16(x) {
+  var y = 0x0001, ret = 0;
+  for(var i=0; i<x.length; i++) {
+    if (x[i]) ret += y;
+    y<<=1;
   }
   return ret;
 }
@@ -93,10 +108,11 @@ function call(pRef, js) {
   }
 
   var result = [], host = js.Host, address = tools.getInt(js.Address),
-  quantity = tools.getInt(js.Quantity, 1), value = tools.getInt(js.Value),
+  quantity = tools.getInt(js.Quantity, 1),
   outmode = js.OutMode ? js.OutMode.trim() : cfg.DEFAULT_MODBUS_OUTMODE,
   port = tools.getInt(js.Port, cfg.DEFAULT_MODBUS_PORT),
   skip = tools.getInt(js.Skip, 0),
+  value = js.Value.length ? bitArrayToUint16(js.Value) : tools.getInt(js.Value),
   fc = js.FunctionCode.trim();
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
