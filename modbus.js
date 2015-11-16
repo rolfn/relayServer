@@ -116,7 +116,7 @@ function call(pRef, js) {
   fc = js.FunctionCode.trim();
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
-  // "fc" entspricht nun dem Namen der relevanten Funktionen
+  // "fc" entspricht nun dem Namen der relevanten Funktion
 
   function doIt(b, next) {
     logger.debug('modbus function: ' + fc);
