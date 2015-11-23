@@ -31,7 +31,7 @@ COMPACT=curl -H "Content-Type: application/json" -X POST
 ARCH=$(shell arch)
 INSTALL_DIRS_PARENT = $$HOME/couch-apps/repos/
 INSTALL_DIRS_ROOT = $(INSTALL_DIRS_PARENT)_attachments/
-OS_RELEASES = openSUSE_11.4  openSUSE_12.2  openSUSE_12.3  openSUSE_13.1  SLE_11_SP3
+OS_RELEASES = openSUSE_12.3  openSUSE_13.1  SLE_11_SP3 tumbleweed
 INSTALL_DIRS = $(addsuffix /noarch, $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
 
 ### LANG=c date +"* %a %b %d %Y Rolf.Niepraschk@ptb.de"
