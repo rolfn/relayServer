@@ -1,5 +1,7 @@
 
-# Rolf Niepraschk, 2015-10-23, Rolf.Niepraschk@ptb.de
+# Rolf Niepraschk, 2015-11-23, Rolf.Niepraschk@ptb.de
+
+# zypper in fakeroot alien createrepo
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
