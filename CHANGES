@@ -1,3 +1,6 @@
+* Mon Nov 23 2015 Rolf.Niepraschk@ptb.de
+- Action "HTTP" jetzt mit Parameter "Method"
+
 * Tue Oct 27 2015 Rolf.Niepraschk@ptb.de
 - Result: 1-Element-Array zu Element
 

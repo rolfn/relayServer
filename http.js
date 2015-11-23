@@ -21,7 +21,7 @@ var logger = cfg.logger;
  */
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
-  var method = (js.Body) ? 'POST' : 'GET';
+  var method = js.Method ? js.Method : (js.Body ? 'POST' : 'GET');
   var proxy = process.env.http_proxy;
   var np = process.env.no_proxy.split(',');
   var json = js.Json || false;
