@@ -1,3 +1,9 @@
+* Thu Dec 17 2015 Rolf.Niepraschk@ptb.de
+- update "relay-add.js" ("extractDcf77")
+
+* Mon Dec 07 2015 Rolf.Niepraschk@ptb.de
+- DEFAULT_EXEC_TIMEOUT (30s --> 60s)
+
 * Mon Nov 23 2015 Rolf.Niepraschk@ptb.de
 - Action "HTTP" jetzt mit Parameter "Method"
 
