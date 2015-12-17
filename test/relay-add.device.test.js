@@ -231,4 +231,13 @@ describe('relay-add.Device', function(){
     });
   });
 
+  describe('#extractDcf77', function(){
+    it('should return a integer (ms since 1970)', function(){
+      assert.equal(add.extractDcf77("\u0002D:16.12.15;T:3;U:11.04.34; *  \u0003"), 1450260274000);
+    });
+
+    it('should return null on wrong data format', function(){
+      assert.equal(add.extractDcf77(":16.12.15;T:3;U:11.04.34; *  \u0003"), null);
+    });
+  });
 });
