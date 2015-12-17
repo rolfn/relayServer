@@ -668,7 +668,7 @@ exports.extractKeithleyTempScan = extractKeithleyTempScan;
  * @return Number Zahl.
  */
 function extractDcf77(s) {
-  var regex = /D:([0-9\.]*);T:[0-9];U:([0-9\.]*)/
+  var regex = /D:([0-9\.]*);T:[0-9];U:([0-9\.]*);.\s/
     , yy    = new Date().getFullYear()
     , r     = regex.exec(s)
   if(r != null){
