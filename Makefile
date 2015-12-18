@@ -5,7 +5,7 @@
 
 MAIN = relayServer
 VERSION = $(shell awk -F"'" '/VERSION:/ {print $$2}' config.js)
-RELEASE = "1"# >0!
+RELEASE = 1# >0!
 LICENSE = "???"
 GROUP = "Productivity/Networking/Web/Servers"
 SUMMARY = "Nodejs-basierte http-Server für Messaufgaben"
@@ -31,7 +31,7 @@ ARCHIVNAME = $(MAIN)-$(shell date +%Y-%m-%d).zip
 COMPACT=curl -H "Content-Type: application/json" -X POST
 
 ARCH=$(shell arch)
-INSTALL_DIRS_PARENT = $$HOME/couch-apps/repos/
+INSTALL_DIRS_PARENT = $(HOME)/couch-apps/repos/
 INSTALL_DIRS_ROOT = $(INSTALL_DIRS_PARENT)_attachments/
 OS_RELEASES = openSUSE_12.3  openSUSE_13.1  SLE_11_SP3 tumbleweed
 INSTALL_DIRS = $(addsuffix /noarch, $(addprefix $(INSTALL_DIRS_ROOT), $(OS_RELEASES)))
@@ -135,12 +135,18 @@ arch :
 	@echo
 	@echo $(ARCHIVNAME)
 
+ONE_RPM_FILE = \
+  $(INSTALL_DIRS_ROOT)openSUSE_13.1/noarch/$(MAIN)-$(VERSION)-$(RELEASE).noarch.rpm
+
 debug :
 	@echo $(VERSION)
 	@echo $(JS_SOURCE)
 	@echo $(INSTALL_DIRS)
+	@echo $(INSTALL_DIRS_PARENT)
+	@echo $(INSTALL_DIRS_ROOT)
+	@echo $(ONE_RPM_FILE)
 
-install : rpm deb
+install : $(ONE_RPM_FILE)
 	@echo "=== INSTALL ==="
 	@target=$(shell ls -1t $$HOME/rpmbuild/RPMS/noarch/*.rpm | head -1) ; \
 	$(foreach i, $(INSTALL_DIRS), cp -pv $$target $i ;)
