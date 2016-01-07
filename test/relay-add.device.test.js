@@ -65,6 +65,15 @@ describe('relay-add.Device', function(){
 
     });
   });
+ describe('#extractPhillipsTemp', function(){
+    it('should return clean numbers or NaN', function(){
+
+      assert.equal( _.isNaN(add.extractPhillipsTemp("VDC    0.0001\n")),true);
+
+      assert.equal( add.extractPhillipsTemp("TDC     +022.80E+00\n"), 22.8);
+
+    });
+  });
 
   describe('#extractAtmion', function(){
     it('should return clean numbers or NaN', function(){

@@ -377,6 +377,21 @@ function extractF250(s) {
 exports.extractF250 = extractF250;
 
 /**
+ * Extrahiert Float-Zahl aus String welcher vom Phillips
+ * 2535 geliefert wird
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractPhillipsTemp(s) {
+  var regex = /^(TDC\s*)([-+]{1}[0-3]{3}\.?[0-9]{2}[E]{1}[-+]{1}[0-1]{2})(\n)$/;
+
+  return strToNum(regex.exec(s),2);
+}
+exports.extractPhillipsTemp= extractPhillipsTemp;
+
+/**
  * Extrahiert Float-Zahl aus String wie von
  * Atmion IG (z.B. SE1) gesendet
  *
