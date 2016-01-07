@@ -6,20 +6,23 @@
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '11.13.2',
-  DATE: '2015-08-03',
+  VERSION: '12.2.1',
+  DATE: '2015-12-17',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
-  DEFAULT_EXEC_TIMEOUT: 30000, // msec
+  DEFAULT_EXEC_TIMEOUT: 60000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
   MIN_VXI11_WAIT: 50, // msec
   MIN_TCP_WAIT: 250, // msec // ???
   MIN_UDP_WAIT: 250, // msec
+  MIN_MODBUS_WAIT: 250, // msec
   DEFAULT_TCP_TIMEOUT: 30000, // msec
   DEFAULT_UDP_TIMEOUT: 30000, // msec
   DEFAULT_SMTP_HOST: 'smtp-hub',
   DEFAULT_SMTP_PORT: 25,
+  DEFAULT_MODBUS_PORT: 502,
+  DEFAULT_MODBUS_OUTMODE: 'Uint16',
   DEFAULT_XLSX_NAME: 'data.xlsx',
   DEFAULT_TEX_RUNS: 2,
   DEFAULT_TEX_CMD: 'pdflatex',

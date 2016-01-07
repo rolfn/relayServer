@@ -9,8 +9,7 @@
  *
  * im Postprocessing ausgeführt werden.
  *
- * @author wactbprot (thsteinbock@web.de)
- * version: 2013-06-07
+ * version: 2015-12-16
  */
 
 /**
@@ -98,7 +97,7 @@ exports.calQsp = calQsp;
  *
  * @author wactbprot
  * @param x Array Datenreihe
- * @return res Object   res.mv (Mittelwert) res.sd (Standardabweichung) und re.N (Länge)
+ * @return res Object res.mv (Mittelwert) res.sd (Standardabweichung) und re.N (Länge)
  */
 function vlStat(x) {
 
@@ -675,3 +674,30 @@ function extractKeithleyTempScan(sObj, e) {
 
 }
 exports.extractKeithleyTempScan = extractKeithleyTempScan;
+
+/**
+ * Wandelt DCF77 String in ms seit 1970
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractDcf77(s) {
+  var regex = /D:([0-9\.]*);T:[0-9];U:([0-9\.]*);.\s/
+    , yy    = new Date().getFullYear()
+    , r     = regex.exec(s)
+  if(r != null){
+    var D     = r[1].split(".")
+      , U     = r[2].split(".")
+      , ds    = new Date(yy + "-" +
+                        D[1] +"-" +
+                        D[0] +" " +
+                        U[0] +":" +
+                        U[1] +":" +
+                        U[2]);
+    return ds.getTime();
+  }else{
+    return null;
+  }
+}
+exports.extractDcf77 = extractDcf77;
