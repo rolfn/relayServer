@@ -2,11 +2,13 @@
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
  */
 
+var fs = require('fs');
+
 /**
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '12.2.1',
+  VERSION: '?.?.?',
   DATE: '2015-12-17',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
@@ -45,6 +47,12 @@ var cfg = {
   },
   theRepeats: {}
 };
+
+try {
+  var d = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+  if (d.version) cfg.VERSION = d.version;
+} catch(err) {
+}
 
 var winston = require('winston');
 require('vwebsocket');

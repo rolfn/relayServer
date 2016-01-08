@@ -1,6 +1,6 @@
 {
-  "name": "relayserver",
-  "relayServer": "11.12.8",
+  "name": "relayServer",
+  "version": "12.3.0",
   "description": "Nodejs-basierter http-Server für Messaufgaben",
   "author": {
     "name": "Rolf Niepraschk",
