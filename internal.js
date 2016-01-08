@@ -167,6 +167,12 @@ function call(pRef, js) {
       break;
     // TODO: Evtl. Ausgabe von "process.memoryUsage()" !?
     //                         "process.uptime()" !?
+    case '_exit':
+      process.on('exit', function () {
+        response.prepareResult(pRef, js, 'OK');
+      });
+      process.exit(0);
+      break;
     default: response.prepareError(pRef, js, 'unknown internal action');
   }
   if (doIt) {
