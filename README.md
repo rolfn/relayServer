@@ -42,6 +42,8 @@ echo '{"Action":"/usr/bin/which","Value":"pdftex"}' | \
 
 echo '{"Action":"_version"}' | curl -T - -X PUT http://localhost:55555
 
+echo '{"Action":"_exit"}' | curl -T - -X PUT http://localhost:55555
+
 echo '{"Action":"RANDOM"}' | \
   curl -T - -X PUT http://i75434.berlin.ptb.de:55555
 
