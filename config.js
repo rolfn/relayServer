@@ -51,12 +51,14 @@ var cfg = {
 try {
   var fname = __dirname + '/package.json';
   fs.stat(fname, function(err, stats) {
-    var t = stats.mtime;
-    cfg.DATE = t.getFullYear() + '-' +
-      ("0" + (t.getMonth() + 1)).slice(-2) + '-' +
-      ("0" + (t.getDate())).slice(-2);
-    var data = JSON.parse(fs.readFileSync(fname, 'utf-8'));
-    if (data.version) cfg.VERSION = data.version;
+    if (!err) {
+      var t = stats.mtime;
+      cfg.DATE = t.getFullYear() + '-' +
+        ("0" + (t.getMonth() + 1)).slice(-2) + '-' +
+        ("0" + (t.getDate())).slice(-2);
+      var data = JSON.parse(fs.readFileSync(fname, 'utf-8'));
+      if (data.version) cfg.VERSION = data.version;
+    }
   });
 } catch(err) {
 }
