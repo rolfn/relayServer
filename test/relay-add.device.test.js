@@ -65,6 +65,15 @@ describe('relay-add.Device', function(){
 
     });
   });
+ describe('#extractPhillipsTemp', function(){
+    it('should return clean numbers or NaN', function(){
+
+      assert.equal( _.isNaN(add.extractPhillipsTemp("VDC    0.0001\n")),true);
+
+      assert.equal( add.extractPhillipsTemp("TDC     +022.80E+00\n"), 22.8);
+
+    });
+  });
 
   describe('#extractAtmion', function(){
     it('should return clean numbers or NaN', function(){
@@ -244,7 +253,7 @@ describe('relay-add.Device', function(){
 
     it('should return integer (ms since 1970)', function(){
       assert.equal(add.extractDcf77("\u0002D:16.12.15;T:3;U:11.04.34;   \u0003")
-                  , 1450260274000);
+                  , 1481882674000);
     });
   });
 });
