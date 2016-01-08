@@ -8,8 +8,8 @@ var fs = require('fs');
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '?.?.?',
-  DATE: '2015-12-17',
+  VERSION: '?.?.?',   // TODO: git hook!
+  DATE: '2016-01-08', // TODO: git hook!
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
@@ -49,7 +49,7 @@ var cfg = {
 };
 
 try {
-  var d = JSON.parse(fs.readFileSync('./package.json', 'utf-8'));
+  var d = JSON.parse(fs.readFileSync(__dirname + '/package.json', 'utf-8'));
   if (d.version) cfg.VERSION = d.version;
 } catch(err) {
 }
