@@ -141,7 +141,7 @@ function call(pRef, js) {
       break;
     case 'TTY':
       response.prepareError(pRef, js, 'not yet implemented!');
-      // TODO: Zugriff auf /dev/*tty* (ggf. auch auf "/dev/bus/usb/*" o.ä.)
+      // TODO: Zugriff auf /dev/*tty* (ggf. auch auf "/dev/char/x:y" o.ä.)
       break;
     // Administration
     case '_version':
