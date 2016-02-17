@@ -312,6 +312,22 @@ var vlTrim = function(str) {
 };
 
 /**
+ * Extrahiert Array mit zwei Float-Zahl aus
+ * String welcher vom Corvus Kontroller geliefert wird
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Array Achsen.
+ */
+function extractCorvusArray(s) {
+  var regex = /^[\s]*([-]?[0-9]{1,3}\.[0-9]{4,6})[\ \n\r]{1,2}([-]?[0-9]{1,3}\.[0-9]{4,6})/
+    , ns    = regex.exec(s);
+  return [strToNum(ns, 1), strToNum(ns, 2)] ;
+};
+exports.extractCorvusArray = extractCorvusArray;
+
+
+/**
  * Extrahiert Float-Zahl aus String welcher von
  * den Leybold SRG- Kontrollern VM212 geliefert wird
  * Es wird auch auf DCR getestet
