@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-10-27
+ * version: 2016-02-18
  */
 
 var cfg = require('./config.js');
@@ -112,8 +112,11 @@ function call(pRef, js) {
   outmode = js.OutMode ? js.OutMode.trim() : cfg.DEFAULT_MODBUS_OUTMODE,
   port = tools.getInt(js.Port, cfg.DEFAULT_MODBUS_PORT),
   skip = tools.getInt(js.Skip, 0),
-  value = js.Value.length ? bitArrayToUint16(js.Value) : tools.getInt(js.Value),
-  fc = js.FunctionCode.trim();
+  value, fc = js.FunctionCode.trim();
+  
+  if (js.Value) {
+    value = js.Value.length ? bitArrayToUint16(js.Value) : tools.getInt(js.Value);
+  }
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
   // "fc" entspricht nun dem Namen der relevanten Funktion
