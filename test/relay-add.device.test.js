@@ -256,4 +256,48 @@ describe('relay-add.Device', function(){
                   , 1481882674000);
     });
   });
+
+  describe('#extractCorvusArray', function(){
+
+    it('should return NaN on missin seperator', function(){
+      assert.equal(isNaN(add.extractCorvusArray(' 0.00000-1.35000')[0])
+                  , true);
+      assert.equal(isNaN(add.extractCorvusArray(' 0.00000-1.35000')[1])
+                  , true);
+
+    });
+
+    it('should return position Array on normal syntax', function(){
+      assert.equal(add.extractCorvusArray(' 0.00000\n -1.35000')[0]
+                  , 0);
+      assert.equal(add.extractCorvusArray(' 0.00000\n -1.35000')[1]
+                    , -1.35);
+    });
+
+    it('should return position Array on missing newline', function(){
+      assert.equal(add.extractCorvusArray(' 0.00000 -1.35000')[0]
+                  , 0);
+      assert.equal(add.extractCorvusArray(' 0.00000 -1.35000')[1]
+                    , -1.35);
+    });
+
+    it('should return position Array on missing newline', function(){
+      assert.equal(add.extractCorvusArray(' 0.00000 -1.35000')[0]
+                  , 0);
+      assert.equal(add.extractCorvusArray(' 0.00000 1.35000')[1]
+                    , 1.35);
+    });
+
+    it('should return position Array high numbers', function(){
+      assert.equal(add.extractCorvusArray('15.00000 -1.35000')[0]
+                  , 15);
+    });
+
+    it('should return position Array lower numbers', function(){
+      assert.equal(add.extractCorvusArray('-151.00000 -1.35000')[0]
+                  , -151);
+    });
+
+  });
+
 });
