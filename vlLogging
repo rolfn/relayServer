@@ -1,6 +1,6 @@
 #! /bin/sh
 
-VL_DIR=/usr/local/share/vaclab/nodejs
+VL_DIR=/usr/local/share/relayServer
 
 NODE_PATH=$VL_DIR node $VL_DIR/vlLogging.js $1
 
