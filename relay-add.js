@@ -648,7 +648,8 @@ function extractMKT50(s) {
 exports.extractMKT50 = extractMKT50;
 
 /**
- * Erstellt Array aus Scan Resultaten wie sie vom Keithley 2700
+ * Erstellt Array aus Temperatur Scan Resultaten
+ * wie sie von Keithley 2700s
  * geliefert werden
  *
  * @author wactbprot
@@ -656,8 +657,29 @@ exports.extractMKT50 = extractMKT50;
  * @return Number Zahl.
  */
 function extractKeithleyTempScan(sObj, e) {
+  var  regex_sc  = /^,?(\+[1-3]{1}\.?[0-9]{8}E\+01)/
+    return extractKeithleyScan(sObj,  e, regex_sc);
+}
+exports.extractKeithleyTempScan = extractKeithleyTempScan;
+
+/**
+ * Erstellt Array aus Temperatur Scan Resultaten
+ * wie sie von Keithley 2700s
+ * geliefert werden
+ *
+ * @author wactbprot
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractKeithleyPressScan(sObj, e) {
+  var  regex_sc  = /^,?([+-]?[0-9]*\.?[0-9]{8}E[+-]?[0-9]{2})/
+    return extractKeithleyScan(sObj,  e, regex_sc);
+}
+exports.extractKeithleyPressScan = extractKeithleyPressScan;
+
+
+function extractKeithleyScan(sObj, e, regex_sc){
   var regex_ch  = /^(\(\@)([0-9]{3}):([0-9]{3})\)$/
-    , regex_sc  = /^,?(\+[1-3]{1}\.?[0-9]{8}E\+01)/
     , ch        = regex_ch.exec(e)
     , start_ch  = parseInt(ch[2],10)
     , end_ch    = parseInt(ch[3],10)
@@ -685,11 +707,8 @@ function extractKeithleyTempScan(sObj, e) {
   for(var n = start_ch; n  < end_ch +1; n++){
     ret[n] = vlStat(r2[n])
   }
-
   return ret;
-
 }
-exports.extractKeithleyTempScan = extractKeithleyTempScan;
 
 /**
  * Wandelt DCF77 String in ms seit 1970
