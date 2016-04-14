@@ -100,8 +100,9 @@ function prepareResult(pRef, js, data) {
 
     // vm nach:
     // http://www.hacksparrow.com/scripting-a-node-js-app.html
-    var script = vm.createScript(evalStr);
+    var script;
     try{
+      script = vm.createScript(evalStr);
       script.runInNewContext(sandbox[id]);
     } catch(err) {
       prepareError(pRef, js, 'Postprocessing failed: ' + err);
