@@ -320,7 +320,7 @@ var vlTrim = function(str) {
  * @return Array Achsen.
  */
 function extractCorvusArray(s) {
-  var regex = /^[\s]*([-]?[0-9]{1,3}\.[0-9]{4,6})[\ \n\r]{1,2}([-]?[0-9]{1,3}\.[0-9]{4,6})/
+  var regex = /^[\s]{0,4}([-]?[0-9]{1,3}\.[0-9]{4,6})[\s]{1,5}([-]?[0-9]{1,3}\.[0-9]{4,6})/
     , ns    = regex.exec(s);
   return [strToNum(ns, 1), strToNum(ns, 2)] ;
 };

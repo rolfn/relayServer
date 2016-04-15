@@ -311,6 +311,11 @@ describe('relay-add.Device', function(){
                   , -151);
     });
 
+    it('should return position Array with more leading whitespaces'
+       + '', function(){
+      assert.equal(add.extractCorvusArray('   0.00000\n    0.00000')[0]
+                  , 0);
+    });
   });
 
 });
