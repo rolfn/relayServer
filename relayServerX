@@ -7,7 +7,7 @@
 
 SUDO=''
 if (( $EUID != 0 )); then
-  SUDO='sudo'
+  SUDO='sudo -E'
 fi
 
 $SUDO systemctl stop relayServer.service
