@@ -735,4 +735,24 @@ function extractDcf77(s) {
     return null;
   }
 }
-exports.extractDcf77 = extractDcf77;
+exports.extractDcf77 = extractDcf77; 
+
+/**
+ * Wandelt einen ASCII-String, der jeweils hexadezimale Hi/Lo-Nibbels enthält,
+ * um ein Byte-Array zu kodieren, in einen Buffer. 
+ *
+ * @author niepra01
+ * @param s Eingabestring
+ * @return Buffer Resultat
+ */
+function hexString2Buffer(s) {
+  var l = s.length, b = new Buffer(l/2), j=0;
+  for (var i=0; i<l; i+=2) {
+    b[j++] = parseInt(s.substr(i, 2), 16);
+  }
+  return b;
+}
+exports.hexString2Buffer = hexString2Buffer; 
+
+
+
