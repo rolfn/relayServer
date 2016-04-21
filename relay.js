@@ -1,7 +1,7 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-25
+ * version: 2016-04-21
  */
 
 var cfg = require('./config.js');
@@ -10,6 +10,7 @@ var utils = require('./utils.js');
 var internal = require('./internal.js');
 var external = require('./external.js');
 var response = require('./response.js');
+var process = require('./processing.js');
 
 var logger = cfg.logger;
 
@@ -105,6 +106,11 @@ function analyzeActions1(pRef, data) {
       js = JSON.parse(data);
     } catch(err) {
       response.prepareError(pRef, js, 'data error (invalid JSON)');
+    }    
+    // Preprocessing
+    if (js.Value && js.PreProcessing) {
+      var processResult = process(pRef.jobId, js.Value, js.PreProcessing);
+      if (processResult.Value) js.Value = processResult.Value;
     }
     analyzeActions2(pRef, js);
   } else {
