@@ -742,17 +742,36 @@ exports.extractDcf77 = extractDcf77;
  * um ein Byte-Array zu kodieren, in einen Buffer. 
  *
  * @author niepra01
- * @param s Eingabestring
+ * @param String s Eingabestring
  * @return Buffer Resultat
  */
 function hexString2Buffer(s) {
-  var l = s.length, b = new Buffer(l/2), j=0;
-  for (var i=0; i<l; i+=2) {
-    b[j++] = parseInt(s.substr(i, 2), 16);
-  }
-  return b;
-}
+  return new Buffer(s, 'hex');
+} 
 exports.hexString2Buffer = hexString2Buffer; 
 
+/**
+ * Wandelt Buffer in ASCII-String, der jeweils hexadezimale Hi/Lo-Nibbels 
+ * enthält. 
+ *
+ * @author niepra01
+ * @param Buffer b Eingabebuffer
+ * @return String Resultat
+ */
+function buffer2hexString(b) {
+  var buf = b instanceof Buffer ? b : new Buffer(b, 'binary');
+  return buf.toString('hex');
+}
+exports.buffer2hexString = buffer2hexString;
 
+function VACOMdecode(b) {
+  // ...
+  return '';
+}
+exports.VACOMdecode = VACOMdecode;
+
+
+
+
+ 
 

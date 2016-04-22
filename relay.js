@@ -1,7 +1,7 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-21
+ * version: 2016-04-22
  */
 
 var cfg = require('./config.js');
@@ -109,8 +109,8 @@ function analyzeActions1(pRef, data) {
     }    
     // Preprocessing
     if (js.Value && js.PreProcessing) {
-      var processResult = process(pRef.jobId, js.Value, js.PreProcessing);
-      if (processResult.Value) js.Value = processResult.Value;
+      var error = process(js, js, js.PreProcessing);
+      if (error) prepareError(pRef, js, error);
     }
     analyzeActions2(pRef, js);
   } else {

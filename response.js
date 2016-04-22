@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-21
+ * version: 2016-04-22
  */
 
 var cfg = require('./config.js');
@@ -10,6 +10,17 @@ var vm = require('vm');
 var addon = null;
 var util = require('util');
 var logger = cfg.logger;
+var sandbox = {};
+
+/**
+ * Wenn vorhanden, Datei "relay-add.js" laden.
+ */
+try {
+  addon = require('./relay-add.js');
+  logger.info('"relay-add.js" loaded');
+} catch(e) {
+  logger.info('"relay-add.js" not found');
+}
 
 /**
  * Aufbereitung der zu sendenden Daten; html-Header erzeugen; Daten senden.
@@ -68,12 +79,10 @@ function prepareResult(pRef, js, data) {
   } // TODO: Sinnhaftigkeit überprüfen!
 
   if ((js) && (js.PostProcessing)) {
-    
     // Postprocessing
-    var processResult = process(pRef.jobId, x, js.PostProcessing);
-    
-    if (processResult.error) prepareError(pRef, js, processResult.error);
-
+    var processResult = {};
+    var error = process(processResult, x, js.PostProcessing, js);
+    if (error) prepareError(pRef, js, error);
     for (var i in processResult) { 
       jsonRes[i] = processResult[i]; 
     }
