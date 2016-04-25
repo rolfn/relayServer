@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-06-10
+ * version: 2016-04-25
  */
 
 var cfg = require('./config.js');
@@ -24,7 +24,7 @@ function call(pRef, js) {
     var conn = net.createConnection(port, host);
     var timeout = tools.getInt(js.Timeout, cfg.DEFAULT_TCP_TIMEOUT);
     conn.setTimeout(timeout);
-    conn.setEncoding('ascii');
+    conn.setEncoding('binary'); // ???
     conn.addListener('connect', function(){
       conn.write(cmd);
       if (conn.flush) conn.flush(); // required for legacy support (Node <0.5)?
