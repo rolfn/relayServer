@@ -13,16 +13,6 @@ var logger = cfg.logger;
 var sandbox = {};
 
 /**
- * Wenn vorhanden, Datei "relay-add.js" laden.
- */
-try {
-  addon = require('./relay-add.js');
-  logger.info('"relay-add.js" loaded');
-} catch(e) {
-  logger.info('"relay-add.js" not found');
-}
-
-/**
  * Aufbereitung der zu sendenden Daten; html-Header erzeugen; Daten senden.
  * @method sendResponse
  * @param {object} pRef interne Serverdaten (req, res, ...)
