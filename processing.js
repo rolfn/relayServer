@@ -25,7 +25,7 @@ try {
 
 var process = function(target, data, code, addition) {    
   // Einfache Strings und String-Arrays unterstützen.
-  var evalStr = (Array.isArray(code)) ? code.join('') : code;
+  var evalStr = (Array.isArray(code)) ? code.join('\n') : code;
   logger.debug('evalStr: %s', evalStr);
   var script, ret = "";
   var sandbox = {};
@@ -42,7 +42,7 @@ var process = function(target, data, code, addition) {
       }
     }
   } catch(err) {
-    ret = err;
+    ret = err.toString();
   }
   return ret;
 }
