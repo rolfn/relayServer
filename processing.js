@@ -16,6 +16,7 @@ var addon = null;
 /**
  * Wenn vorhanden, Datei "relay-add.js" laden.
  */
+
 try {
   addon = require('./relay-add.js');
   logger.info('"relay-add.js" loaded');
@@ -31,6 +32,7 @@ var process = function(target, data, code, addition) {
   var sandbox = {};
   sandbox._x = data;
   if (typeof addition != 'undefined') sandbox._$ = addition;
+  console.log('addon:' + addon);
   if (addon) sandbox._ = addon; 
   try {
     script = vm.createScript(evalStr);
