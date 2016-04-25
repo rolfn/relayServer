@@ -110,7 +110,7 @@ function analyzeActions1(pRef, data) {
     // Preprocessing
     if (js.Value && js.PreProcessing) {
       var error = process(js, js, js.PreProcessing);
-      if (error) prepareError(pRef, js, error);
+      if (error) response.prepareError(pRef, js, error);
     }
     analyzeActions2(pRef, js);
   } else {
