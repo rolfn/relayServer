@@ -745,10 +745,10 @@ exports.extractDcf77 = extractDcf77;
  * @param String s Eingabestring
  * @return Buffer Resultat
  */
-function hexString2Buffer(s) {
+function hexString2buffer(s) {
   return new Buffer(s, 'hex');
 } 
-exports.hexString2Buffer = hexString2Buffer; 
+exports.hexString2buffer = hexString2buffer; 
 
 /**
  * Wandelt Buffer in ASCII-String, der jeweils hexadezimale Hi/Lo-Nibbels 
