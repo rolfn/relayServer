@@ -748,18 +748,18 @@ exports.extractDcf77 = extractDcf77;
  * @return Buffer Resultat (24 Bytes)
  */
 function encodeVACOM(s) {
+  if (s.length > 36) return ''; // (2 Kommadobytes + 16 Datenbytes) * 2 (Lo+Hi) 
   // var buf = Buffer.alloc(24); // default: zero-filled; erst ab 5.10
   var buf = new Buffer(24), sbuf = new Buffer(s, 'hex');
   buf.fill(0);
   buf[0] = 0xA5; // Frame-Beginn
   buf[1] = 0x50; // Kommandobyte gültig, erster Frame, Antwort erforderlich
-  buf[2] = 0x00; // Empfängeradresse
+  buf[2] = 0x00; // Empfängeradresse 
   buf[3] = 0x00; // Absenderadresse
-  if (sbuf.length > 18) return '';
-  for (var i=0; i<sbuf.length; i++) {
+  for (var i=0; i<sbuf.length; i++) { 
     buf[i+4] = sbuf[i];
   }
-  var c = crc.crc16modbus(buf.slice(0, -2)); // CRC bestimmen; ohne CRC-Bytes
+  var c = crc.crc16modbus(buf.slice(0, -2)); // CRC bestimmen; ohne CRC-Bytes 
   buf[22] = c & 0x00ff; buf[23] = c >> 8;
   return buf;
 }
