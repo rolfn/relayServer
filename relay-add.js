@@ -753,11 +753,11 @@ function encodeVACOM(s) {
   buf.fill(0);
   buf[0] = 0xA5; // Frame-Beginn
   buf[1] = 0x50; // Kommandobyte gültig, erster Frame, Antwort erforderlich
-  buf[2] = 0x00;  
-  buf[3] = 0x00; // Empfänger-/Absenderadresse
+  buf[2] = 0x00; // Empfängeradresse 
+  buf[3] = 0x00; // Absenderadresse
   if (sbuf.length > 18) return '';
-  for (var i=4,j=0; i<4+sbuf.length; i++) {// TODO: besser 
-    buf[i] = sbuf[j++];
+  for (var i=0; i<sbuf.length; i++) { 
+    buf[i+4] = sbuf[i];
   }
   var c = crc.crc16modbus(buf.slice(0, -2)); // CRC bestimmen; ohne CRC-Bytes 
   buf[22] = c & 0x00ff; buf[23] = c >> 8;
