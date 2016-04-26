@@ -32,7 +32,6 @@ var process = function(target, data, code, addition) {
   var sandbox = {};
   sandbox._x = data;
   if (typeof addition != 'undefined') sandbox._$ = addition;
-  console.log('addon:' + addon);
   if (addon) sandbox._ = addon; 
   try {
     script = vm.createScript(evalStr);

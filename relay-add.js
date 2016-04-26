@@ -9,7 +9,7 @@
  *
  * im Postprocessing ausgeführt werden.
  *
- * version: 2016-04-25
+ * version: 2016-04-26
  */
  
 var crc = require('crc');
@@ -801,10 +801,11 @@ exports.encodeVACOM = encodeVACOM;
  * @return String Resultat
  */
 function decodeVACOMstring(b) {
+  var str = b instanceof Buffer ? b.toString('binary') : b;
   var ch = '', a = [];
   for (var i=6; i<22; i++) {
-    ch = b[i];
-    if (ch.charCodeAt(0) == 0) break;
+    ch = str[i];
+    if (ch == '\0') break;
     a.push(ch);
   }
   return a.join('');
