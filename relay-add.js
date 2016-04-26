@@ -740,34 +740,6 @@ function extractDcf77(s) {
 exports.extractDcf77 = extractDcf77; 
 
 /**
- * Wandelt einen ASCII-String, der jeweils hexadezimale Hi/Lo-Nibbels enthält,
- * um ein Byte-Array zu kodieren, in einen Buffer. 
- *
- * @author Rolf Niepraschk
- * @param String s Eingabestring
- * @return Buffer Resultat
- */
-function hexString2buffer(s) {
-  return new Buffer(s, 'hex');
-  // return Buffer.alloc(s, 'hex'); // // erst ab 5.10
-} 
-exports.hexString2buffer = hexString2buffer; 
-
-/**
- * Wandelt Buffer in ASCII-String, der jeweils hexadezimale Hi/Lo-Nibbels 
- * enthält. 
- *
- * @author Rolf Niepraschk
- * @param Buffer b Eingabebuffer
- * @return String Resultat
- */
-function buffer2hexString(b) {
-  var buf = b instanceof Buffer ? b : new Buffer(b, 'binary'); // Buffer.alloc(b, 'binary');
-  return buf.toString('hex');
-}
-exports.buffer2hexString = buffer2hexString;
-
-/**
  * Wandelt Hex-kodierte Kommando/Subkommando und ggf. 16 Datenbytes in 
  * VACOM-Binärdaten (einschließlich der Checksumme)   
  *
@@ -777,14 +749,14 @@ exports.buffer2hexString = buffer2hexString;
  */
 function encodeVACOM(s) {
   // var buf = Buffer.alloc(24); // default: zero-filled; erst ab 5.10
-  var buf = new Buffer(24); buf.fill(0);
+  var buf = new Buffer(24), sbuf = new Buffer(s, 'hex');
+  buf.fill(0);
   buf[0] = 0xA5; // Frame-Beginn
-  buf[1] = 0x50; // Kommandobyte gültig, erster Frame (Antwort erforderlich)
-  buf[2] = 0x00;  buf[3] = 0x00; // Empfänger-/Absenderadresse
-  // var sbuf = Buffer.alloc(s, 'hex'); // erst ab 5.10
-  var sbuf = new Buffer(s, 'hex');
+  buf[1] = 0x50; // Kommandobyte gültig, erster Frame, Antwort erforderlich
+  buf[2] = 0x00;  
+  buf[3] = 0x00; // Empfänger-/Absenderadresse
   if (sbuf.length > 18) return '';
-  for (var i=4,j=0; i<4+sbuf.length; i++) {
+  for (var i=4,j=0; i<4+sbuf.length; i++) {// TODO: besser 
     buf[i] = sbuf[j++];
   }
   var c = crc.crc16modbus(buf.slice(0, -2)); // CRC bestimmen; ohne CRC-Bytes 
