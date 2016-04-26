@@ -71,7 +71,7 @@ function prepareResult(pRef, js, data) {
   if ((js) && (js.PostProcessing)) {
     // Postprocessing
     var processResult = {};
-    var error = process(processResult, x, js.PostProcessing, js);
+    var error = process(processResult, x, js.PostProcessing, js, jsonRes);
     if (error) prepareError(pRef, js, error);
     for (var i in processResult) { 
       jsonRes[i] = processResult[i]; 
