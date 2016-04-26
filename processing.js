@@ -24,22 +24,24 @@ try {
   logger.info('"relay-add.js" not found');
 }
 
-var process = function(target, data, code, a1, a2) {    
+var process = function(target, data, code, a1) {    
   // Einfache Strings und String-Arrays unterstützen.
   var evalStr = (Array.isArray(code)) ? code.join('\n') : code;
   logger.debug('evalStr: %s', evalStr);
   var script, ret = "";
   var sandbox = {};
   sandbox._x = data;
-  if (typeof a1 != 'undefined') sandbox._$ = a1;
-  if (typeof a2 != 'undefined') {
-    if (a2.t_start !== undefined) {
-      sandbox._t_start = a2.t_start;
-      delete a2.t_start; //???
+  console.log('a1:' + require('util').inspect(a1));
+  console.log('a2:' + require('util').inspect(a2));
+  if (typeof a1 != 'undefined') {
+    sandbox._$ = a1;
+    if (a1.t_start !== undefined) {
+      sandbox._t_start = a1.t_start;
+      delete a1.t_start; //???
     }
-    if (a2.t_stop !== undefined) {
-      sandbox._t_stop = a2.t_stop;
-      delete a2.t_stop; //???
+    if (a1.t_stop !== undefined) {
+      sandbox._t_stop = a1.t_stop;
+      delete a1.t_stop; //???
     }    
   }
   if (addon) sandbox._ = addon; 
