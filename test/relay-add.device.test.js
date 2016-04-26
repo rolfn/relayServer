@@ -101,14 +101,14 @@ describe('relay-add.Device', function(){
     });
   });
 
-  describe('#se1ValveClosed', function(){
+  describe('#se1ValveStatus', function(){
     it('open close??', function(){
 
       var v6zu  = "00310EFE0E\r";
       var v6auf = "00112EFE2E\r";
 
-      assert.equal( add.se1ValveClosed(v6auf).Valve_closed, false);
-      assert.equal( add.se1ValveClosed(v6zu).Valve_closed, false);
+      assert.equal( add.se1ValveStatus(v6auf).Valve_closed, false);
+      assert.equal( add.se1ValveStatus(v6zu).Valve_closed, false);
 
     });
   });
@@ -311,6 +311,11 @@ describe('relay-add.Device', function(){
                   , -151);
     });
 
+    it('should return position Array with more leading whitespaces'
+       + '', function(){
+      assert.equal(add.extractCorvusArray('   0.00000\n    0.00000')[0]
+                  , 0);
+    });
   });
 
 });

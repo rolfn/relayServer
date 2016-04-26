@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-16
+ * version: 2016-04-14
  */
 
 var cfg = require('./config.js');
@@ -22,13 +22,15 @@ var logger = cfg.logger;
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
   var method = js.Method ? js.Method : (js.Body ? 'POST' : 'GET');
-  var proxy = process.env.http_proxy;
-  var np = process.env.no_proxy.split(',');
   var json = js.Json || false;
-  for (var i=0;i<np.length;i++) {
-    if (host.indexOf(np[i].trim()) != -1) {
-      logger.debug('no_proxy: %s', np[i]);
-      proxy = ''; break;
+  var proxy = process.env.http_proxy;
+  if (process.env.no_proxy) {
+    var np = process.env.no_proxy.split(',');
+    for (var i=0;i<np.length;i++) {
+      if (host.indexOf(np[i].trim()) != -1) {
+        logger.debug('no_proxy: %s', np[i]);
+        proxy = ''; break;
+      }
     }
   }
   logger.debug('method: %s, proxy: %s, json: %s', method, proxy, json);

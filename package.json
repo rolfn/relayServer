@@ -18,7 +18,8 @@
     "vwebsocket": ">0.0.0",
     "nodemailer": "~0.6.3",
     "temp": "~0.7.0",
-    "node-xlsx": ">=0.4.0"
+    "node-xlsx": ">=0.4.0",
+      "crc":">=3.4.0" 
   },
   "devDependencies": {
     "underscore":">=1.4.4",
@@ -33,8 +34,6 @@
       "test-udp":"mocha --slow 10000 -t 10000 test/relay.udp.test.js",
       "test-relay-add":"mocha  test/relay-add.*",
       "test-rscript":"mocha --slow 1000 test/relay.rscript.test.js",
-      "test-ce3-inst":"env TESTHOST=e73462.berlin.ptb.de npm run test",
-      "test-rolf-inst":"env TESTHOST=i75434.berlin.ptb.de npm run test",
-      "test-thomas-inst":"env TESTHOST=e73461.berlin.ptb.de npm run test"
+      "test-rolf-inst":"env TESTHOST=i75434.berlin.ptb.de npm run test"
   }
 }

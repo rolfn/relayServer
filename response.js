@@ -1,25 +1,16 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-07-31
+ * version: 2016-04-22
  */
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
+var process = require('./processing.js');
 var vm = require('vm');
 var addon = null;
 var util = require('util');
 var logger = cfg.logger;
 var sandbox = {};
-
-/**
- * Wenn vorhanden, Datei "relay-add.js" laden.
- */
-try {
-  addon = require('./relay-add.js');
-  logger.info('"relay-add.js" loaded');
-} catch(e) {
-  logger.info('"relay-add.js" not found');
-}
 
 /**
  * Aufbereitung der zu sendenden Daten; html-Header erzeugen; Daten senden.
@@ -78,46 +69,13 @@ function prepareResult(pRef, js, data) {
   } // TODO: Sinnhaftigkeit überprüfen!
 
   if ((js) && (js.PostProcessing)) {
-    // Einfache Strings und String-Arrays unterstützen.
-    var evalStr = (Array.isArray(js.PostProcessing)) ?
-      js.PostProcessing.join('') : js.PostProcessing;
-    logger.debug('evalStr: %s', evalStr);
-
-    var id = pRef.jobId;
-    sandbox[id] = {};
-
-    sandbox[id]._x = x;
-    if (jsonRes.t_start !== undefined) {
-      sandbox[id]._t_start = jsonRes.t_start;
-      delete jsonRes.t_start; //???
+    // Postprocessing
+    var processResult = {};
+    var error = process(processResult, x, js.PostProcessing, js);
+    if (error) prepareError(pRef, js, error);
+    for (var i in processResult) { 
+      jsonRes[i] = processResult[i]; 
     }
-    if (jsonRes.t_stop !== undefined) {
-      sandbox[id]._t_stop = jsonRes.t_stop;
-      delete jsonRes.t_stop;
-    }
-    if (addon !== undefined) sandbox[id]._ = addon;
-    logger.debug('addon: ', addon);
-
-    // vm nach:
-    // http://www.hacksparrow.com/scripting-a-node-js-app.html
-    var script = vm.createScript(evalStr);
-    try{
-      script.runInNewContext(sandbox[id]);
-    } catch(err) {
-      prepareError(pRef, js, 'Postprocessing failed: ' + err);
-    }
-
-    // sandbox-Variablen der Rückgabe-Struktur zuweisen.
-    for (var key in sandbox[id]) {
-      if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
-        logger.debug('sandbox[%s][%s]', id, key, sandbox[id][key]);
-        jsonRes[key] = sandbox[id][key];
-      }
-      // delete sandbox[id][key]; // nötig?
-    }
-
-    delete sandbox[id];
-
   } else {
     jsonRes.Result = x;
   }

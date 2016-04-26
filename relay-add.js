@@ -9,8 +9,10 @@
  *
  * im Postprocessing ausgeführt werden.
  *
- * version: 2015-12-16
+ * version: 2016-04-26
  */
+
+var crc = require('crc');
 
 /**
  * Berechnet, in Abhängigkeit von Ziel- und Istdruck
@@ -320,7 +322,7 @@ var vlTrim = function(str) {
  * @return Array Achsen.
  */
 function extractCorvusArray(s) {
-  var regex = /^[\s]*([-]?[0-9]{1,3}\.[0-9]{4,6})[\ \n\r]{1,2}([-]?[0-9]{1,3}\.[0-9]{4,6})/
+  var regex = /^[\s]{0,4}([-]?[0-9]{1,3}\.[0-9]{4,6})[\s]{1,5}([-]?[0-9]{1,3}\.[0-9]{4,6})/
     , ns    = regex.exec(s);
   return [strToNum(ns, 1), strToNum(ns, 2)] ;
 };
@@ -563,10 +565,10 @@ exports.vlRes = vlRes;
  * @author wactbprot
  * @param hexstr String Ventilrückmeldung
  * @param valve String Ventilbezeichnung
- * @return Object mit {'Valve_closed': true| false}
+ * @return Object mit {'Valve_closed': true| false, 'Valve_opened':  false|true}
  *
  */
-function se1ValveClosed(hexStr,valve) {
+function se1ValveStatus(hexStr,valve) {
 
     var BN = 4294967296,
     V={V6:3,
@@ -583,7 +585,7 @@ function se1ValveClosed(hexStr,valve) {
       'Valve_opened': pat[V[valve]] == '0' };
 
 }
-exports.se1ValveClosed = se1ValveClosed;
+exports.se1ValveStatus = se1ValveStatus;
 
 
 
@@ -676,7 +678,7 @@ function extractKeithleyPressScan(sObj, e) {
     return extractKeithleyScan(sObj,  e, regex_sc);
 }
 exports.extractKeithleyPressScan = extractKeithleyPressScan;
-                                   
+
 
 function extractKeithleyScan(sObj, e, regex_sc){
   var regex_ch  = /^(\(\@)([0-9]{3}):([0-9]{3})\)$/
@@ -736,3 +738,51 @@ function extractDcf77(s) {
   }
 }
 exports.extractDcf77 = extractDcf77;
+
+/**
+ * Wandelt Hex-kodierte Kommando/Subkommando und ggf. 16 Datenbytes in
+ * VACOM-Binärdaten (einschließlich der Checksumme)
+ *
+ * @author Rolf Niepraschk
+ * @param String s Hex-String (4 oder 4+32 Nibble-Character)
+ * @return Buffer Resultat (24 Bytes)
+ */
+function encodeVACOM(s) {
+  // var buf = Buffer.alloc(24); // default: zero-filled; erst ab 5.10
+  var buf = new Buffer(24), sbuf = new Buffer(s, 'hex');
+  buf.fill(0);
+  buf[0] = 0xA5; // Frame-Beginn
+  buf[1] = 0x50; // Kommandobyte gültig, erster Frame, Antwort erforderlich
+  buf[2] = 0x00; // Empfängeradresse
+  buf[3] = 0x00; // Absenderadresse
+  if (sbuf.length > 18) return '';
+  for (var i=0; i<sbuf.length; i++) {
+    buf[i+4] = sbuf[i];
+  }
+  var c = crc.crc16modbus(buf.slice(0, -2)); // CRC bestimmen; ohne CRC-Bytes
+  buf[22] = c & 0x00ff; buf[23] = c >> 8;
+  return buf;
+}
+exports.encodeVACOM = encodeVACOM;
+
+/**
+ * Wandelt Binär-Antwort, welche einen max. 16 Byte langen String enthält.
+ *
+ * @author Rolf Niepraschk
+ * @param String b Binärdaten
+ * @return String Resultat
+ */
+function decodeVACOMstring(b) {
+  // TODO: CRC der Daten überprüfen und geeignete Fehlermeldung generieren.
+  // TODO: Außer Strings noch Float-Format unterstützen (???).
+  // TODO: Muti-Frames unbterstützen (???).
+  var str = b instanceof Buffer ? b.toString('binary') : b;
+  var ch = '', a = [];
+  for (var i=6; i<22; i++) {
+    ch = str[i];
+    if (ch == '\0') break;
+    a.push(ch);
+  }
+  return a.join('');
+}
+exports.decodeVACOMstring = decodeVACOMstring;
