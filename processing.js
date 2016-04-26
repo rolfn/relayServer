@@ -31,8 +31,6 @@ var process = function(target, data, code, a1) {
   var script, ret = "";
   var sandbox = {};
   sandbox._x = data;
-  console.log('a1:' + require('util').inspect(a1));
-  console.log('a2:' + require('util').inspect(a2));
   if (typeof a1 != 'undefined') {
     sandbox._$ = a1;
     if (a1.t_start !== undefined) {
