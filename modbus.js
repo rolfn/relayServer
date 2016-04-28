@@ -205,8 +205,10 @@ function call(pRef, js) {
           case 'Uint8': // Array of 8-Bit-Integers
             result = Array.from(view8);
             break;
-          default: // 'Uint16'; Array of 16-Bit-Integers
+          case 'Uint16': // Array of 16-Bit-Integers
             result = Array.from(view16);
+          default: // 'Buffer'; raw data
+            result = values;
         }
         return result;
       });
