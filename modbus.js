@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-02-19
+ * version: 2016-04-28
  */
 
 var cfg = require('./config.js');
@@ -201,6 +201,9 @@ function call(pRef, js) {
             break;
           case '16Bits*': // Bit-Array (Quantity * 16 Bits)
             result = Uint16toBitArray(view16);
+            break;
+          case 'Uint8': // Array of 8-Bit-Integers
+            result = Array.from(view8);
             break;
           default: // 'Uint16'; Array of 16-Bit-Integers
             result = Array.from(view16);
