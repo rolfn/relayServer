@@ -741,14 +741,22 @@ exports.extractDcf77 = extractDcf77;
 
 /**
  * Wandelt Hex-kodierte Kommando/Subkommando und ggf. 16 Datenbytes in
- * VACOM-Binärdaten (einschließlich der Checksumme)
+ * VACOM-Binärdaten (einschließlich der Checksumme). Beispiele:
+ * 
+ * "0100" --> "VMG"          (Gerätename)
+ * "0101" --> "1.3.3c"       (Softwareversion)
+ * "0102" --> "26884000050"  (Seriennummer)  
+ * "2010" --> "1.330000E-03" (mbar) 
+ * "2011" --> "1.330000E-01" (Pa)
+ * "2012" --> "9.975000E-04" (Torr) 
  *
  * @author Rolf Niepraschk
  * @param String s Hex-String (4 oder 4+32 Nibble-Character)
  * @return Buffer Resultat (24 Bytes)
  */
 function encodeVACOM(s) {
-  if (s.length > 36) return ''; // (2 Kommadobytes + 16 Datenbytes) * 2 (Lo+Hi) 
+  // (Kommadobyte + Subkommandobyte + 16 Datenbytes) * (Lo + Hi) = 36 Bytes 
+  if (s.length > 36) return ''; 
   // var buf = Buffer.alloc(24); // default: zero-filled; erst ab 5.10
   var buf = new Buffer(24), sbuf = new Buffer(s, 'hex');
   buf.fill(0);
