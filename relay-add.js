@@ -783,7 +783,7 @@ exports.encodeVACOM = encodeVACOM;
 function decodeVACOMstring(b) {
   // TODO: CRC der Daten überprüfen und geeignete Fehlermeldung generieren.
   // TODO: Außer Strings noch Float-Format unterstützen (???).
-  // TODO: Muti-Frames unbterstützen (???).
+  // TODO: Muti-Frames unterstützen (???).
   var str = b instanceof Buffer ? b.toString('binary') : b;
   var ch = '', a = [];
   for (var i=6; i<22; i++) {
