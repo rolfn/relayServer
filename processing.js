@@ -42,6 +42,7 @@ var process = function(target, data, code, a1) {
       delete a1.t_stop; //???
     }    
   }
+  logger.debug('sandbox: ', sandbox);
   if (addon) sandbox._ = addon; 
   try {
     script = vm.createScript(evalStr);

@@ -32,6 +32,7 @@ submodules = [
 './add/relay-add-DCF77.js',
 './add/relay-add-KEITHLEY.js',
 './add/relay-add-VACOM.js',
+'./add/relay-add-CDG.js',
 './add/relay-add-STATISTICS.js'
 ]
 
