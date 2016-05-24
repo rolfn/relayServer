@@ -5,6 +5,8 @@
 // * https://github.com/pseudosavant/psMathStats
 //
 
+var misc = require('./relay-add-MISC.js');
+
 /**
  * Berechnet Mittelwert und Standardabweichung
  * eines gegebenen Vectors (bzw. Arrays).
@@ -20,7 +22,7 @@ function vlStat(x) {
              mv:NaN,
              sd:NaN};
   if (x) {
-    var ck = checkNumArr(x);
+    var ck = misc.checkNumArr(x);
     if(ck.Arr.length > 2){
       var y      = ck.Arr,
           mv     = 0,
@@ -80,8 +82,8 @@ function vlSlope(vec, tstart, tstop) {
       for (var l = 0; l < t.length; l++) {
         var predict_val = vlm * t[l] + vlc;
         if (Math.abs((vec[l] - predict_val) / predict_val) > d_border) {
-          vec = rmByIndex(vec, [l]);
-          t = rmByIndex(t, [l]);
+          vec = misc.rmByIndex(vec, [l]);
+          t = misc.rmByIndex(t, [l]);
           hs = slope(vec, t);
           vlm = hs.bx;
           vlc = hs.Cx;
@@ -115,7 +117,7 @@ function slope(y, x) {
         SSxx     = 0,
         SSyy     = 0;
 	for (var i = 0; i < y.length; i++) {
-	    if (isNumber(y[i]) && isNumber(x[i])) {
+	    if (misc.isNumber(y[i]) && misc.isNumber(x[i])) {
 		sumX = sumX + x[i];
 		XArr.push(x[i]);
 		sumY = sumY + y[i];

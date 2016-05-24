@@ -18,8 +18,9 @@
     "vwebsocket": ">0.0.0",
     "nodemailer": "~0.6.3",
     "temp": "~0.7.0",
+    "h5.modbus": ">=0.1.0",
     "node-xlsx": ">=0.4.0",
-      "crc":">=3.4.0" 
+    "crc":">=3.4.0" 
   },
   "devDependencies": {
     "underscore":">=1.4.4",
