@@ -85,6 +85,7 @@ exports.strToNum = strToNum;
 var vlTrim = function(str) {
     return str.replace(/\s/g, "");
 };
+exports.vlTrim = vlTrim;
 
 /**
  * Testet Array auf numerische Einträge und sortiert ggf. aus
@@ -128,5 +129,3 @@ function rmByIndex(Arr, Idx) {
   return Arr;
 }
 exports.rmByIndex = rmByIndex;
-
-

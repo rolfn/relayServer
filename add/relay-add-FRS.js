@@ -1,5 +1,5 @@
 
-var x = require('./relay-add-MISC.js');
+var misc = require('./relay-add-MISC.js');
 
 /**
  * Extrahiert Float-Zahl aus String welcher von
@@ -15,6 +15,6 @@ var x = require('./relay-add-MISC.js');
 function extractFRS(s) {
     var regex = /^([+-]{0,1}[\s]{0,2}[0-9]{1,2}\.?[0-9]{6})/;
 
-    return x.strToNum(regex.exec(vlTrim(s)), 1);
+    return misc.strToNum(regex.exec(misc.vlTrim(s)), 1);
 };
 exports.extractFRS =  extractFRS;

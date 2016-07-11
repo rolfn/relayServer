@@ -1,5 +1,6 @@
 
-var x = require('./relay-add-MISC.js');
+var misc = require('./relay-add-MISC.js')
+  , stat = require('./relay-add-STATISTICS.js');
 
 /**
  * Extrahiert Float-Zahl aus String
@@ -12,7 +13,7 @@ var x = require('./relay-add-MISC.js');
 function extractKeithleyVolt(s) {
   var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(VDC)/;
 
-  return x.strToNum(regex.exec(s), 1);
+  return misc.strToNum(regex.exec(s), 1);
 
 }
 exports.extractKeithleyVolt = extractKeithleyVolt;
@@ -27,7 +28,7 @@ exports.extractKeithleyVolt = extractKeithleyVolt;
  */
 function extractKeithleyC(s) {
   var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})([_,])/;
-  return x.strToNum(regex.exec(s), 1);
+  return misc.strToNum(regex.exec(s), 1);
 }
 exports.extractKeithleyC = extractKeithleyC;
 
@@ -42,7 +43,7 @@ exports.extractKeithleyC = extractKeithleyC;
 function extractKeithleyTemp(s) {
 var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})(,)/;
 
-  return x.strToNum(regex.exec(s), 1);
+  return misc.strToNum(regex.exec(s), 1);
 
 }
 exports.extractKeithleyTemp = extractKeithleyTemp;
@@ -92,7 +93,7 @@ function extractKeithleyScan(sObj, e, regex_sc){
     var s1 = sObj[l].split("#")
       , j  = 0
     for(var i = start_ch; i  < end_ch +1; i++){
-      r1[l][i] = x.strToNum(regex_sc.exec(s1[j]), 1)
+      r1[l][i] = misc.strToNum(regex_sc.exec(s1[j]), 1)
       j++;
     }
   }
@@ -105,8 +106,7 @@ function extractKeithleyScan(sObj, e, regex_sc){
   }
   // stat
   for(var n = start_ch; n  < end_ch +1; n++){
-    ret[n] = vlStat(r2[n])
+    ret[n] = stat.vlStat(r2[n])
   }
   return ret;
 }
-
