@@ -19,7 +19,7 @@ var logger = cfg.logger;
  * @param {object} d
  * @return d
  */
-function simplify(d) {
+function simplify(d) {// TODO: Beseitigen, da wohl sinnlos
   for (var i=0; i<d.worksheets.length; i++) {
     for (var j=0; j<d.worksheets[i].data.length; j++) {
       for (var k=0; k<d.worksheets[i].data[j].length; k++) {
@@ -71,7 +71,8 @@ function fromXLSX(pRef, js) {
     var data = xlsx.parse(new Buffer(js.Value, 'base64'));
     utils.addStopTime(js);
     var short = (typeof js.ShortFormat == 'boolean') ? js.ShortFormat : true;
-    response.prepareResult(pRef, js, short ? simplify(data) : data);
+    //response.prepareResult(pRef, js, short ? simplify(data) : data);
+    response.prepareResult(pRef, js, data);
   } catch(e) {
     logger.error(e.toString());
     response.prepareError(pRef, js, 'xlsx conversion error');
