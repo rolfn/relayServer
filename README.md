@@ -76,6 +76,9 @@ echo '{"Action":"LaTeX","Source":"\\documentclass{article}\\begin{document}
 
 echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
   curl -T - -X PUT http://localhost:55555
+
+echo "{\"Action\":\"XLSX-IN\",\"Value\":\"$(base64 -w 0 foo.xlsx)\"}" | \
+  curl -T - -X PUT http://localhost:55555
 ```
 
 ## Test
