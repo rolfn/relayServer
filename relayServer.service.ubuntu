@@ -1,0 +1,24 @@
+# Ubuntu 16.04-Version, RN, 2016-10-04
+[Unit]
+Description=The relayServer daemon.
+Wants=gitlabhook.service
+After=network.target gitlabhook.service
+
+[Service]
+User=www-data
+Group=www-data
+Type=simple
+StandardOutput=null
+StandardError=null
+Restart=always
+# Run ExecStartPre with root-permissions
+PermissionsStartOnly=true
+# Remove PIDFile at Stop
+PIDFile=/var/run/relayServer/relayServerd.pid
+ExecStartPre=/bin/mkdir -p /var/run/relayServer
+ExecStartPre=/bin/bash -c '/usr/bin/node /usr/local/share/getGitLabFiles/getGitLabFiles.js relayServer'
+ExecStartPost=/bin/bash -c '/bin/echo $MAINPID > /var/run/relayServer/relayServerd.pid'
+ExecStart=/bin/bash -l -c '/usr/bin/node --expose_gc  /usr/local/share/relayServer/relayServer.js'
+
+[Install]
+WantedBy=multi-user.target
