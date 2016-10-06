@@ -39,11 +39,8 @@ function simplify(d) {// TODO: Beseitigen, da wohl sinnlos
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function toXLSX(pRef, js) {
-  var params = {};
-  params.worksheets = js.Value;
-  logger.debug('params: ', params);
   try {
-    var buf = xlsx.build(params);
+    var buf = xlsx.build(js.Value);
     var filename = js.Filename ? js.Filename : cfg.DEFAULT_XLSX_NAME;
     js.OutputType = 'stream';
     js.Head = {};
