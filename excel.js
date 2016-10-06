@@ -7,10 +7,7 @@ var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
-var xlsx = require('node-xlsx');
-//TODO: deprecated node-xlsx@0.4.0: please use the xlsx package instead
-// ==> https://github.com/SheetJS/js-xlsx
-
+var xlsx = require('node-xlsx'); // ==> https://github.com/mgcrea/node-xlsx
 var logger = cfg.logger;
 
 /**
