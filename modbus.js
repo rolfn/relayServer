@@ -207,6 +207,7 @@ function call(pRef, js) {
             break;
           case 'Uint16': // Array of 16-Bit-Integers
             result = Array.from(view16);
+            break;
           default: // 'Buffer'; raw data
             result = values;
         }

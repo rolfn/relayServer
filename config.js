@@ -40,6 +40,7 @@ var cfg = {
     '/etc/release'],
   bin: {
     RSCRIPT: '/usr/bin/Rscript',
+    PYTHON: '/usr/bin/python',
     DATE: '/bin/date',
     SLEEP: '/bin/sleep',
     ECHO: '/bin/echo',

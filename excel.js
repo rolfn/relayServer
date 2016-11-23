@@ -1,16 +1,13 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-24
+ * version: 2016-10-06
  */
 
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
 var response = require('./response.js');
-var xlsx = require('node-xlsx');
-//TODO: deprecated node-xlsx@0.4.0: please use the xlsx package instead
-// ==> https://github.com/SheetJS/js-xlsx
-
+var xlsx = require('node-xlsx'); // ==> https://github.com/mgcrea/node-xlsx
 var logger = cfg.logger;
 
 /**
@@ -19,7 +16,7 @@ var logger = cfg.logger;
  * @param {object} d
  * @return d
  */
-function simplify(d) {
+function simplify(d) {// TODO: Beseitigen, da wohl sinnlos
   for (var i=0; i<d.worksheets.length; i++) {
     for (var j=0; j<d.worksheets[i].data.length; j++) {
       for (var k=0; k<d.worksheets[i].data[j].length; k++) {
@@ -39,11 +36,8 @@ function simplify(d) {
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function toXLSX(pRef, js) {
-  var params = {};
-  params.worksheets = js.Value;
-  logger.debug('params: ', params);
   try {
-    var buf = xlsx.build(params);
+    var buf = xlsx.build(js.Value);
     var filename = js.Filename ? js.Filename : cfg.DEFAULT_XLSX_NAME;
     js.OutputType = 'stream';
     js.Head = {};
@@ -71,7 +65,8 @@ function fromXLSX(pRef, js) {
     var data = xlsx.parse(new Buffer(js.Value, 'base64'));
     utils.addStopTime(js);
     var short = (typeof js.ShortFormat == 'boolean') ? js.ShortFormat : true;
-    response.prepareResult(pRef, js, short ? simplify(data) : data);
+    //response.prepareResult(pRef, js, short ? simplify(data) : data);
+    response.prepareResult(pRef, js, data);
   } catch(e) {
     logger.error(e.toString());
     response.prepareError(pRef, js, 'xlsx conversion error');
