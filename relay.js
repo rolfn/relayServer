@@ -25,6 +25,7 @@ var logger = cfg.logger;
  * @return {number} Action-Typ
 */
 function getActionType(str) {
+  if (!str) return 99;
   var ret = str.indexOf('/');
   if (ret > -1) {
     ret = 0;
@@ -67,7 +68,7 @@ function analyzeActions3(pRef, js) {
     } else if (aType == 1) {
       external.call(pRef, js);
     } else {
-      response.prepareError(pRef, js, 'unknown external action');
+      response.prepareError(pRef, js, 'unknown action');
     }
   } else response.prepareError(pRef, js, 'action not found');
 }
