@@ -108,7 +108,7 @@ function analyzeActions1(pRef, data) {
       response.prepareError(pRef, js, 'data error (invalid JSON)');
     }    
     // Preprocessing
-    if (js.Value && js.PreProcessing) {
+    if (js.PreProcessing) {
       var error = process(js, js, js.PreProcessing);
       if (error) response.prepareError(pRef, js, error);
     }
