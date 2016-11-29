@@ -43,7 +43,6 @@ var process = function(target, data, code, clbk, a1) {
       delete a1.t_stop; //???
     }    
   }
-  logger.debug('sandbox: ', sandbox);
   if (addon) sandbox._ = addon;
   sandbox._addCallback = function(c) {
     sandbox._callbacks.push(c);
@@ -52,6 +51,7 @@ var process = function(target, data, code, clbk, a1) {
     var idx = sandbox._callbacks.indexOf(c);
     if (~idx) sandbox._callbacks.splice(idx, 1);  
   }
+  logger.debug('sandbox: ', sandbox);
   var error = null;
   function doIt() {
     try {

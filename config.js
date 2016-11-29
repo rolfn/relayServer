@@ -9,7 +9,7 @@ var fs = require('fs');
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  // Wenn sie mit '?' beginnt, wird Eintrag in "package.json" verwendet
+  // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
   VERSION: '12.8.0-pre', 
   DATE: '????-??-??',
   RELAY_PORT: 55555,

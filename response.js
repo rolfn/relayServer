@@ -35,7 +35,7 @@ function sendResponse(pRef, js, _data) {
     data = JSON.stringify(_data) + '\n';
   }
   head['Access-Control-Allow-Origin'] = '*';
-  logger.debug('head: ', head);
+  logger.debug('head: ', tools.inspect(head));
   pRef.res.writeHead(200, head);
   pRef.res.end(data);
   pRef.req.connection.end();

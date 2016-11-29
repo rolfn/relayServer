@@ -38,7 +38,7 @@ function call(pRef, js) {
   request(
     { method: method,
       uri: js.Url,
-      proxy: proxy,
+      proxy: proxy, // TODO: Test ob unnötig/schädlich
       body: js.Body,
       timeout: js.Timeout,
       json: json
@@ -49,10 +49,8 @@ function call(pRef, js) {
         logger.debug('response body', body);
         response.prepareResult(pRef, js, body);
       } else {
-        logger.error('body', body);
-        var x = ((res) && (res.statusCode)) ? res.statusCode :
-          'no response';
-        logger.error('statusCode: %d', x);
+        var x = res && res.statusCode ? res.statusCode : e.toString();
+        logger.error(x);
         response.prepareError(pRef, js, x);
       }
     }
