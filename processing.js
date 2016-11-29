@@ -24,13 +24,14 @@ try {
   logger.info('"relay-add.js" not found');
 }
 
-var process = function(target, data, code, a1) {    
+var process = function(target, data, code, clbk, a1) {    
   // Einfache Strings und String-Arrays unterstützen.
   var evalStr = (Array.isArray(code)) ? code.join('\n') : code;
   logger.debug('evalStr: %s', evalStr);
   var script, ret = "";
   var sandbox = {};
   sandbox._x = data;
+  sandbox._callbacks = [];
   if (typeof a1 != 'undefined') {
     sandbox._$ = a1;
     if (a1.t_start !== undefined) {
@@ -43,20 +44,38 @@ var process = function(target, data, code, a1) {
     }    
   }
   logger.debug('sandbox: ', sandbox);
-  if (addon) sandbox._ = addon; 
-  try {
-    script = vm.createScript(evalStr);
-    script.runInNewContext(sandbox);
-    for (var key in sandbox) {
-      if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
-        logger.debug('sandbox[%s]', key, sandbox[key]);
-        target[key] = sandbox[key];
-      }
-    }
-  } catch(err) {
-    ret = err.toString();
+  if (addon) sandbox._ = addon;
+  sandbox._addCallback = function(c) {
+    sandbox._callbacks.push(c);
   }
-  return ret;
+  sandbox._removeCallback = function(c) {
+    var idx = sandbox._callbacks.indexOf(c);
+    if (~idx) sandbox._callbacks.splice(idx, 1);  
+  }
+  var error = null;
+  function doIt() {
+    try {
+      script = vm.createScript(evalStr);
+      script.runInNewContext(sandbox);
+      for (var key in sandbox) {
+        if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
+          logger.debug('sandbox[%s]', key, sandbox[key]);
+          target[key] = sandbox[key];
+        }
+      }
+    } catch(err) {
+      error = err.toString();
+    }
+    sandbox._removeCallback(doIt);
+  }
+  sandbox._addCallback(doIt);
+  var clbkCheck = setInterval(function() {
+    if (!sandbox._callbacks.length) {
+      clearInterval(clbkCheck);
+      clbk(error);
+    } 
+  }, 5);
+  doIt();    
 }
 
 module.exports = process;

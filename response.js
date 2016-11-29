@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-22
+ * version: 2016-11-29
  */
 
 var cfg = require('./config.js');
@@ -68,26 +68,28 @@ function prepareResult(pRef, js, data) {
     jsonRes.t_stop = jsonRes.t_stop[0];
   } // TODO: Sinnhaftigkeit überprüfen!
 
+  function _prepareResult() {  
+    if (js.OutputType == 'stream') {
+      if (jsonRes.Result !== undefined) {
+        sendResponse(pRef, js, jsonRes.Result);
+      } else {
+        sendResponse(pRef, js, x);
+      }
+    } else {// 'json'
+      sendResponse(pRef, js, jsonRes);
+    }
+  }  
+
   if ((js) && (js.PostProcessing)) {
     // Postprocessing
     var processResult = {};
-    var error = process(processResult, x, js.PostProcessing, js);
-    if (error) prepareError(pRef, js, error);
-    for (var i in processResult) { 
-      jsonRes[i] = processResult[i]; 
-    }
+    process(jsonRes, x, js.PostProcessing, function(error) {
+      if (error) response.prepareError(pRef, js, error);   
+      _prepareResult();
+    }, js);
   } else {
     jsonRes.Result = x;
-  }
-  //logger.debug('jsonRes: ', jsonRes);
-  if (js.OutputType == 'stream') {
-    if (jsonRes.Result !== undefined) {
-      sendResponse(pRef, js, jsonRes.Result);
-    } else {
-      sendResponse(pRef, js, x);
-    }
-  } else {// 'json'
-    sendResponse(pRef, js, jsonRes);
+    _prepareResult();
   }
 }
 exports.prepareResult = prepareResult;

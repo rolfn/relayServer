@@ -1,5 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+ * version: 2016-11-29
  */
 
 var fs = require('fs');
@@ -8,7 +9,8 @@ var fs = require('fs');
  * Datenstruktur mit Default-Werten
  */
 var cfg = {
-  VERSION: '?.?.?',   // TODO: git hook (package.json)!
+  // Wenn sie mit '?' beginnt, wird Eintrag in "package.json" verwendet
+  VERSION: '12.8.0-pre', 
   DATE: '????-??-??',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
@@ -51,16 +53,18 @@ var cfg = {
 
 try {
   var fname = __dirname + '/package.json';
-  fs.stat(fname, function(err, stats) {
-    if (!err) {
-      var t = stats.mtime;
-      cfg.DATE = t.getFullYear() + '-' +
-        ("0" + (t.getMonth() + 1)).slice(-2) + '-' +
-        ("0" + (t.getDate())).slice(-2);
-      var data = JSON.parse(fs.readFileSync(fname, 'utf-8'));
-      if (data.version) cfg.VERSION = data.version;
-    }
-  });
+  if (cfg.VERSION[0] == '?') {// nur, wenn nicht Test-Version
+    fs.stat(fname, function(err, stats) {
+      if (!err) {
+        var t = stats.mtime;
+        cfg.DATE = t.getFullYear() + '-' +
+          ("0" + (t.getMonth() + 1)).slice(-2) + '-' +
+          ("0" + (t.getDate())).slice(-2);
+        var data = JSON.parse(fs.readFileSync(fname, 'utf-8'));
+        if (data.version) cfg.VERSION = data.version;
+      }
+    });
+  }
 } catch(err) {
 }
 
