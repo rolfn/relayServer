@@ -12,8 +12,7 @@ var inspect = require('util').inspect;
 var socket = io.connect('ws://' + host + ':' + port), id;
 
 function onConnect() {
-  id = socket.sessionid;
-  console.log('»' + id + '« connected to »' + host + '«');
+  console.log('»' + socket.id + '« connected to »' + host + '«');
 }
 function onDisconnect() {
   console.log('disconnected');

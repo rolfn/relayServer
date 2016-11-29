@@ -21,7 +21,7 @@ try {
   addon = require('./relay-add.js');
   logger.info('"relay-add.js" loaded');
 } catch(e) {
-  logger.info('"relay-add.js" not found');
+  logger.info('relay-add.js: ' + e.toString());
 }
 
 var process = function(target, data, code, clbk, a1) {    

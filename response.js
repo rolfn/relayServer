@@ -84,7 +84,7 @@ function prepareResult(pRef, js, data) {
     // Postprocessing
     var processResult = {};
     process(jsonRes, x, js.PostProcessing, function(error) {
-      if (error) response.prepareError(pRef, js, error);   
+      if (error) prepareError(pRef, js, error);   
       _prepareResult();
     }, js);
   } else {
