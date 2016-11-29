@@ -2,14 +2,13 @@
 
 /**
  *   @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
- *   2014-01-23
+ *   2016-11-29
  */
 
 var io = require('socket.io-client');
 var host = process.argv[2] ? process.argv[2] : 'localhost';
 var port = 9001;
-var inspect = require('util').inspect;
-var socket = io.connect('ws://' + host + ':' + port), id;
+var socket = io.connect('ws://' + host + ':' + port);
 
 function onConnect() {
   console.log('»' + socket.id + '« connected to »' + host + '«');
