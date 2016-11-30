@@ -15,10 +15,10 @@ var request = require('request');
 function getValveState(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
-  ctx.Address = 45407; // ???
-  ctx.Quantity = 2; // ???
   ctx.OutMode = '16Bits*';
   ctx.PostProcessing = 'Result=_.getValveState2(this);';
+  ctx.Address = 45407;
+  ctx.Quantity = 9;
 }
 
 /**
@@ -31,11 +31,14 @@ function getValveState(ctx) {// für PreProcessing
 function getValveState2(ctx) {// für PostProcessing
   var x = ctx._x, VNb = ctx._$.VNb;
   var a = [];
-  for (var i=0; i<x.length; i++) {// 32?
-    a.push(x & (1<<i) ? true : false);
-  } // auf zwei 16Bit-Werte ausweiten.
-  if (typeof VNb == 'number') {
-    return a[VNb]
+  if (!x.length || x.length < 136) return null;
+  for (var j=0; j<136; j+=32) {
+    for (var i=0; i<8; i+=2) {
+      a.push(!!x[j+i]);
+    }
+  }
+  if (typeof VNb == 'number' && VNb > 0 && VNb < 21) {
+    return a[VNb-1]
   } else {
     return a
   }
