@@ -55,11 +55,18 @@ function getValveState2(ctx) {// für PostProcessing
  * @author Rolf Niepraschk
  */ 
 function setValveState(ctx) {// für PreProcessing
-  if (!ctx.Host || !ctx.VNb || typeof ctx.Open == 'undfined') return;
+  if (!ctx.Host || typeof ctx.VNb != 'number' || ctx.VNb < 1 || ctx.VNb > 20 ||
+    typeof ctx.Open == 'undfined') return;
+  var adr = 45407;
+  if (ctx.VNb > 16) adr+=2;
+  if (ctx.VNb > 12) adr+=2;
+  if (ctx.VNb >  8) adr+=2;
+  if (ctx.VNb >  4) adr+=2;
+  
   var jdata = {
     Host:ctx.Host, VNb:ctx.VNb, Open:ctx.Open, 
-    Address: ctx.VNb < 17 ? 45407 : 45415,
-    Quantity:1, FunctionCode:'ReadHoldingRegisters', OutMode:'Uint16' 
+    Address: adr, Quantity:1, 
+    FunctionCode:'ReadHoldingRegisters', OutMode:'Uint16' 
   };  
   var opts = {
     url: 'http://localhost:' + cfg.RELAY_PORT,
@@ -71,15 +78,26 @@ function setValveState(ctx) {// für PreProcessing
   };  
   function stateResponse(err, res, _d) {
     if (!err) {    
-      var d = typeof _d === 'string' ? JSON.parse(_d) : _d, v_data, v_old; 
-      if (dtx.VNb < 17) {
-        v_data = dtx.VNb;
-        dtx.Address = 40003;
-      } else {
-        v_data = dtx.VNb - 16;
-        dtx.Address = 40007;  
+      var d = typeof _d === 'string' ? JSON.parse(_d) : _d, v_data, v_old;
+      var v_old = d.Result, adr = 40003, v_data = ctx.VNb;
+      if (ctx.VNb > 16) {
+        adr++;
+        v_data-=4;
       }
-      v_old = d.Result
+      if (ctx.VNb > 12) {
+        adr++;
+        v_data-=4;
+      }
+      if (ctx.VNb >  8) {
+        adr++;
+        v_data-=4;
+      }
+      if (ctx.VNb >  4) {
+        adr++;
+        v_data-=4;
+      }
+      dtx.Address = adr;
+      v_data = 1 << 2*(v_data-1); 
       dtx.Action = 'MODBUS';
       dtx.FunctionCode = 'writeSingleRegister';
       dtx.Value = dtx.Open ? v_old | (1<<v_data-1) : v_old & ~(1<<v_data-1);
