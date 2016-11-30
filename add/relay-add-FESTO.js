@@ -1,15 +1,12 @@
 
 var cfg = require('../config.js');
-var inspect = require('util').inspect;
+// var inspect = require('util').inspect;
 var request = require('request');
 
-function getDigitalInput() {// für PostProcessing
-}
-
 /**
- * Als Eingangs-JSON-Daten reichen die folgenden:
+ * Eingangs-JSON-Daten:
  *   {"Host":"172.30.56.46","PreProcessing":"_.getValveState(this);"}
- * und ggf. '"VNb":...'
+ * und ggf. '"VNb":(1..32)' 
  * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
  * diese Funktion.
  * 
@@ -43,37 +40,24 @@ function getValveState2(ctx) {// für PostProcessing
     return a
   }
 }
-/*
-$ cat <<EOF | curl -T - -X PUT http://localhost:55555
-{"Action":"TIME","PreProcessing":"_.foo(this);"}
-EOF
-*/
 
 /**
+ * Eingangs-JSON-Daten (Beispiel)
+ *   {"Host":"172.30.56.46","PreProcessing":"_.setValveState(this);",
+ *    "VNb": 9, Open":true}
+ * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
+ * diese Funktion. Dazu wird vorher der bisherige Status des zugehörigen
+ * Registers erfragt und der neu zu schreibende Wert errechnet.
  * 
- *
  * @author Rolf Niepraschk
- * @param 
- * @return 
  */ 
 function setValveState(ctx) {// für PreProcessing
-  var _x = ctx._x;
-  var callbacks = ctx._callbacks
-  //console.log('foo: ' + inspect(ctx));
-  function bar() {
-    _x.Action = 'RANDOM';
-  }
-  ctx._addCallback(bar);
-  setTimeout(function() {
-    bar();
-    ctx._removeCallback(bar);
-  }, 3000);
-  /*
+  if (!ctx.Host || !ctx.VNb || typeof ctx.Open == 'undfined') return;
   var jdata = {
-    Host:_x.Host, Quantity:2, // 4?
-    VNb:5, Open:true,
-    FunctionCode:'ReadHoldingRegisters', OutMode:'Uint16' 
-  };    
+    Host:ctx.Host, VNb:ctx.VNb, Open:ctx.Open, 
+    Address: ctx.VNb < 17 ? 45407 : 45415,
+    Quantity:1, FunctionCode:'ReadHoldingRegisters', OutMode:'Uint16' 
+  };  
   var opts = {
     url: 'http://localhost:' + cfg.RELAY_PORT,
     method: 'PUT',
@@ -81,35 +65,70 @@ function setValveState(ctx) {// für PreProcessing
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(jdata)
-  };
-  
+  };  
   function stateResponse(err, res, _d) {
-    //if (err) throw err;
     if (!err) {    
       var d = typeof _d === 'string' ? JSON.parse(_d) : _d, v_data, v_old; 
-      if (_x.VNb < 17) {
-        v_data = _x.VNb;
-        v_old = d.Result[0];
-        _x.Address = 40003;
+      if (dtx.VNb < 17) {
+        v_data = dtx.VNb;
+        dtx.Address = 40003;
       } else {
-        v_data = _x.VNb-16;
-        v_old = d.Result[8]; // [?]
-        _x.Address = 40003+4; // +1?       
+        v_data = dtx.VNb - 16;
+        dtx.Address = 40007;  
       }
-      _x.Action = 'MODBUS';
-      _x.Value = _x.Open ? v_old | (1<<v_data-1) : v_old & ~(1<<v_data-1);
-      _x.FunctionCode = 'writeSingleRegister';
+      v_old = d.Result
+      dtx.Action = 'MODBUS';
+      dtx.FunctionCode = 'writeSingleRegister';
+      dtx.Value = dtx.Open ? v_old | (1<<v_data-1) : v_old & ~(1<<v_data-1);
     }
     ctx._removeCallback(stateResponse);   
   }
-  ctx._addCallback(stateResponse);
-   
-  request(opts, stateResponse);
-  
-  */
+  ctx._addCallback(stateResponse);     
+
+  request(opts, stateResponse);// Abfrage des vorherigen Status
+}
+
+/**
+ * Eingangs-JSON-Daten (Beispiel)
+ *   {"Host":"172.30.56.46","PreProcessing":"_.getDigitalInput(this);"}
+ * und ggf. '"PinNb":(1..32)' 
+ * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
+ * diese Funktion.
+ * 
+ * @author Rolf Niepraschk
+ */ 
+function getDigitalInput(ctx) {// für PreProcessing
+  ctx.Action = 'MODBUS';
+  ctx.FunctionCode = 'ReadHoldingRegisters';
+  ctx.Address = 45395; // ???
+  ctx.Quantity = 11; // ???
+  ctx.Skip = 1; // ???
+  ctx.OutMode = '8Bits*';
+  ctx.PostProcessing = 'Result=_.getDigitalInput2(this);';
+}
+
+/**
+ * Ist in der JSON-Struktur PinNb angegeben, wird eine einzelner boolean-Wert
+ * zurückgeliefert, sonst ein Array von 40 boolean-Werten.
+ *
+ * @author Rolf Niepraschk
+ * @return boolean-Wert oder Array von boolean-Werten
+ */ 
+function getDigitalInput2(ctx) {// für PostProcessing
+  var x = ctx._x, PinNb = ctx._$.PinNb;
+  var a = [];
+  for (var i=0; i<x.length; i++) {// 32?
+    a.push(x & (1<<i) ? true : false);
+  } // auf zwei 16Bit-Werte ausweiten.
+  if (typeof PinNb == 'number') {
+    return a[PinNb]
+  } else {
+    return a
+  }
 }
 
 exports.getValveState = getValveState;
 exports.getValveState2 = getValveState2;
 exports.setValveState = setValveState;
-
+exports.getDigitalInput = getDigitalInput;
+exports.getDigitalInput2 = getDigitalInput2;
