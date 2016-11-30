@@ -28,7 +28,9 @@ function serverLog(data) {
 }
 
 socket.on('connect', onConnect);
+socket.on('reconnect', onConnect);
 socket.on('disconnect', onDisconnect);
 socket.on('logging', serverLog);
 socket.on('connect_failed', onError);
+socket.on('reconnect_failed', onError);
 socket.on('error', onError);
