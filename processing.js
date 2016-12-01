@@ -44,13 +44,7 @@ var process = function(target, data, code, clbk, a1) {
     }    
   }
   if (addon) sandbox._ = addon;
-  sandbox._addCallback = function(c) {
-    sandbox._callbacks.push(c);
-  }
-  sandbox._removeCallback = function(c) {
-    var idx = sandbox._callbacks.indexOf(c);
-    if (~idx) sandbox._callbacks.splice(idx, 1);  
-  }
+  sandbox._busy = 0;
   logger.debug('sandbox: ', sandbox);
   var error = null;
   function doIt() {
@@ -66,11 +60,12 @@ var process = function(target, data, code, clbk, a1) {
     } catch(err) {
       error = err.toString();
     }
-    sandbox._removeCallback(doIt);
+    sandbox._busy--;
   }
-  sandbox._addCallback(doIt);
+  sandbox._busy++;
   var clbkCheck = setInterval(function() {
-    if (!sandbox._callbacks.length) {
+    // 5ms-Timer zum Test, ob noch ausstehende callbacks
+    if (!sandbox._busy) {
       clearInterval(clbkCheck);
       clbk(error);
     } 
