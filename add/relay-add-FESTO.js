@@ -18,7 +18,7 @@ var request = require('request');
 function getValveState(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
-  ctx.OutMode = '16Bits*';
+  ctx.OutMode = '16Bits*'; // TODO: '8Bits*' hier sinnvoll?
   ctx.PostProcessing = 'Result=_.getValveState2(this);';
   ctx.Address = 45407;
   ctx.Quantity = 9;
@@ -39,7 +39,7 @@ function getValveState2(ctx) {// für PostProcessing
       a.push(!!x[j+i]);
     }
   }
-  if (typeof VNb == 'number' && VNb > 0 && VNb < 21) {
+  if (typeof VNb == 'number' && VNb > 0 && VNb <= a.length) {
     return a[VNb-1]
   } else {
     return a

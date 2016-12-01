@@ -22,7 +22,7 @@ try {
   logger.info('"relay-add.js" loaded');
 } catch(e) {
   logger.info('relay-add.js: ' + e.toString());
-}
+} 
 
 var process = function(target, data, code, clbk, a1) {    
   // Einfache Strings und String-Arrays unterstützen.
@@ -44,6 +44,7 @@ var process = function(target, data, code, clbk, a1) {
     }    
   }
   if (addon) sandbox._ = addon;
+  console.log('addon:' + addon);
   sandbox._busy = 0;
   logger.debug('sandbox: ', sandbox);
   var error = null;
