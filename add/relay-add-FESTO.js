@@ -12,7 +12,7 @@ var request = require('request');
  * Eingangs-JSON-Daten:
  *   {"Host":"172.30.56.46","PreProcessing":"_.getValveState(this);"}
  * und ggf. '"VNb":(1..32)' 
- * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
+ * Alle anderen Parameter einschließlich "PostProcessing" setzt
  * diese Funktion.
  */ 
 function getValveState(ctx) {// für PreProcessing
@@ -50,7 +50,7 @@ function getValveState2(ctx) {// für PostProcessing
  * Eingangs-JSON-Daten (Beispiel):
  *   {"Host":"172.30.56.46","PreProcessing":"_.setValveState(this);",
  *    "VNb": 9, Open":true}
- * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
+ * Alle anderen Parameter einschließlich "PostProcessing" setzt
  * diese Funktion. Dazu wird vorher der bisherige Status des zugehörigen
  * Registers erfragt und der neu zu schreibende Wert errechnet.
  */ 
