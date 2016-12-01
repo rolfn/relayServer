@@ -49,7 +49,7 @@ function getValveState2(ctx) {// für PostProcessing
 /**
  * Eingangs-JSON-Daten (Beispiel):
  *   {"Host":"172.30.56.46","PreProcessing":"_.setValveState(this);",
- *    "VNb": 9, Open":true}
+ *    "VNb":9, Open":true}
  * Alle anderen Parameter einschließlich "PostProcessing" setzt
  * diese Funktion. Dazu wird vorher der bisherige Status des zugehörigen
  * Registers erfragt und der neu zu schreibende Wert errechnet.
@@ -66,7 +66,7 @@ function setValveState(ctx) {// für PreProcessing
   if (o.VNb >  4) adr+=2;
   
   var jdata = {
-    Host:o.Host, VNb:o.VNb, Open:o.Open, Address:adr, Quantity:1,
+    Host:o.Host, Address:adr, Quantity:1,
     Action:'MODBUS', FunctionCode:'ReadHoldingRegisters', OutMode:'Uint16' 
   };  
   var opts = {
@@ -121,8 +121,6 @@ function setValveState(ctx) {// für PreProcessing
  * und ggf. '"PinNb":(1..32)' 
  * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
  * diese Funktion.
- * 
- * @author Rolf Niepraschk
  */ 
 function getDigitalInput(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
@@ -138,7 +136,6 @@ function getDigitalInput(ctx) {// für PreProcessing
  * Ist in der JSON-Struktur PinNb angegeben, wird eine einzelner boolean-Wert
  * zurückgeliefert, sonst ein Array von 48 boolean-Werten.
  *
- * @author Rolf Niepraschk
  * @return boolean-Wert oder Array von boolean-Werten
  */ 
 function getDigitalInput2(ctx) {// für PostProcessing
@@ -147,7 +144,7 @@ function getDigitalInput2(ctx) {// für PostProcessing
   for (var i=0; i<x.length; i++) {
     a.push(!!x[i]);
   } 
-  if (typeof PinNb == 'number' && PinNb > 0 && PinNb <= x.length) {             
+  if (typeof PinNb == 'number' && PinNb > 0 && PinNb <= a.length) {             
     return a[PinNb-1]
   } else {
     return a
