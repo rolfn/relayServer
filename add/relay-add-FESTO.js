@@ -11,7 +11,7 @@ var request = require('request');
 const V_WRITE_ADR = 40003;
 const V_READ_ADR  = 45407;
 const D_READ_ADR  = 45395;
-const V_QUANTITY = 20;
+const V_QUANTITY  = 20;
 
 /**
  * Eingangs-JSON-Daten:
@@ -34,7 +34,7 @@ function getValveState(ctx) {// für PreProcessing
 
 /**
  * Ist in der JSON-Struktur VNb angegeben, wird eine einzelner boolean-Wert
- * zurückgeliefert, sonst ein Array von 32 boolean-Werten (20 reale).
+ * zurückgeliefert, sonst ein Array von V_QUANTITY boolean-Werten.
  *
  * @return boolean-Wert oder Array von boolean-Werten
  */ 
@@ -162,3 +162,42 @@ exports.getValveState2 = getValveState2;
 exports.setValveState = setValveState;
 exports.getDigitalInput = getDigitalInput;
 exports.getDigitalInput2 = getDigitalInput2;
+
+/*
+
+Schreibregister für Ventile 1..20:
+==================================
+40003:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
+                             4     3     2     1   <-- Ventilenummer
+40004:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
+                             8     7     6     5   <-- Ventilenummer
+...
+40007:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
+                          ^20^  ^19^  ^18^  ^17^   <-- Ventilenummer
+
+Leseregister für Ventile 1..20:
+===============================
+45407:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
+                             4     3     2     1   <-- Ventilenummer
+45409:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
+                             4     3     2     1   <-- Ventilenummer
+...
+45415:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
+                          ^20^  ^19^  ^18^  ^17^   <-- Ventilenummer
+
+Die Ventile 17..20 verwenden 2 Bitpositionen (2-Wege).
+
+*/
+
