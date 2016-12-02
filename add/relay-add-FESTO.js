@@ -170,34 +170,34 @@ Schreibregister für Ventile 1..20
 40003:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
-                             4     3     2     1   <-- Ventilenummer
+                             4     3     2     1   <-- Ventilnummer
 40004:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
-                             8     7     6     5   <-- Ventilenummer
+                             8     7     6     5   <-- Ventilnummer
 ...
 40007:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
-                          ^20^  ^19^  ^18^  ^17^   <-- Ventilenummer
+                          ^20^  ^19^  ^18^  ^17^   <-- Ventilnummer
 
 Leseregister für Ventile 1..20
 ==============================
 45407:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
-                             4     3     2     1   <-- Ventilenummer
+                             4     3     2     1   <-- Ventilnummer
 45409:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
-                             4     3     2     1   <-- Ventilenummer
+                             8     7     6     5   <-- Ventilnummer
 ...
 45415:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
-                          ^20^  ^19^  ^18^  ^17^   <-- Ventilenummer
+                          ^20^  ^19^  ^18^  ^17^   <-- Ventilnummer
 
-Die Ventile 17..20 verwenden 2 Bitpositionen (2-Wege).
+Für die Ventile 17..20 werden 2 Bitpositionen verwendet (2-Wege).
 
 
 Leseregister für Digitaleingänge 1..48
