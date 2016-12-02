@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-22
+ * version: 2016-12-02
  */
 
 var vm = require('vm');
@@ -44,7 +44,6 @@ var process = function(target, data, code, clbk, a1) {
     }    
   }
   if (addon) sandbox._ = addon;
-  console.log('addon:' + addon);
   sandbox._busy = 0;
   logger.debug('sandbox: ', sandbox);
   var error = null;

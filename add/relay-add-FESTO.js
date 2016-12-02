@@ -1,12 +1,17 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-12-01
+ * version: 2016-12-02
  */
 
 var cfg = require('../config.js');
 //var inspect = require('util').inspect;
 var request = require('request');
+
+const V_WRITE_ADR = 40003;
+const V_READ_ADR  = 45407;
+const D_READ_ADR  = 45395;
+const V_QUANTITY = 20;
 
 /**
  * Eingangs-JSON-Daten:
@@ -18,10 +23,12 @@ var request = require('request');
 function getValveState(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
-  ctx.OutMode = '16Bits*'; // TODO: '8Bits*' hier sinnvoll?
+  ctx.OutMode = '16Bits*';
   ctx.PostProcessing = 'Result=_.getValveState2(this);';
-  ctx.Address = 45407;
-  ctx.Quantity = 9;
+  ctx.Address = V_READ_ADR;
+  ctx.Skip = 1;
+  ctx.Quantity = V_QUANTITY / 4 * 2 - 1;
+  // 4 Ventil-Bits pro 16-Bit-Register und jeweils 1 16-Bit-Register ungenutzt
 }
 
 /**
@@ -32,9 +39,8 @@ function getValveState(ctx) {// für PreProcessing
  */ 
 function getValveState2(ctx) {// für PostProcessing
   var x = ctx._x, VNb = ctx._$.VNb;
-  var a = [];
-  if (!x.length || x.length < 136) return null;
-  for (var j=0; j<136; j+=32) {
+  var a = [];  
+  for (var j=0; j<x.length; j+=16) {// V_QUANTITY / 4 * 16 Werte     
     for (var i=0; i<8; i+=2) {
       a.push(!!x[j+i]);
     }
@@ -58,7 +64,7 @@ function setValveState(ctx) {// für PreProcessing
   var o = ctx._x;
   if (!o.Host || typeof o.VNb != 'number' || o.VNb < 1 || o.VNb > 20 ||
     typeof o.Open == 'undfined') return;
-  var adr = 45407;
+  var adr = V_READ_ADR;
   
   if (o.VNb > 16) adr+=2;
   if (o.VNb > 12) adr+=2;
@@ -80,7 +86,7 @@ function setValveState(ctx) {// für PreProcessing
   function stateResponse(err, res, _d) {
     if (!err) {    
       var d = typeof _d === 'string' ? JSON.parse(_d) : _d, 
-        v_old = d.Result, adr = 40003, v_data = o.VNb;
+        v_old = d.Result, adr = V_WRITE_ADR, v_data = o.VNb;
       if (o.VNb > 16) {
         adr++;
         v_data-=4;
@@ -125,7 +131,7 @@ function setValveState(ctx) {// für PreProcessing
 function getDigitalInput(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
-  ctx.Address = 45395; 
+  ctx.Address = D_READ_ADR; 
   ctx.Quantity = 11; 
   ctx.Skip = 1; 
   ctx.OutMode = '8Bits*';
