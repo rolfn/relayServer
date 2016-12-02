@@ -23,12 +23,13 @@ const V_QUANTITY = 20;
 function getValveState(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
-  ctx.OutMode = '16Bits*';
+  ctx.OutMode = '8Bits*';
   ctx.PostProcessing = 'Result=_.getValveState2(this);';
   ctx.Address = V_READ_ADR;
   ctx.Skip = 1;
   ctx.Quantity = V_QUANTITY / 4 * 2 - 1;
-  // 4 Ventil-Bits pro 16-Bit-Register und jeweils 1 16-Bit-Register ungenutzt
+  // 4 Ventil-Bits pro 16-Bit-Register und jeweils nächstes 16-Bit-Register 
+  // ist ungenutzt und wird übersprungen; die 8 höherwertigen Bits ignorieren.
 }
 
 /**
@@ -39,11 +40,10 @@ function getValveState(ctx) {// für PreProcessing
  */ 
 function getValveState2(ctx) {// für PostProcessing
   var x = ctx._x, VNb = ctx._$.VNb;
-  var a = [];  
-  for (var j=0; j<x.length; j+=16) {// V_QUANTITY / 4 * 16 Werte     
-    for (var i=0; i<8; i+=2) {
-      a.push(!!x[j+i]);
-    }
+  var a = [];
+
+  for (var i=0; i<x.length; i+=2) {// V_QUANTITY / 4 * 8 Werte
+    a.push(!!x[i]);  // Wie bei Ventilen 17..20?
   }
   if (typeof VNb == 'number' && VNb > 0 && VNb <= a.length) {
     return a[VNb-1]
