@@ -165,8 +165,8 @@ exports.getDigitalInput2 = getDigitalInput2;
 
 /*
 
-Schreibregister für Ventile 1..20:
-==================================
+Schreibregister für Ventile 1..20
+=================================
 40003:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
@@ -181,8 +181,8 @@ Schreibregister für Ventile 1..20:
 |  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
                           ^20^  ^19^  ^18^  ^17^   <-- Ventilenummer
 
-Leseregister für Ventile 1..20:
-===============================
+Leseregister für Ventile 1..20
+==============================
 45407:
  15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
 |  |  |  |  |  |  |  |  |  | x|  | x|  | x|  | x|
@@ -198,6 +198,23 @@ Leseregister für Ventile 1..20:
                           ^20^  ^19^  ^18^  ^17^   <-- Ventilenummer
 
 Die Ventile 17..20 verwenden 2 Bitpositionen (2-Wege).
+
+
+Leseregister für Digitaleingänge 1..48
+======================================
+45395:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
+                          8  7  6  5  4  3  2  1   <-- Nr. des Digitaleingangs
+45397:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
+                         16 15 14 13 12 11 10  9   <-- Nr. des Digitaleingangs
+...
+45405:
+ 15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0   <-- Bitnummer
+|  |  |  |  |  |  |  |  | x| x| x| x| x| x| x| x|
+                         48 47 46 45 44 43 42 41   <-- Nr. des Digitaleingangs
 
 */
 
