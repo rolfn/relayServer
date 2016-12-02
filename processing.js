@@ -46,31 +46,29 @@ var process = function(target, data, code, clbk, a1) {
   if (addon) sandbox._ = addon;
   sandbox._busy = 0;
   logger.debug('sandbox: ', sandbox);
+  
   var error = null;
-  function doIt() {
-    try {
-      script = vm.createScript(evalStr);
-      script.runInNewContext(sandbox);
-      for (var key in sandbox) {
-        if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
-          logger.debug('sandbox[%s]', key, sandbox[key]);
-          target[key] = sandbox[key];
-        }
+  
+  try {
+    script = vm.createScript(evalStr);
+    script.runInNewContext(sandbox);
+    for (var key in sandbox) {
+      if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
+        logger.debug('sandbox[%s]', key, sandbox[key]);
+        target[key] = sandbox[key];
       }
-    } catch(err) {
-      error = err.toString();
     }
-    sandbox._busy--;
+  } catch(err) {
+    error = err.toString();
   }
-  sandbox._busy++;
+  
   var clbkCheck = setInterval(function() {
-    // 5ms-Timer zum Test, ob noch ausstehende callbacks
+    // 5ms-Timer zum Test, ob sandbox-Script beendet ist (asynchr. Funktionen).
     if (!sandbox._busy) {
       clearInterval(clbkCheck);
       clbk(error);
     } 
   }, 5);
-  doIt();    
 }
 
 module.exports = process;
