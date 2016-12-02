@@ -9,6 +9,15 @@ var utils = require('./utils.js');
 var response = require('./response.js');
 var mailer = require('nodemailer');
 // npm install nodemailer
+/* Alternativen:
+ 
+https://github.com/nodemailer/smtp-connection
+https://github.com/guileen/node-sendmail
+
+oder doch mit aktuellem 'nodemailer'?
+http://www.technicalkeeda.com/node/how-to-send-email-using-node-js
+
+*/
 
 var logger = cfg.logger;
 
