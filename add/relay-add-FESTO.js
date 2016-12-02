@@ -16,7 +16,7 @@ const V_QUANTITY  = 20;
 /**
  * Eingangs-JSON-Daten:
  *   {"Host":"172.30.56.46","PreProcessing":"_.getValveState(this);"}
- * und ggf. '"VNb":(1..32)' 
+ * und ggf. '"VNb":(1..20)' 
  * Alle anderen Parameter einschließlich "PostProcessing" setzt
  * diese Funktion.
  */ 
@@ -124,7 +124,7 @@ function setValveState(ctx) {// für PreProcessing
 /**
  * Eingangs-JSON-Daten (Beispiel):
  *   {"Host":"172.30.56.46","PreProcessing":"_.getDigitalInput(this);"}
- * und ggf. '"PinNb":(1..32)' 
+ * und ggf. '"PinNb":(1..48)' 
  * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
  * diese Funktion.
  */ 
