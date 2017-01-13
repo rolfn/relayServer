@@ -1,7 +1,7 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-12-02
+ * version: 2017-01-13
  */
 
 var cfg = require('../config.js');
@@ -17,14 +17,12 @@ const V_QUANTITY  = 20;
  * Eingangs-JSON-Daten:
  *   {"Host":"172.30.56.46","PreProcessing":"_.getValveState(this);"}
  * und ggf. '"VNb":(1..20)'
- * Alle anderen Parameter einschließlich "PostProcessing" setzt
- * diese Funktion.
+ * Alle anderen Parameter setzt diese Funktion.
  */
 function getValveState(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
   ctx.OutMode = '8Bits*';
-  ctx.PostProcessing = 'Result=_.getValveState2(this);';
   ctx.Address = V_READ_ADR;
   ctx.Skip = 1;
   ctx.Quantity = V_QUANTITY / 4 * 2 - 1;
@@ -33,32 +31,12 @@ function getValveState(ctx) {// für PreProcessing
 }
 
 /**
- * Ist in der JSON-Struktur VNb angegeben, wird eine einzelner boolean-Wert
- * zurückgeliefert, sonst ein Array von V_QUANTITY boolean-Werten.
- *
- * @return boolean-Wert oder Array von boolean-Werten
- */
-function getValveState2(ctx) {// für PostProcessing
-  var x = ctx._x, VNb = parseInt(ctx._$.VNb);
-  var a = [];
-
-  for (var i=0; i<x.length; i+=2) {// V_QUANTITY / 4 * 8 Werte
-    a.push(!!x[i]);  // Wie bei Ventilen 17..20?
-  }
-  if (typeof VNb == 'number' && VNb > 0 && VNb <= a.length) {
-    return a[VNb-1]
-  } else {
-    return a
-  }
-}
-
-/**
  * Eingangs-JSON-Daten (Beispiel):
  *   {"Host":"172.30.56.46","PreProcessing":"_.setValveState(this);",
  *    "VNb":9, Open":true}
- * Alle anderen Parameter einschließlich "PostProcessing" setzt
- * diese Funktion. Dazu wird vorher der bisherige Status des zugehörigen
- * Registers erfragt und der neu zu schreibende Wert errechnet.
+ * Alle anderen Parameter setzt diese Funktion. Dazu wird vorher der bisherige 
+ * Status des zugehörigen Registers erfragt und der neu zu schreibende Wert 
+ * errechnet.
  */
 function setValveState(ctx) {// für PreProcessing
   var o = ctx._x;
@@ -125,8 +103,7 @@ function setValveState(ctx) {// für PreProcessing
  * Eingangs-JSON-Daten (Beispiel):
  *   {"Host":"172.30.56.46","PreProcessing":"_.getDigitalInput(this);"}
  * und ggf. '"PinNb":(1..48)'
- * Alle anderen MODBUS-Parameter einschließlich "PostProcessing" setzt
- * diese Funktion.
+ * Alle anderen MODBUS-Parameter setzt diese Funktion.
  */
 function getDigitalInput(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
@@ -135,33 +112,11 @@ function getDigitalInput(ctx) {// für PreProcessing
   ctx.Quantity = 11;
   ctx.Skip = 1;
   ctx.OutMode = '8Bits*';
-  ctx.PostProcessing = 'Result=_.getDigitalInput2(this);';
-}
-
-/**
- * Ist in der JSON-Struktur PinNb angegeben, wird eine einzelner boolean-Wert
- * zurückgeliefert, sonst ein Array von 48 boolean-Werten.
- *
- * @return boolean-Wert oder Array von boolean-Werten
- */
-function getDigitalInput2(ctx) {// für PostProcessing
-  var x = ctx._x, PinNb = ctx._$.PinNb;
-  var a = [];
-  for (var i=0; i<x.length; i++) {
-    a.push(!!x[i]);
-  }
-  if (typeof PinNb == 'number' && PinNb > 0 && PinNb <= a.length) {
-    return a[PinNb-1]
-  } else {
-    return a
-  }
 }
 
 exports.getValveState = getValveState;
-exports.getValveState2 = getValveState2;
 exports.setValveState = setValveState;
 exports.getDigitalInput = getDigitalInput;
-exports.getDigitalInput2 = getDigitalInput2;
 
 /*
 
