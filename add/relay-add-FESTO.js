@@ -24,7 +24,7 @@ function getValveState(ctx) {// für PreProcessing
   ctx.Action = 'MODBUS';
   ctx.FunctionCode = 'ReadHoldingRegisters';
   ctx.OutMode = '8Bits*';
-  ctx.PostProcessing = 'Result=_.getValveState2(this);';
+//  ctx.PostProcessing = 'Result=_.getValveState2(this);';
   ctx.Address = V_READ_ADR;
   ctx.Skip = 1;
   ctx.Quantity = V_QUANTITY / 4 * 2 - 1;
