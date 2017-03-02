@@ -1,5 +1,6 @@
 [Unit]
 Description=The relayServer daemon.
+Wants=gitlabhook.service
 After=network.target
 
 [Service]
@@ -9,13 +10,7 @@ Type=simple
 StandardOutput=null
 StandardError=null
 Restart=always
-# Run ExecStartPre/ExecStartPost with root-permissions
-PermissionsStartOnly=true
-# Remove PIDFile at Stop
-PIDFile=/var/run/relayServer/relayServerd.pid
-ExecStartPre=/usr/bin/mkdir -p /var/run/relayServer
-ExecStartPost=/bin/sh -c '/usr/bin/echo $MAINPID > /var/run/relayServer/relayServerd.pid'
-ExecStart=/bin/bash -l -c "/usr/bin/node --expose_gc  /usr/local/share/relayServer/relayServer.js"
+ExecStart=/bin/bash -l -c '/usr/bin/node --expose_gc  /usr/local/share/relayServer/relayServer.js'
 
 [Install]
 WantedBy=multi-user.target
