@@ -34,8 +34,8 @@ function getValveState(ctx) {// für PreProcessing
  * Eingangs-JSON-Daten (Beispiel):
  *   {"Host":"172.30.56.46","PreProcessing":"_.setValveState(this);",
  *    "VNb":9, Open":true}
- * Alle anderen Parameter setzt diese Funktion. Dazu wird vorher der bisherige 
- * Status des zugehörigen Registers erfragt und der neu zu schreibende Wert 
+ * Alle anderen Parameter setzt diese Funktion. Dazu wird vorher der bisherige
+ * Status des zugehörigen Registers erfragt und der neu zu schreibende Wert
  * errechnet.
  */
 function setValveState(ctx) {// für PreProcessing
