@@ -113,7 +113,7 @@ function call(pRef, js) {
   port = tools.getInt(js.Port, cfg.DEFAULT_MODBUS_PORT),
   skip = tools.getInt(js.Skip, 0),
   value, fc = js.FunctionCode.trim();
-  
+
   if (js.Value) {
     value = js.Value.length ? bitArrayToUint16(js.Value) : tools.getInt(js.Value);
   }
@@ -131,6 +131,7 @@ function call(pRef, js) {
     var master = modbus.createMaster({
       transport: {
         type: 'ip',
+	eofTimeout: 300,
         connection: {
           type: 'tcp',
           host: host,
@@ -226,6 +227,7 @@ function call(pRef, js) {
     }
     var options = {
       interval: -1,
+      timeout: 400,
       onComplete: onCompleteDefault,
       onError: function(err) {// TODO: nötig?
         logger.error('onError: ' + err);
