@@ -9,7 +9,7 @@ Group=www
 Type=simple
 StandardOutput=null
 StandardError=null
-Restart=always
+Restart=no
 ExecStart=/bin/bash -l -c '/usr/bin/node --expose_gc  /usr/local/share/relayServer/relayServer.js'
 
 [Install]
