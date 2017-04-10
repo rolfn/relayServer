@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2013-11-26
+ * version: 2017-04-10
  */
 
 var cfg = require('./config.js');
@@ -16,8 +16,8 @@ var logger = cfg.logger;
 
 /**
  * Schreibt Inhalt von js.Body in temporäre Datei und ergänzt js.Value
- * (R-Parameter) durch Namen und Pfad dieser temporären Datei. Zum Schluss wird
- * js.Body beseitigt und per external.call das Programm Rscript aufgerufen.
+ * (Parameter) durch Namen und Pfad dieser temporären Datei. Zum Schluss wird
+ * js.Body beseitigt und per external.call das Programm aus "Action" aufgerufen.
  * @param {object} pRef interne Serverdaten (req, res, ...)
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
@@ -34,7 +34,7 @@ function call(pRef, js) {
 
   var params = [];
 
-  params.push(cfg.R_FILE);
+  params.push(cfg.PRG_FILE); // ???
   if (js.Value !== undefined) {
     if (Array.isArray(js.Value)) {
       params = params.concat(js.Value);
@@ -42,18 +42,20 @@ function call(pRef, js) {
       params = params.concat(js.Value.split(' '));
     }
   }
-  // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.R_FILE".
+  // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.PRG_FILE".
+  // TODO: "zuvorderst" evtl. falsch bzw. nicht allgemeingültig
+  // TODO: Allg. Lösung: Args vor "cfg.PRG_FILE" und Args nach "cfg.PRG_FILE"
   js.Value = params;
 
   if (!js.Body) response.prepareError(pRef, js, 'missing program code');
   // "String" und "String[]" unterstützen.
   var content = Array.isArray(js.Body) ? js.Body.join('\n') : js.Body;
 
-  // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.R_FILE"
-  //  schreiben, dann zweiter Aufruf von "external.call" ("/usr/bin/Rscript")
-  tmp.mkdir({dir:os.tmpDir(), prefix:'R.'}, function(err, p) {
+  // "js.WorkingDir" erzeugen und "js.Body" in Datei "cfg.PRG_FILE" schreiben, 
+  // dann zweiter Aufruf von "external.call" (Programmname aus "Action")
+  tmp.mkdir({dir:os.tmpDir(), prefix:'relayServer.'}, function(err, p) {
     js.WorkingDir = p;
-    var fname = path.join(p, cfg.R_FILE)
+    var fname = path.join(p, cfg.PRG_FILE)
     fs.writeFile(fname, content, function(err) {
       if (err) {
         var e = 'File creation error: ' + err;

@@ -1,13 +1,13 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-23
+ * version: 2017-04-10
  */
 
 var exec = require('child_process').exec;
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
-var rscript = require('./rscript.js');
+var prgTempfile = require('./prgTempfile.js');
 var response = require('./response.js');
 
 var logger = cfg.logger;
@@ -31,7 +31,7 @@ function call(pRef, js, postFunc) {
         break;
       case cfg.bin.RSCRIPT:
         if (js.Body !== undefined) {
-          rscript.call(pRef, js);
+          prgTempfile.call(pRef, js);
           // Kehrt später noch mal zu dieser Funktion zurück.
           return;
         }

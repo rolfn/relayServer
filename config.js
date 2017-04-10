@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-03-20
+ * version: 2017-04-10
  */
 
 var fs = require('fs');
@@ -10,8 +10,8 @@ var fs = require('fs');
  */
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.8.0', 
-  DATE: '2017-03-20',
+  VERSION: '12.9.0', 
+  DATE: '2017-04-10',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
@@ -34,7 +34,7 @@ var cfg = {
   TEX_CMDS: ['pdftex', 'pdflatex', 'xetex', 'xelatex', 'luatex', 'lualatex'],
   TEX_FILE: 'texput.tex',
   TEX_ERROR_FILE: 'texerror.tex',
-  R_FILE: 'cmd.R',
+  PRG_FILE: 'prg.dat',
   // Reihenfolge bestimmt Wichtigkeit
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
     '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
@@ -72,7 +72,7 @@ require('vwebsocket');
 cfg.logger = require('vlogger')({
   transports: [
     new winston.transports.vWebsocket({
-      level: 'debug',
+      level: 'silly',
       port: cfg.WEBSOCKET_PORT,
       handleExceptions: true,
       colorize: true,
