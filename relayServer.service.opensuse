@@ -4,8 +4,8 @@ Wants=gitlabhook.service
 After=network.target
 
 [Service]
-User=wwwrun
-Group=www
+User=nobody
+Group=nobody
 Type=simple
 StandardOutput=null
 StandardError=null

@@ -30,18 +30,17 @@ function call(pRef, js, postFunc) {
         execStr = execStr + ' "+%Y-%m-%d %H:%M:%S"';
         break;
       case cfg.bin.RSCRIPT:
-        if (js.Body !== undefined) {
+        if (js.Body !== undefined) {// Erster Aufruf
           prgTempfile.call(pRef, js);
-          // Kehrt später noch mal zu dieser Funktion zurück.
           return;
         }
-        // TODO: LaTeX ähnlich wie RSCRIPT handhaben. (???)
-        // TODO: RSCRIPT ergänzen und dazu Script-Behandlung generalisieren.
+        // Kehrt später noch mal hier her zurück (dann "js.Body === undefined").
+        // TODO: Script-Behandlung generalisieren.
         break;
       default:
         break;
-    }
-
+    }                                              
+    // TODO: js.Value aus "Args0", "Args" (einschl. "WorkingDir"+"PRG_FILE")
     if (js.Value !== undefined) {
       if (Array.isArray(js.Value)) {
         for (var i=0; i < js.Value.length; i++) {
