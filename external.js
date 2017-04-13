@@ -7,7 +7,7 @@ var exec = require('child_process').exec;
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
-var prgTempfile = require('./prepareScriptCall.js');
+var prepare = require('./prepareScriptCall.js');
 var response = require('./response.js');
 
 var logger = cfg.logger;
@@ -29,9 +29,9 @@ function call(pRef, js, postFunc) {
       case cfg.bin.DATE:
         execStr = execStr + ' "+%Y-%m-%d %H:%M:%S"';
         break;
-      case cfg.bin.RSCRIPT:
+      case cfg.bin.RSCRIPT: // TODO: 'case "SCRIPT":
         if (js.Body !== undefined) {// Erster Aufruf
-          prgTempfile.call(pRef, js);
+          prepare.call(pRef, js);
           return;
         }
         // Kehrt später noch mal hier her zurück (dann "js.Body === undefined").

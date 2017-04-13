@@ -32,20 +32,25 @@ function call(pRef, js) {
 
   js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
 
-  var params = [];
-
-  params.push(cfg.PRG_FILE); // ???
+  /*
+  callStr.push(cfg.PRG_FILE); // ???
   if (js.Value !== undefined) {
     if (Array.isArray(js.Value)) {
-      params = params.concat(js.Value);
+      callStr = callStr.concat(js.Value);
     } else {
-      params = params.concat(js.Value.split(' '));
+      callStr = callStr.concat(js.Value.split(' '));
     }
   }
-  // Alte Parameter zuvorderst ergänzt durch Namen von "cfg.PRG_FILE".
-  // TODO: "zuvorderst" evtl. falsch bzw. nicht allgemeingültig
-  // TODO: Allg. Lösung: Args vor "cfg.PRG_FILE" und Args nach "cfg.PRG_FILE"
-  js.Value = params;
+  */
+  
+  // TODO: {"Action":"SCRIPT","Cmd":"/usr/bin/foo",...}
+  var args0 = js.Args0 || [], args = js.Args || js.Value || [];
+  var callStr = []
+    .concat(Array.isArray(args0) ? args0 : args0.split(' '))
+    .concat([cfg.PRG_FILE])
+    .concat(Array.isArray(args) ? args : args.split(' '));
+    
+  js.Value = callStr;
 
   if (!js.Body) response.prepareError(pRef, js, 'missing program code');
   // "String" und "String[]" unterstützen.
