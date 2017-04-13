@@ -10,8 +10,8 @@ var fs = require('fs');
  */
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.9.0-pre1', 
-  DATE: '2017-04-10',
+  VERSION: '12.9.0-pre2', 
+  DATE: '2017-04-12',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec

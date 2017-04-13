@@ -1,13 +1,13 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-10
+ * version: 2017-04-13
  */
 
 var exec = require('child_process').exec;
 var cfg = require('./config.js');
 var tools = require('./tools.js');
 var utils = require('./utils.js');
-var prgTempfile = require('./prgTempfile.js');
+var prgTempfile = require('./prepareScriptCall.js');
 var response = require('./response.js');
 
 var logger = cfg.logger;
