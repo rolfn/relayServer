@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-24
+ * version: 2017-04-18
  */
 
 var cfg = require('./config.js');
@@ -28,16 +28,16 @@ function call(pRef, js) {
    * @param {object} js
    */
   function post(pRef, js) {
-    var texFile = js.execStr.split(' ').pop();
+    var texFile = js._execStr.split(' ').pop();
     var resultFile = path.join(js.WorkingDir,
       texFile.replace('.tex', '.' + cfg.DEFAULT_TEX_DESTFMT));
     logger.debug('texFile: ' + texFile);
     logger.debug('resultFile: ' + resultFile);
     fs.readFile(resultFile, function (err, data) {
       if (err) {
-        if (js.execStr.indexOf(cfg.TEX_ERROR_FILE) == -1) {// keine Endlosschleife
+        if (js._execStr.indexOf(cfg.TEX_ERROR_FILE) == -1) {// keine Endlosschleife
           // Fehlermeldung als pdf-Code
-          js.execStr = js.execStr.replace(cfg.TEX_FILE, cfg.TEX_ERROR_FILE);
+          js._execStr = js._execStr.replace(cfg.TEX_FILE, cfg.TEX_ERROR_FILE);
           var fname = path.join(js.WorkingDir, cfg.TEX_ERROR_FILE);
 
           var content = [];
@@ -99,7 +99,7 @@ function call(pRef, js) {
   js.Head['Content-Disposition'] = 'attachment; filename=' + filename;
   js.OutputType = 'stream';
   js.OutputEncoding = 'binary';// TODO: Kann das weg?
-  js.execStr = cmd + ' -interaction=batchmode '  + cfg.TEX_FILE;
+  js._execStr = cmd + ' -interaction=batchmode '  + cfg.TEX_FILE;
   logger.debug('Head: %s', js.Head);
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
   //  schreiben, dann Aufruf von "external.call".

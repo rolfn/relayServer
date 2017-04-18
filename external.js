@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-13
+ * version: 2017-04-18
  */
 
 var exec = require('child_process').exec;
@@ -21,38 +21,31 @@ var logger = cfg.logger;
 function call(pRef, js, postFunc) {
   var execStr = '';
   logger.debug('Action: %s', js.Action);
-  if (js.execStr === undefined) {
-
-    execStr = js.Action;
-
-    switch (js.Action) {// Spezifische Ergänzungen der Aufrufe
-      case cfg.bin.DATE:
-        execStr = execStr + ' "+%Y-%m-%d %H:%M:%S"';
-        break;
-      case cfg.bin.RSCRIPT: // TODO: 'case "SCRIPT":
-        if (js.Body !== undefined) {// Erster Aufruf
-          prepare.call(pRef, js);
-          return;
-        }
-        // Kehrt später noch mal hier her zurück (dann "js.Body === undefined").
-        // TODO: Script-Behandlung generalisieren.
-        break;
-      default:
-        break;
-    }                                              
-    // TODO: js.Value aus "Args0", "Args" (einschl. "WorkingDir"+"PRG_FILE")
-    if (js.Value !== undefined) {
-      if (Array.isArray(js.Value)) {
-        for (var i=0; i < js.Value.length; i++) {
-          execStr = execStr + ' "' + js.Value[i] + '"';
-        }
-      } else {
-        execStr = execStr + ' "' + js.Value + '"';
-      }
+  if (js._execStr === undefined) {
+    
+    if (js.Body) {// Erster Aufruf; 
+      // kehrt später noch mal hier her zurück (dann "js.Body == false").
+      prepare.call(pRef, js); // js.Body --> js._paramFile usw.
+      return;
+    } else {
+      if (!js.Cmd) {
+        response.prepareError(pRef, js, '"Cmd" missing');
+        return;
+      } 
+      execStr = js.Cmd;
+      if (js.Args0) {
+        execStr = execStr + ' ' + (Array.isArray(js.Args0) ? js.Args0.join(' ') 
+          : js.Args0);
+      } 
+      if (js._paramFile) execStr = execStr + ' ' + js._paramFile;
+      if (js.Args) {
+        execStr = execStr + ' ' + (Array.isArray(js.Args) ? js.Args.join(' ') 
+          : js.Args);
+      } 
     }
-
-  } else {// Sonderfall (js.execStr bereits anderweitig definiert)
-    execStr = js.execStr; // z.B. "TEX"
+                                      
+  } else {// Sonderfall (js._execStr bereits anderweitig definiert; z.B. "TEX")
+    execStr = js._execStr; 
   }
 
   logger.info('execStr: %s', execStr);

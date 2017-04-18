@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-10
+ * version: 2017-04-18
  */
 
 var cfg = require('./config.js');
@@ -32,27 +32,6 @@ function call(pRef, js) {
 
   js.KeepFiles = typeof js.KeepFiles === 'undefined' ? false : !!js.KeepFiles;
 
-  /*
-  callStr.push(cfg.PRG_FILE); // ???
-  if (js.Value !== undefined) {
-    if (Array.isArray(js.Value)) {
-      callStr = callStr.concat(js.Value);
-    } else {
-      callStr = callStr.concat(js.Value.split(' '));
-    }
-  }
-  */
-  
-  // TODO: {"Action":"SCRIPT","Cmd":"/usr/bin/foo",...}
-  var args0 = js.Args0 || [], args = js.Args || js.Value || [];
-  var callStr = []
-    .concat(Array.isArray(args0) ? args0 : args0.split(' '))
-    .concat([cfg.PRG_FILE])
-    .concat(Array.isArray(args) ? args : args.split(' '));
-    
-  js.Value = callStr;
-
-  if (!js.Body) response.prepareError(pRef, js, 'missing program code');
   // "String" und "String[]" unterstützen.
   var content = Array.isArray(js.Body) ? js.Body.join('\n') : js.Body;
 
@@ -67,7 +46,8 @@ function call(pRef, js) {
         logger.error(e);
         response.prepareError(pRef, js, e);
       } else {
-        delete js.Body;
+        js.Body = false;
+        js._paramFile = cfg.PRG_FILE;
         // Zweiter Aufruf mit Dateinamen-Parameter statt 'Body';
         logger.debug('2nd "external.call"');
         external.call(pRef, js, cleanUp);

@@ -39,14 +39,6 @@ var cfg = {
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
     '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
     '/etc/release'],
-  bin: {
-    RSCRIPT: '/usr/bin/Rscript',
-    PYTHON: '/usr/bin/python',
-    DATE: '/bin/date',
-    SLEEP: '/bin/sleep',
-    ECHO: '/bin/echo',
-    WHICH: '/usr/bin/which'
-  },
   theRepeats: {}
 };
 

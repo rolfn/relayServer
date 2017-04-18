@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-08
+ * version: 2017-04-18
  */
 
 var fs = require('fs');
@@ -177,7 +177,7 @@ function call(pRef, js) {
       });
       process.exit(0);
       break;
-    default: response.prepareError(pRef, js, 'unknown internal action');
+    default: response.prepareError(pRef, js, 'unknown action');
   }
   if (doIt) {
     utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
