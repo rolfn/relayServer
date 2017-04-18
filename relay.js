@@ -18,7 +18,6 @@ var logger = cfg.logger;
  * Analysiert den Action-Typ. Rückgabe:
  * <pre>
  * -1: "internal action",
- *  0: "invalid external action",
  *  1: "valid external action"
  * </pre>
  * @param {string} str Action-String.
@@ -26,15 +25,13 @@ var logger = cfg.logger;
 */
 function getActionType(str) {
   if (!str) return 99;
-  var ret = str.indexOf('/');
-  if (ret > -1) {
-    ret = 0;
-    for (var i in cfg.bin) {
-      if (cfg.bin[i] == str) {
-        ret = 1; break;
-      }
-    }
+  var ret = 0;
+  if (str == 'EXECUTE') {
+    ret = 1;
+  } else {
+    ret = -1;
   }
+
   return ret;
 }
 
