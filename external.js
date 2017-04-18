@@ -51,7 +51,7 @@ function call(pRef, js, postFunc) {
       }
     }
 
-  } else {// Sonderfall
+  } else {// Sonderfall (js.execStr bereits anderweitig definiert)
     execStr = js.execStr; // z.B. "TEX"
   }
 
