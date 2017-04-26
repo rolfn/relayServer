@@ -11,7 +11,16 @@ Durch Zusenden von JSON-Daten per http-POST (Port 55555) kann dieser Server vera
 
 ### Vorbereitung zur Installation
 
-Die make-Aufrufe ```make``` bzw. ```make install``` erzeugen ein rpm-Paket mit allen Dateien, die notwendig sind, damit der Relay-Server als Dämon unter openSUSE (>12.2) laufen kann. Vorher muss einmalig ```npm install``` aufgerufen werden, damit die nötigen nodejs-Bibliotheken installiert werden. ```make install``` kopiert das fertige rpm-Paket in eine Dateistruktur, die geeignet ist, an unser openSUSE-rpm-Repositorium geschickt zu werden. Alternativ kann das rpm-Paket auch von Hand installiert werden.
+### Installation
+Funktionierende Dateien von einem anderen Rechner beschaffen, z.B.:
+```bash
+rsync -avzL --delete --keep-dirlinks --exclude '.git'  \
+  i75454:/usr/local/share/relayServer /usr/local/share/
+scp i75454:/usr/lib/systemd/system/relayServer.service \
+  /usr/lib/systemd/system/relayServer.service
+chown -R nobody.nobody /usr/local/share/relayServer/
+ln -sf /usr/local/share/relayServer/vlLogging /usr/local/bin/vlLogging
+```
 
 ### Nach erfolgter Installation
 
@@ -25,60 +34,80 @@ und ggf.
 systemctl status -l relayServer.service
 ```
 
-Einem neuen Rechner sollte das vaclab-Repositorium bekannt gemacht werden, damit das Paket »relayServer« einfach installiert werden kann (einschließlich zukünftiger updates):
-```bash
-zypper ar http://a73434.berlin.ptb.de:5984/sys/repos/openSUSE_13.1/vaclab.repo
-zypper ref vaclab ; zypper in relayServer
-```
-
 ### Beispiele zur Kommunikation mit dem Relay-Server (Port 55555)
 
 ```bash
-echo '{"Action":"/bin/echo","Value":"FRIDOLIN"}' | \
-  curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"EXECUTE","Cmd":"/usr/bin/date","Args":"+%Y-%m-%d"}
+EOF
 
-echo '{"Action":"/usr/bin/which","Value":"pdftex"}' | \
-  curl -T - -X PUT http://`hostname --fqdn`:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"_version"}
+EOF
 
-echo '{"Action":"_version"}' | curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"TIME","Repeat":3,"Wait":2000}
+EOF
 
-echo '{"Action":"_exit"}' | curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"RANDOM"}
+EOF
 
-echo '{"Action":"RANDOM"}' | \
-  curl -T - -X PUT http://i75434.berlin.ptb.de:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"VXI11","Host":"e75465","Device":"gpib0,2","Value":"T\n",
+  "readTimeout":0}
+EOF
 
-echo '{"Action":"TIME","Repeat":3,"Wait":2000}' | \
-  curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"EXECUTE","Cmd":"/usr/bin/Rscript",
+"Body":["a <- 1:10","b <- which(a > 2 & a < 8)","b"],
+"Args0":"--vanilla","Args":["foo","bar"]}
+EOF
 
-echo '{"Action":"VXI11","Host":"e75465","Device":"gpib0,2","Value":"T\n",
-  "readTimeout":0}' | curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"EXECUTE","Cmd":"/usr/bin/python","Body":"print 12+5"}
+EOF
 
-echo '{"Action":"/usr/bin/Rscript", "Value":["foo","bar"],"Body":"print(17+4)"}' | \
-  curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"TCP","Repeat":3,"Wait":2000,"Host":"e75493","Port":"23",
+  "Value":"exit\r"}
+EOF
 
-echo '{"Action":"TCP","Repeat":3,"Wait":2000,"Host":"e75493","Port":"23",
-  "Value":"exit\r"}' | curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"UDP","Host":"172.30.56.30","Port":"2362","Value":"*IDN?"}
+EOF
 
-echo '{"Action":"UDP","Host":"172.30.56.30","Port":"2362","Value":"*IDN?"}' | \
-  curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"HTTP","Url":"https://google.de"}
+EOF
 
-echo '{"Action":"HTTP","Url":"http://a73434.berlin.ptb.de"}' | \
-  curl -T - -X PUT http://localhost:55555
-
-echo '{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"EMAIL", "Host": "smtp-hub", "Subject": "Grüße von NodeJS",
   "From": "Homunculus <homunculus@ptb.de>","To": "Thomas.Bock@ptb.de",
-  "Body": "Hallo, wie geht es Dir?\nHeute scheint die Sonne."}' | \
-   curl -T - -X PUT http://localhost:55555
+  "Body": "Hallo, wie geht es Dir?\nHeute scheint die Sonne."}
+EOF
 
-echo '{"Action":"LaTeX","Source":"\\documentclass{article}\\begin{document}
-  Hello world!!!\\end{document}","OutputType":"stream"}' | \
-    curl -T - -X PUT http://localhost:55556 > zz.pdf
+cat <<EOF | curl -T - -X PUT http://localhost:55555 > foo.pdf
+{"Action":"TEX","Body":"\\\documentclass{article} \
+\\\begin{document}Hello world!!!\\\end{document}",
+"OutputType":"stream","KeepFiles":true}
+EOF
 
-echo '{"Action":"_version","PostProcessing":"Result=\"Hugo\""}' | \
-  curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"_version","PostProcessing":"Result=\"Hugo\""}
+EOF
 
-echo "{\"Action\":\"XLSX-IN\",\"Value\":\"$(base64 -w 0 foo.xlsx)\"}" | \
-  curl -T - -X PUT http://localhost:55555
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"_version","PostProcessing":"Result=\"Hugo\""}
+EOF
+
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"XLSX-IN","Value":"$(base64 -w 0 foo.xlsx)"}
+EOF
+
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"MODBUS","Host":"10.0.0.31","Address":45395,"Quantity":11,
+ "FunctionCode":"ReadHoldingRegisters", "OutMode":"Uint16"}
 ```
 
 ## Test
