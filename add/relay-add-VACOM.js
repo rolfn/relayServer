@@ -1,4 +1,3 @@
-
 var crc = require('crc');
 
 /**
@@ -11,6 +10,9 @@ var crc = require('crc');
  * "2010" --> "1.330000E-03" (mbar) 
  * "2011" --> "1.330000E-01" (Pa)
  * "2012" --> "9.975000E-04" (Torr) 
+ * 
+ * Baud Rate/Einstellung  der Geräte: 	RS232, 19200, None, 8, 1, None
+ * 
  *
  * @author Rolf Niepraschk
  * @param String s Hex-String (4 oder 4+32 Nibble-Character)
