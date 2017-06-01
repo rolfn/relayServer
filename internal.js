@@ -144,9 +144,10 @@ function call(pRef, js) {
       break;
     // Administration
     case '_version':
-      response.prepareResult(pRef, js, cfg.VERSION + ', ' + cfg.DATE);
+      response.prepareResult(pRef, js, cfg.VERSION + 
+        ' (node: ' + process.versions.node + ')');
       break;
-    case '_nodesVersion':
+    case '_nodejsVersion':
       response.prepareResult(pRef, js, process.version);
       break;
     case '_environment':
