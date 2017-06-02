@@ -1,0 +1,28 @@
+#! /bin/bash
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2017-06-02
+
+# Vorbereitung und Start des relayServer-Prozesses.
+
+R_PATH=/usr/local/share/relayServer/  # Pfad zu relayServer-Installation
+
+dist=$(lsb_release -is | cut -d " " -f 1 | tr '[A-Z]' '[a-z]')
+
+case "$dist" in
+  opensuse)
+    cp ${R_PATH}relayServer.service.opensuse \
+      /usr/lib/systemd/system/relayServer.service   
+    chown -R nobody:nobody ${R_PATH} ;;
+  ubuntu)
+    cp ${R_PATH}relayServer.service.ubuntu \
+      /lib/systemd/system/relayServer.service
+    chown -R nobody:nogroup ${R_PATH} ;;
+esac
+
+ln -sf ${R_PATH}vlLogging /usr/local/bin/vlLogging
+systemctl daemon-reload
+systemctl restart relayServer.service
+systemctl enable relayServer.service
+systemctl status relayServer.service
+
+exit
+
