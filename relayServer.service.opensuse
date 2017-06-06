@@ -1,6 +1,5 @@
 [Unit]
 Description=The relayServer daemon.
-Wants=gitlabhook.service
 After=network.target
 
 [Service]
