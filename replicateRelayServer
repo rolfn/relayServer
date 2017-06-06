@@ -1,5 +1,5 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2017-06-02
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2017-06-06
 
 # Verteilt relayServer-Dateien zu ausgewählten Rechnern per "rsync" und
 # aktiviert den relayServer-Prozess dort.
@@ -8,14 +8,16 @@ R_PATH=/usr/local/share/relayServer  # Pfad zu relayServer-Installation
 
 function doIt {
   echo "Begin: ************** $1 **************"
-  rsync --info=STATS1 -azL --delete --keep-dirlinks --exclude '.git'  \
-    ${R_PATH} $1:$(dirname $R_PATH)/
   # »-L« – Behandle Symlinks auf dem Quellsystem wie Verzeichnisse.  
   # »--keep-dirlinks« – Behandle Symlinks auf dem Zielsystem wie Verzeichnisse.
+  rsync --info=STATS1 -azL --delete --keep-dirlinks --exclude '.git'  \
+    ${R_PATH} $1:$(dirname $R_PATH)/
+  # Auf dem Zielsystem Nacharbeiten durchführen  
   ssh root@$1 ${R_PATH}/install
   echo "End:   ************** $1 **************"
 }
- 
+
+# Alle Rechner müssen/sollten ohne Passwortabfrage per ssh erreichbar sein!
 if [[ $1 ]]; then
   server="$1"
 else
@@ -24,8 +26,6 @@ else
 # 
   server="a73434 a73435 a75436 e75459 e75466 i75422 i75436"
 fi
-
-# Alle Rechner müssen ohne Passwortabfrage per ssh erreichbar sein!
 
 for i in $server; do
   doIt $i
