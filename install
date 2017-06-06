@@ -13,7 +13,7 @@ case "$dist" in
       /usr/lib/systemd/system/relayServer.service   
     chown -R nobody:nobody ${R_PATH} ;;
   ubuntu|raspbian|debian)
-    cp ${R_PATH}relayServer.service.ubuntu \
+    cp ${R_PATH}relayServer.service.debian \
       /lib/systemd/system/relayServer.service
     chown -R nobody:nogroup ${R_PATH} ;;
 esac
