@@ -44,6 +44,7 @@ function Uint16toBitArray(x, onlyLowByte) {
 function bitArrayToUint16(x) {
   var y = 0x0001, ret = 0;
   for(var i=0; i<x.length; i++) {
+    if (i>15) break;
     if (x[i]) ret += y;
     y<<=1;
   }
@@ -117,6 +118,9 @@ function call(pRef, js) {
   if (js.Value) {
     value = js.Value.length ? bitArrayToUint16(js.Value) : tools.getInt(js.Value);
   }
+  
+  if (value < 0 || value > 65535) 
+    response.prepareError(pRef, js, 'value must be greater 0 and less 65536');
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
   // "fc" entspricht nun dem Namen der relevanten Funktion
