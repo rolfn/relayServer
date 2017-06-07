@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-28
+ * version: 2017-06-07
  */
 
 var cfg = require('./config.js');
