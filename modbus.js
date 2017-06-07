@@ -56,6 +56,7 @@ function bitArrayToUint16(x) {
  */
 if (os.endianness() === 'LE') {
   var correctEndian = function(b) {
+    var tmp
     for(var i=0, tmp; i<b.length; i+=2) {
       tmp = b[i];
       b[i] =  b[i+1];
@@ -119,8 +120,8 @@ function call(pRef, js) {
     value = js.Value.length ? bitArrayToUint16(js.Value) : tools.getInt(js.Value);
   }
   
-  if (value < 0 || value > 65535) 
-    response.prepareError(pRef, js, 'value must be greater 0 and less 65536');
+  if (value < 0 || value > 65535) response.prepareError(pRef, js,
+    'Value must be a number between 0 and 65535');
 
   fc = fc ? (fc[0].toLowerCase() + fc.slice(1)) : false;
   // "fc" entspricht nun dem Namen der relevanten Funktion
