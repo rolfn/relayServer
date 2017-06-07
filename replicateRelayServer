@@ -11,7 +11,7 @@ function doIt {
   # »-L« – Behandle Symlinks auf dem Quellsystem wie Verzeichnisse.  
   # »--keep-dirlinks« – Behandle Symlinks auf dem Zielsystem wie Verzeichnisse.
   rsync --info=STATS1 -azL --delete --keep-dirlinks --exclude '.git'  \
-    ${R_PATH} $1:$(dirname $R_PATH)/
+    ${R_PATH} root@$1:$(dirname $R_PATH)/
   # Auf dem Zielsystem Nacharbeiten durchführen  
   ssh root@$1 ${R_PATH}/install
   echo "End:   ************** $1 **************"

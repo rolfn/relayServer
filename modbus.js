@@ -37,7 +37,7 @@ function Uint16toBitArray(x, onlyLowByte) {
 }
 
 /**
- * Liefert aus einem Array mit maximal 0/1-Werten einen 16Bit-Integer-Wert.
+ * Liefert aus einem Array mit 0/1-Werten einen 16Bit-Integer-Wert.
  * @param {array} x
  * @return {number}
  */
