@@ -7,9 +7,9 @@
  * sicher funktioniert (pos ändert sich bei führenden 0en).
  *
  * @author wactbprot
- * @param hexstr String Ventilrückmeldung
- * @param valve String Ventilbezeichnung
- * @return Object mit {'Valve_closed': true| false, 'Valve_opened':  false|true}
+ * @param {string} hexstr  Ventilrückmeldung
+ * @param {string} valve  Ventilbezeichnung
+ * @return {object} mit {'Valve_closed': true| false, 'Valve_opened':  false|true}
  *
  */
 function se1ValveStatus(hexStr,valve) {
@@ -37,10 +37,10 @@ exports.se1ValveStatus = se1ValveStatus;
  *
  *
  * @author wactbprot
- * @param psoll Number Solldruck in mbar
- * @param psoll Number Istdruck in mbar
- * @param Vopen Number kleines oder großes Volumen
- * @return Object Zielfluß bzw Setpoint für Regler 1&2
+ * @param {number} psoll Solldruck in mbar
+ * @param {number} psoll Istdruck in mbar
+ * @param {number} Vopen kleines oder großes Volumen
+ * @return {object} Zielfluß bzw. Setpoint für Regler 1&2
  */
 function calQsp(psoll, pist, mq){
   var ret = {};

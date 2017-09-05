@@ -25,7 +25,7 @@ var logger = cfg.logger;
 /**
  * Liefert Angaben zum Betriebssystem
  * (siehe: http://www.freedesktop.org/software/systemd/man/os-release.html)
- * @param {string|[string]} fname release-Dateien (kompletter Dateiname)
+ * @param {string} fname release-Dateien (kompletter Dateiname)
  * @param {function} success Aufruf bei Erfolg
  * @param {function} error Aufruf im Fehlerfall
 */

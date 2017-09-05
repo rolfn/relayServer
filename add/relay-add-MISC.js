@@ -12,6 +12,9 @@ function isNumber(n) {
 }
 exports.isNumber = isNumber;
 
+// TODO: Statt: "@param t String  Type" Besser: "@param {string} t Type"
+// --> JSDoc3
+
  /**
  *
  * Funktion erzeugt die üblich gewordene
