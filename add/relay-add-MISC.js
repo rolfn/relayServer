@@ -30,21 +30,19 @@ exports.isNumber = isNumber;
  *
  */
 function vlRes(t, v, u, c, s, n) {
-  var res = {
-    'Type': t,
-    'Value': v,
-    'Unit': u
-    };
+  var res = {'Type': t,
+             'Value': v,
+             'Unit': u
+            };
   if (c) {
     res.Comment = c;
   }
-  if (s || isNaN(s)) {
+  if (s || isNaN(s) || isNumber(s)) {
     res.SdValue = s;
   }
-  if (n) {
+  if (n || isNaN(s) || isNumber(s)) {
     res.N = n;
   }
-
     return res;
 }
 exports.vlRes = vlRes;
