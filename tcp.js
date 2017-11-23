@@ -38,7 +38,7 @@ function call(pRef, js) {
           result.splice(i,1); // Leerzeile beseitigen.
         }
       }
-      result = result.join('\n');
+      result = result.join('');
       b.push(result);
       next();
     });
@@ -71,4 +71,3 @@ function call(pRef, js) {
 }
 
 exports.call = call;
-
