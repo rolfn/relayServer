@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-07-01
+ * version: 2017-11-29
  */
 
 var fs = require('fs');
@@ -10,8 +10,8 @@ var fs = require('fs');
  */
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.10.1', 
-  DATE: '2017-06-07',
+  VERSION: '12.10.2', 
+  DATE: '2017-11-29',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
