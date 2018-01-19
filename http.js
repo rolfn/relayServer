@@ -41,10 +41,12 @@ function call(pRef, js) {
       proxy: proxy, // TODO: Test ob unnötig/schädlich
       body: js.Body,
       timeout: js.Timeout,
+      headers: js.Headers || {},
+      encoding: js.Encoding || 'utf8',
       json: json
     },
     function (e, res, body) {
-      if (!e && res.statusCode == 200) {
+      if (!e && res.statusCode > 199 && res.statusCode < 300) {
         utils.addStopTime(js);
         logger.debug('response body', body);
         response.prepareResult(pRef, js, body);
