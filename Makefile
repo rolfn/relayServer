@@ -1,6 +1,8 @@
 
 # Rolf Niepraschk, 2015-11-23, Rolf.Niepraschk@ptb.de
 
+# !!! jsdoc -r -d docs/html -R README.md add *.js
+
 # zypper in fakeroot alien createrepo
 
 MAIN = relayServer
