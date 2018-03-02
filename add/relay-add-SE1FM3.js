@@ -54,7 +54,7 @@ function calQsp(psoll, pist, mq){
    var  ts      = 20,          // Sollzeit (p wird theor. in ts erreicht)
         bord    = 0.7,         // Start Regelung rel. Abw. von psoll
         sscbord = 2.0,        // Start 2. Regler
-        eps     = 0.003,        // Ende Regelung rel. Abw. von psoll
+        eps     = 0.005,        // Ende Regelung rel. Abw. von psoll
         md      = 1;           // Dämpf./verst. der Regel.
 
     // genauere Einstellung durch psoll * (1 + eps)
