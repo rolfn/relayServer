@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-02-24
+ * version: 2018-04-17
  */
 
 var cfg = require('./config.js');
@@ -42,22 +42,38 @@ function call(pRef, js) {
    * @param {function} next
    */
   function doIt(b, next) {
-    var diff = new Date().getTime() - cfg.vxi11_last_time, 
+    function addDelay(nb, success, error) {
+      nb--;
+      if (!nb) error(); // letzter Versuch erfolglos
+      var diff = new Date().getTime() - cfg.vxi11_last_time, 
         addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT-diff : 0;
-    logger.info('VXI (last): ' + (cfg.vxi11_last_time ? diff + ' ms' : '?'));
-    if (addWait) logger.info('VXI (addWait): %d ms', addWait);
-    // TODO: mehrfach überprüfen!
-    setTimeout(function() {// warten, wenn zu wenig Zeit vergangen
-      cfg.vxi11_last_time = new Date().getTime();
-      vxi(params, function(result) {
-        b.push(result);
-        next();
-      }, function(error) {
-        logger.error(error);
-        response.prepareError(pRef, js, error);
-      });              
-    }, addWait);  
+      logger.info('[' + nb + '] VXI11 (last): ' + 
+        (cfg.vxi11_last_time ? diff + ' ms' : '?'));
+      if (addWait) logger.info('[' + nb + '] VXI11 (addWait): %d ms', addWait);
+      else success();      
+      setTimeout(function() {// warten, wenn zu wenig Zeit vergangen
+        addDelay(nb, success, error);
+      }, addWait);
+    }
+    addDelay(5, // max. Anzahl Versuche, "race condition" zu vermeiden
+      function() {// success
+        cfg.vxi11_last_time = new Date().getTime();
+        vxi(params, function(result) {
+          b.push(result);
+          next();
+        }, function(error) {
+          logger.error(error);
+          response.prepareError(pRef, js, error);
+        });      
+      }, 
+      function() {// error
+        var e = 'Unresolved race condition';
+        logger.error(e);
+        response.prepareError(pRef, js, e);
+      }
+    );
   }
+    
   utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
     response.prepareResult(pRef, js, repeatResult);
   }, pRef, js);
