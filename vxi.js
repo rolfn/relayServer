@@ -42,20 +42,28 @@ function call(pRef, js) {
    * @param {function} next
    */
   function doIt(b, next) {
+    const MAX_TRIES = 5; // max. Anzahl Versuche, "race condition" zu vermeiden
     function addDelay(nb, success, error) {
       nb--;
-      if (!nb) error(); // letzter Versuch erfolglos
+      if (!nb) {// alle Versuche erfolglos
+        error();
+        return;
+      }
       var diff = new Date().getTime() - cfg.vxi11_last_time, 
-        addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT-diff : 0;
-      logger.info('[' + nb + '] VXI11 (last): ' + 
+        addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT-diff : 0,
+        idx = MAX_TRIES - nb;
+      logger.info('[' + idx + '] VXI11 (last): ' + 
         (cfg.vxi11_last_time ? diff + ' ms' : '?'));
-      if (addWait) logger.info('[' + nb + '] VXI11 (addWait): %d ms', addWait);
-      else success();      
-      setTimeout(function() {// warten, wenn zu wenig Zeit vergangen
+      if (addWait) logger.info('[' + idx + '] VXI11 (addWait): %d ms', addWait);
+      else {
+        success();
+        return;
+      }      
+      setTimeout(function() {// warten, wenn zu wenig Zeit vergangen ist
         addDelay(nb, success, error);
       }, addWait);
     }
-    addDelay(5, // max. Anzahl Versuche, "race condition" zu vermeiden
+    addDelay(MAX_TRIES,
       function() {// success
         cfg.vxi11_last_time = new Date().getTime();
         vxi(params, function(result) {
@@ -67,9 +75,9 @@ function call(pRef, js) {
         });      
       }, 
       function() {// error
-        var e = 'Unresolved race condition';
-        logger.error(e);
-        response.prepareError(pRef, js, e);
+        var error = 'Unresolved race condition';
+        logger.error(error);
+        response.prepareError(pRef, js, error);
       }
     );
   }
