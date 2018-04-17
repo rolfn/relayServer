@@ -42,16 +42,23 @@ function call(pRef, js) {
    * @param {function} next
    */
   function doIt(b, next) {
-    vxi(params, function(result) {
-      b.push(result);
-      next();
-    }, function(error) {
-      logger.error(error);
-      response.prepareError(pRef, js, error);
-    });
+    var diff = new Date().getTime() - cfg.vxi11_last_time, 
+        addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT-diff : 0;
+    logger.info('VXI (last): ' + (cfg.vxi11_last_time ? diff + ' ms' : '?'));
+    if (addWait) logger.info('VXI (addWait): %d ms', addWait);
+    // TODO: mehrfach überprüfen!
+    setTimeout(function() {// warten, wenn zu wenig Zeit vergangen
+      cfg.vxi11_last_time = new Date().getTime();
+      vxi(params, function(result) {
+        b.push(result);
+        next();
+      }, function(error) {
+        logger.error(error);
+        response.prepareError(pRef, js, error);
+      });              
+    }, addWait);  
   }
-  var wait = js.Wait < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT : js.Wait;
-  utils.repeat(js.Repeat, wait, doIt, function(repeatResult) {
+  utils.repeat(js.Repeat, js.Wait, doIt, function(repeatResult) {
     response.prepareResult(pRef, js, repeatResult);
   }, pRef, js);
 

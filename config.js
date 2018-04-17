@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-01-19
+ * version: 2018-04-16
  */
 
 var fs = require('fs');
@@ -10,14 +10,14 @@ var fs = require('fs');
  */
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.10.3', 
-  DATE: '2018-01-19',
+  VERSION: '12.11.0-pre', 
+  DATE: '2018-04-16',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
-  MIN_VXI11_WAIT: 50, // msec
+  MIN_VXI11_WAIT: 100, // msec
   MIN_TCP_WAIT: 250, // msec // ???
   MIN_UDP_WAIT: 250, // msec
   MIN_MODBUS_WAIT: 250, // msec
@@ -39,7 +39,8 @@ var cfg = {
   RELEASE_FILES: ['/etc/os-release','/etc/SuSE-release','/etc/redhat-release',
     '/etc/mandrake-release','/etc/gentoo-release','/etc/slackware-release',
     '/etc/release'],
-  theRepeats: {}
+  theRepeats: {},
+  vxi11_last_time: 0
 };
 
 try {
