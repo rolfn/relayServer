@@ -44,7 +44,6 @@ function call(pRef, js) {
   function doIt(b, next) {
     const MAX_TRIES = 5; // max. Anzahl Versuche, "race condition" zu vermeiden
     function addDelay(nb, success, error) {
-      nb--;
       if (!nb) {// alle Versuche erfolglos
         error();
         return;
@@ -60,7 +59,7 @@ function call(pRef, js) {
         return;
       }      
       setTimeout(function() {// warten, wenn zu wenig Zeit vergangen ist
-        addDelay(nb, success, error);
+        addDelay(--nb, success, error);
       }, addWait);
     }
     addDelay(MAX_TRIES,
