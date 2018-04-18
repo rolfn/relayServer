@@ -44,7 +44,7 @@ function call(pRef, js) {
   function doIt(b, next) {
     const MAX_TRIES = 5; // max. Anzahl Versuche, "race condition" zu vermeiden
     function addDelay(nb, success, error) {
-      if (n <= 0) {// alle Versuche erfolglos
+      if (nb == 0) {// alle Versuche erfolglos
         error();
         return;
       }
