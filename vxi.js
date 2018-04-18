@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-04-17
+ * version: 2018-04-18
  */
 
 var cfg = require('./config.js');
@@ -49,18 +49,19 @@ function call(pRef, js) {
         return;
       }
       var diff = new Date().getTime() - cfg.vxi11_last_time, 
-        addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT-diff : 0,
+        addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT - diff : false,
         idx = MAX_TRIES - nb;
       logger.info('[' + idx + '] VXI11 (last): ' + 
         (cfg.vxi11_last_time ? diff + ' ms' : '?'));
-      if (addWait) logger.info('[' + idx + '] VXI11 (addWait): %d ms', addWait);
-      else {
+      if (addWait) {
+        logger.info('[' + idx + '] VXI11 (addWait): %d ms', addWait);
+        setTimeout(function() {// warten, wenn zu wenig Zeit vergangen ist
+          addDelay(--nb, success, error);
+        }, addWait);
+      } else {
         success();
         return;
       }      
-      setTimeout(function() {// warten, wenn zu wenig Zeit vergangen ist
-        addDelay(--nb, success, error);
-      }, addWait);
     }
     addDelay(MAX_TRIES,
       function() {// success
