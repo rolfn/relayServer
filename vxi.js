@@ -55,7 +55,7 @@ function call(pRef, js) {
         (cfg.vxi11_last_time ? diff + ' ms' : '?'));
       if (addWait) {
         logger.info('[' + idx + '] VXI11 (addWait): %d ms', addWait);
-        setTimeout(function() {// warten, wenn zu wenig Zeit vergangen ist
+        setTimeout(function() {// warten, da zu wenig Zeit vergangen ist
           addDelay(--nb, success, error);
         }, addWait);
       } else {
