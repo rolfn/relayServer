@@ -89,7 +89,9 @@ var vlTrim = function(str) {
 exports.vlTrim = vlTrim;
 
 /**
- * Testet Array auf numerische Einträge und sortiert ggf. aus
+ * Testet Array auf numerische Einträge.
+ * Indizes nicht-numerischer Einträge landen
+ * in res.Skip
  *
  *
  * @author wactbprot
@@ -101,32 +103,38 @@ function checkNumArr(arr) {
     var res = {};
     res.Arr = [];
     res.Skip = [];
-    arr.map(function(v, i) {
-      if (isNumber(v)) {
-        res.Arr.push(v);
+    for (var i=0; i < arr.length; i++) {
+      if (isNumber(arr[i])) {
+        res.Arr.push(arr[i]);
       }
       else {
         res.Skip.push(i);
       }
-    });
+    };
     return res;
   }
 }
 exports.checkNumArr = checkNumArr;
 
 /**
- * Entfernt Einträge aus einer Datenreihe.
- *
+ * Entfernt Einträge aus einer Datenreihe (array).
+ * Bem.: Bie alte splice methode funktioniert plötzlich
+ * im _. relay-Kontext nicht mehr; Tests in der
+ * node-Umgebung (auf Kommandozeile) verhalten sich
+ * erwartungsgemäß (deshalb diese plumpere Umsetzung)
  *
  * @author wactbprot
- * @param arr Array Datenreihe
- * @param arr Integer "skip" Index
+ * @param Arr Array Datenreihe
+ * @param Idx Integer "skip" Index
  * @return res Array resultierendes Array
  */
 function rmByIndex(Arr, Idx) {
-  Idx.map(function(i) {
-    Arr.splice(i, 1);
-  });
-  return Arr;
+  narr = [];
+  for (var i=0; i < Arr.length; i++) {
+    if(Idx.indexOf(i) == -1){
+        narr.push(Arr[i]);
+    }
+  }
+  return narr;
 }
 exports.rmByIndex = rmByIndex;
