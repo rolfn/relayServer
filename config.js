@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-04-18
+ * version: 2018-08-21
  */
 
 var fs = require('fs');
@@ -10,7 +10,7 @@ var fs = require('fs');
  */
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.11.1', 
+  VERSION: '12.11.2', 
   DATE: '2018-04-18',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,

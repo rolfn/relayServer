@@ -1,8 +1,16 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2017-06-06
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2018-08-21
 
 # Verteilt relayServer-Dateien zu ausgewählten Rechnern per "rsync" und
 # aktiviert den relayServer-Prozess dort.
+
+# Aufruf:
+#
+# ./replicateRelayServer
+# oder
+# ./replicateRelayServer "a73434 a73435 a75436 e73461 e73462 \
+# e75455 e75457 e75458 e75459 e75466 e75467 e75470 i75419 \
+# i75420 i75422 i75434 i75436"
 
 R_PATH=/usr/local/share/relayServer  # Pfad zu relayServer-Installation 
 
