@@ -21,9 +21,19 @@ var logger = cfg.logger;
  */
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
-  var method = js.Method ? js.Method : (js.Body ? 'POST' : 'GET');
+  var method;
   var json = js.Json || false;
   var proxy = process.env.http_proxy;
+  if (js.Body) {
+    method = 'POST';
+    if (typeof js.Body != 'string' && typeof js.Body != 'Buffer') {
+      response.prepareError(pRef, js, 
+        'Body must be of type string or Buffer!');
+      return;
+    }
+  } else {
+    method = 'GET';
+  }
   if (process.env.no_proxy) {
     var np = process.env.no_proxy.split(',');
     for (var i=0;i<np.length;i++) {
