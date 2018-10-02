@@ -459,6 +459,26 @@ EOF
         \item[Timeout] -- (optional, Standard: 20...120\,sec).
 
       \end{description}
+Beispiel:
+\begin{lstlisting}[language={}]
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"HTTP","Url":"http://a73434:55555",
+"Body":{"Action":"_os_release"},"Json":true}
+EOF
+\end{lstlisting}
+Es wird dem lokalen "`\theServer"' der Auftrag erteilt, per HTTP"=Protokoll 
+einen anderen entfernten "`\theServer"' anzusprechen und mit diesem die Action  
+"`|_os_release|"' auszuführen. Die zurückgelieferten JSON"=Daten
+\begin{lstlisting}[language={}]
+{"t_start":1538464194174,"t_stop":1538464194184,
+"Result":{"Result":{"NAME":"openSUSE Leap",
+"VERSION":"42.3","ID":"opensuse","ID_LIKE":"suse",
+"VERSION_ID":"42.3","PRETTY_NAME":"openSUSE Leap 42.3",
+"ANSI_COLOR":"0;32","CPE_NAME":"cpe:/o:opensuse:leap:42.3",
+"BUG_REPORT_URL":"https://bugs.opensuse.org",
+"HOME_URL":"https://www.opensuse.org/"}}}
+\end{lstlisting}
+enthalten in diesem Falle Angaben zum Betriebssystem des entfernten Rechners.
 
     \item \action{UDP}
 

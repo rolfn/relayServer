@@ -26,11 +26,6 @@ function call(pRef, js) {
   var proxy = process.env.http_proxy;
   if (js.Body) {
     method = 'POST';
-    if (typeof js.Body != 'string' && typeof js.Body != 'Buffer') {
-      response.prepareError(pRef, js, 
-        'Body must be of type string or Buffer!');
-      return;
-    }
   } else {
     method = 'GET';
   }

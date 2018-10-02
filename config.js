@@ -3,16 +3,15 @@
  * version: 2018-10-01
  */
 
-var fs = require('fs');
+var fs = require('fs'), pkg = require('./package.json');
 
 /**
  * Datenstruktur mit Default-Werten
  */
  
-// TODO: Get VERSION & DATE from "package.json"
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.11.3', 
+  VERSION: pkg.version, 
   DATE: '2018-10-01',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
