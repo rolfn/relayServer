@@ -90,3 +90,25 @@
    return (ret.length > 1) ? ret : ret[0];
  }
  exports.readAnybusGw = readAnybusGw;
+
+
+/**
+ * Funktioniert(e) für Danfos MKS CDG (2018). 
+ * Datagram: PO,PI,ExS,PVF
+ * Profibusmaster: Kunbus
+ *
+ * @param b Buffer buf Rückgabe des Modbus-Profibus-Gateways
+ * @return Object (o) mit Property o.Status Int und o.Value Number/Array Float-Zahl(en)
+ */
+ function readKunbusGw(b) {
+   var ba  = [], pos = 6;
+     
+     ba = [ b[pos + 0]
+          , b[pos + 3]
+          , b[pos + 2]
+	    ,0];
+     var nb = new Buffer(ba);
+    return nb.readFloatBE(0)
+ }
+ exports.readKunbusGw = readKunbusGw;
+
