@@ -1,17 +1,18 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-08-21
+ * version: 2018-10-01
  */
 
-var fs = require('fs');
+var fs = require('fs'), pkg = require('./package.json');
 
 /**
  * Datenstruktur mit Default-Werten
  */
+ 
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
-  VERSION: '12.11.2', 
-  DATE: '2018-04-18',
+  VERSION: pkg.version, 
+  DATE: '2018-10-01',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec

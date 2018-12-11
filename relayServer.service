@@ -4,7 +4,6 @@ After=network.target
 
 [Service]
 User=nobody
-Group=nobody
 Type=simple
 StandardOutput=null
 StandardError=null

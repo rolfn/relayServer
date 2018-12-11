@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-14
+ * version: 2018-10-02
  */
 
 var cfg = require('./config.js');
@@ -21,9 +21,19 @@ var logger = cfg.logger;
  */
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
-  var method = js.Method ? js.Method : (js.Body ? 'POST' : 'GET');
+  var method;
   var json = js.Json || false;
   var proxy = process.env.http_proxy;
+  if (js.Body) {
+    if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !json) {
+      response.prepareError(pRef, js, 
+        "Wrong type of Body. (Missing 'Json:true'?)");
+      return;
+    }
+    method = 'POST';
+  } else {
+    method = 'GET';
+  }
   if (process.env.no_proxy) {
     var np = process.env.no_proxy.split(',');
     for (var i=0;i<np.length;i++) {

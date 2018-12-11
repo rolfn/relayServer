@@ -104,6 +104,11 @@ EOF
 cat <<EOF | curl -T - -X PUT http://localhost:55555
 {"Action":"MODBUS","Host":"10.0.0.31","Address":45395,"Quantity":11,
  "FunctionCode":"ReadHoldingRegisters", "OutMode":"Uint16"}
+EOF
+
+cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"HTTP","Url":"http://a73434:55555","Body":{"Action":"_os_release"},
+"Json":true}
 EOF 
 ```
 
