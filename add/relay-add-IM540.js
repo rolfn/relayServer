@@ -12,8 +12,9 @@ var x = require('./relay-add-MISC.js');
 function extractIm540(s) {
 // var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
 // schwächer:
-// jetzt in Pa:
-  var regex = /(PA\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
+// jetzt in Pa
+// "MES R\r\nPA   1.48E-08\r\n"
+  var regex = /(PA\s*)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
 
   return x.strToNum(regex.exec(s), 2);
 }
