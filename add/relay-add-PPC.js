@@ -10,7 +10,7 @@ var x = require('./relay-add-MISC.js');
  */
 
 function extractPPC(s) {
-  var regex = /^(R\,)([+-]?[0-9]{1,4}\.?[0-9]{1,3})\s*mbar/
+  var regex = /^(R\,)([+-]?[0-9]{1,4}\.?[0-9]{1,3})\s*Pa/
 
   var n = x.strToNum(regex.exec(s), 2)
   return n;

@@ -10,9 +10,10 @@ var x = require('./relay-add-MISC.js');
  * @return Number Zahl.
  */
 function extractIm540(s) {
-//  var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
+// var regex = /^(MES\sR\rMBAR\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
 // schwächer:
-  var regex = /(BAR\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
+// jetzt in Pa:
+  var regex = /(PA\s)([0-9]{1}\.[0-9]{1,2}[E][-+][0-9]{2})(\r\n)$/;
 
   return x.strToNum(regex.exec(s), 2);
 }
