@@ -24,6 +24,7 @@ submodules = [
 './add/relay-add-FRS.js',
 './add/relay-add-PM2535.js',
 './add/relay-add-MKSCDG.js',
+'./add/relay-add-INFCDGCUBE.js',
 './add/relay-add-F250.js',
 './add/relay-add-ATMION.js',
 './add/relay-add-IM540.js',
