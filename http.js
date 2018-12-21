@@ -21,18 +21,20 @@ var logger = cfg.logger;
  */
 function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
-  var method;
+  var method = js.Method || false;
   var json = js.Json || false;
   var proxy = process.env.http_proxy;
-  if (js.Body) {
-    if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !json) {
-      response.prepareError(pRef, js, 
-        "Wrong type of Body. (Missing 'Json:true'?)");
-      return;
+  if (!method) {
+    if (js.Body) {
+      if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !json) {
+        response.prepareError(pRef, js, 
+          "Wrong type of Body. (Missing 'Json:true'?)");
+        return;
+      }
+      method = 'POST';
+    } else {
+      method = 'GET';
     }
-    method = 'POST';
-  } else {
-    method = 'GET';
   }
   if (process.env.no_proxy) {
     var np = process.env.no_proxy.split(',');
