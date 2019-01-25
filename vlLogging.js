@@ -2,7 +2,7 @@
 
 /**
  *   @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
- *   2019-01-24
+ *   2019-01-25
  */
 
 var io = require('socket.io-client');
@@ -10,14 +10,14 @@ var host = process.argv[2] ? process.argv[2] : 'localhost';
 var port = 9001;
 var socket = io.connect('ws://' + host + ':' + port);
 
-function onReconnect() {
-  console.log('»' + socket.id + '« reconnected to »' + host + '«');
+function onReconnect(attemptNumber) {
+  console.log('»' + socket.id + '« reconnected');
 }
 function onConnect() {
-  console.log('»' + socket.id + '« connected to »' + host + '«');
+  console.log('»' + socket.id + '« connected');
 }
-function onDisconnect() {
-  console.log('disconnected');
+function onDisconnect(reason) {
+  console.log('disconnected (' + reason + ')');
   id = undefined;
 }
 function onError(e) {
