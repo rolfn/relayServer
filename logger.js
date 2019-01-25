@@ -25,7 +25,8 @@ function formatParams(info) {
   const filename = path.basename(logCaller.getFileName()),
     linenumber = logCaller.getLineNumber(),
     functionname =  logCaller.getFunctionName() || '<anonymous>';
-  var ret = `${info.timestamp} [${filename}:${linenumber}:${functionname}]\n`;  
+  var ret = `${info.timestamp} [${filename}:${linenumber}:${functionname} `;
+  ret = ret + `${level}]\n`;
   ret = ret + `${info.message === Object(info.message) ? 
     inspect(info.message, inspectOpts) : info.message}`;
   if (typeof info.meta !== 'undefined') {
