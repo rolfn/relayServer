@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-18
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -31,8 +31,8 @@ function call(pRef, js) {
     var texFile = js._execStr.split(' ').pop();
     var resultFile = path.join(js.WorkingDir,
       texFile.replace('.tex', '.' + cfg.DEFAULT_TEX_DESTFMT));
-    logger.debug('texFile: ' + texFile);
-    logger.debug('resultFile: ' + resultFile);
+    logger.debug('texFile: ', texFile);
+    logger.debug('resultFile: ', resultFile);
     fs.readFile(resultFile, function (err, data) {
       if (err) {
         if (js._execStr.indexOf(cfg.TEX_ERROR_FILE) == -1) {// keine Endlosschleife
@@ -63,9 +63,9 @@ function call(pRef, js) {
           });
         } else response.prepareError(pRef, js, err);
       } else {
-        logger.debug('successful read: ' + resultFile);
+        logger.debug('successful read: ', resultFile);
         if (!js.KeepFiles) {
-          logger.debug('remove working directory: %s: ', js.WorkingDir);
+          logger.debug('remove working directory: ', js.WorkingDir);
           tmp.cleanup();
         }
         response.prepareResult(pRef, js, data);
@@ -93,14 +93,14 @@ function call(pRef, js) {
   js.Repeat = tools.getInt(js.Repeat, cfg.DEFAULT_TEX_RUNS);
   var filename = js.Filename ? js.Filename :
     cfg.DEFAULT_TEX_OUTNAME + '.' + cfg.DEFAULT_TEX_DESTFMT;
-  logger.debug('filename: %s', filename);
+  logger.debug('filename: ', filename);
   js.Head = {};
   js.Head['Content-Type'] = 'application/pdf';
   js.Head['Content-Disposition'] = 'attachment; filename=' + filename;
   js.OutputType = 'stream';
   js.OutputEncoding = 'binary';// TODO: Kann das weg?
   js._execStr = cmd + ' -interaction=batchmode '  + cfg.TEX_FILE;
-  logger.debug('Head: %s', js.Head);
+  logger.debug('Head: ', js.Head);
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
   //  schreiben, dann Aufruf von "external.call".
   tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {

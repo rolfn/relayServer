@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2015-03-03
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -32,7 +32,7 @@ function call(pRef, js) {
     });
     client.send(buf, 0, buf.length, port, host, function(e, bytes) {
       if (!e) {
-        logger.debug('%d Bytes sended: %s', bytes, buf.toString('utf8', 0, bytes));
+        logger.debug(`${bytes} Bytes sended: `, buf.toString('utf8', 0, bytes));
         if (!timeout) {
           // Spezialfall, falls keine Antwort vom Gerät erwartet werden kann
           logger.debug('send "OK" back ("timeout==0")');
@@ -51,7 +51,7 @@ function call(pRef, js) {
     if (timeout) {
       client.on('message', function (msg, rinfo) {
         var value = msg.toString('utf8', 0, msg.length);
-        logger.debug('%d Bytes received: %s', msg.length, value);
+        logger.debug(`${msg.length} Bytes received: `, value);
         b.push(value);
         client.close();
         next(); // ?
@@ -59,7 +59,7 @@ function call(pRef, js) {
       setTimeout(function() {
         try{
           client.close();
-          logger.error('Timeout > %d', timeout);
+          logger.error('Timeout > ', timeout);
           response.prepareError(pRef, js, 'Timeout');
         } catch(err) {
         }

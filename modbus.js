@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-06-07
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -127,7 +127,7 @@ function call(pRef, js) {
   // "fc" entspricht nun dem Namen der relevanten Funktion
 
   function doIt(b, next) {
-    logger.debug('modbus function: ' + fc);
+    logger.debug('modbus function: ', fc);
     function destroyMaster() {
       setTimeout(function() {
         master.destroy();
@@ -175,8 +175,8 @@ function call(pRef, js) {
         logger.error(msg);
         response.prepareError(pRef, js, msg);
       } else {// gültige Antwort
-        //logger.debug(require('util').inspect(resp));
-        logger.debug(resp.toString());
+        //logger.debug(resp);
+        logger.debug('resp: ', resp.toString());
         var x = func(); // Funktion muss aufbereitete Antwort zurückliefern
         b.push(x.length == 1 ? x[0] : x); // 1-Element-Array zu Element
         next();
@@ -188,7 +188,7 @@ function call(pRef, js) {
         var view8 = reduceElements(correctEndian(new Uint8Array(values)), skip);
         var arrBuf = view8.buffer, result;
         var view16 = new Uint16Array(arrBuf);
-        logger.debug('outmode: ' + outmode);
+        logger.debug('outmode: ', outmode);
         switch (outmode) {
           case '8Bits':  // Array of Bit-Arrays (8 Bits)
             result = [];

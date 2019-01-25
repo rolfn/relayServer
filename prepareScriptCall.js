@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-18
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -24,7 +24,7 @@ var logger = cfg.logger;
 function call(pRef, js) {
   var cleanUp = function(pRef, js, data) {
     if (!js.KeepFiles) {
-      logger.debug('remove working directory: %s: ', js.WorkingDir);
+      logger.debug('remove working directory: ', js.WorkingDir);
       tmp.cleanup();
     }
     response.prepareResult(pRef, js, data);

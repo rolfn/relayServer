@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-10-06
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -60,7 +60,7 @@ function toXLSX(pRef, js) {
  */
 function fromXLSX(pRef, js) {
   try {
-    logger.debug('Value.length: %d', js.Value.length);
+    logger.debug('Value.length: ', js.Value.length);
     utils.addStartTime(js);
     var data = xlsx.parse(new Buffer(js.Value, 'base64'));
     utils.addStopTime(js);

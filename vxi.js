@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-04-18
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -51,10 +51,10 @@ function call(pRef, js) {
       var diff = new Date().getTime() - cfg.vxi11_last_time, 
         addWait = diff < cfg.MIN_VXI11_WAIT ? cfg.MIN_VXI11_WAIT - diff : false,
         idx = MAX_TRIES - nb;
-      logger.info('[' + idx + '] VXI11 (last): ' + 
-        (cfg.vxi11_last_time ? diff + ' ms' : '?'));
+      logger.info(`[${idx}] VXI11 (last): `, 
+        (cfg.vxi11_last_time ? diff + ' ms' : '?'));  
       if (addWait) {
-        logger.info('[' + idx + '] VXI11 (addWait): %d ms', addWait);
+        logger.info(`[${idx}] VXI11 (addWait): `, addWait);
         setTimeout(function() {// warten, da zu wenig Zeit vergangen ist
           addDelay(--nb, success, error);
         }, addWait);

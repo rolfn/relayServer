@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-04-25
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -30,11 +30,11 @@ function call(pRef, js) {
       if (conn.flush) conn.flush(); // required for legacy support (Node <0.5)?
     });
     conn.addListener('end', function () {
-      logger.debug('end 1: %s', JSON.stringify(result));
+      logger.debug('end 1: ', result);
       for (var i=0; i < result.length;i++) {
         if ((result[i] == '\r\n') || (result[i] == '\n') ||
           (result[i] == '\r')) {
-          logger.debug('end 2: %s', JSON.stringify(result));
+          logger.debug('end 2: ', result);
           result.splice(i,1); // Leerzeile beseitigen.
         }
       }
@@ -58,7 +58,7 @@ function call(pRef, js) {
     });
     conn.addListener('data', function(data){
       result.push(data);
-      logger.debug('data', data);
+      logger.debug('data: ', data);
       conn.end(); // Half-closes the stream.
     });
   }

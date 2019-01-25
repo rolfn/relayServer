@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-12-02
+ * version: 2019-01-25
  */
 
 var vm = require('vm');
@@ -21,13 +21,13 @@ try {
   addon = require('./relay-add.js');
   logger.info('"relay-add.js" loaded');
 } catch(e) {
-  logger.info('relay-add.js: ' + e.toString());
+  logger.info('relay-add.js: ', e.toString());
 } 
 
 var process = function(target, data, code, clbk, a1) {    
   // Einfache Strings und String-Arrays unterstützen.
   var evalStr = (Array.isArray(code)) ? code.join('\n') : code;
-  logger.debug('evalStr: %s', evalStr);
+  logger.debug('evalStr: ', evalStr);
   var script, ret = "";
   var sandbox = {};
   sandbox._x = data;
@@ -54,7 +54,7 @@ var process = function(target, data, code, clbk, a1) {
     script.runInNewContext(sandbox);
     for (var key in sandbox) {
       if (key != 'gc' && key[0] != '_') {// temporäre Variablen ignorieren
-        logger.debug('sandbox[%s]', key, sandbox[key]);
+        logger.debug(`sandbox[${key}]: `, sandbox[key]);
         target[key] = sandbox[key];
       }
     }

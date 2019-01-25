@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-18
+ * version: 2019-01-25
  */
 
 var exec = require('child_process').exec;
@@ -20,7 +20,7 @@ var logger = cfg.logger;
  */
 function call(pRef, js, postFunc) {
   var execStr = '';
-  logger.debug('Action: %s', js.Action);
+  logger.debug('Action: ', js.Action);
   if (js._execStr === undefined) {
     
     if (js.Body) {// Erster Aufruf; 
@@ -48,7 +48,7 @@ function call(pRef, js, postFunc) {
     execStr = js._execStr; 
   }
 
-  logger.info('execStr: %s', execStr);
+  logger.info('execStr: ', execStr);
 
   var execOpt = {};
   execOpt.timeout = tools.getInt(js.Timeout, cfg.DEFAULT_EXEC_TIMEOUT);
@@ -60,16 +60,16 @@ function call(pRef, js, postFunc) {
   logger.debug('execOpt: ', execOpt);
 
   var doIt = function(b, next) {
-    logger.debug('time_begin: %d', new Date().getTime());
+    logger.debug('time_begin: ', new Date().getTime());
     var child = exec(execStr, execOpt,
       function (error, stdout, stderr) {
         if (error) {
-          logger.error('error: %s (%d / %d)', error, stderr.length, stdout.length);
-          logger.error('exitCode:', error.code);
+          logger.error(`error: ${error} (${stderr.length} / ${stdout.length})`);
+          logger.error('exitCode: ', error.code);
           js.exitCode = error.code;
           response.prepareError(pRef, js, error.toString());
         } else {
-          logger.debug('time_success: %d', new Date().getTime());
+          logger.debug('time_success: ', new Date().getTime());
           var res;
 
           if (js.OutputEncoding == 'binary') {
@@ -77,11 +77,10 @@ function call(pRef, js, postFunc) {
           } else {
             res = stdout;
           }
-          logger.debug('exitCode:', 0);
+          logger.debug('exitCode: ', 0);
           js.exitCode = 0;
-          logger.debug('res: %s (%d Bytes)', typeof res, res.length);
-          logger.debug('OutputType: %s, OutputEncoding: %s', js.OutputType,
-            js.OutputEncoding);
+          logger.debug(`res: ${typeof res} (${res.length} Bytes)`);
+          logger.debug(`OutputType: ${js.OutputType}, OutputEncoding: ${js.OutputEncoding}`); 
           b.push(res);
         }
         next();

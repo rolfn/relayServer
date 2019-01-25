@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2017-04-18
+ * version: 2019-01-25
  */
 
 var fs = require('fs');
@@ -129,7 +129,6 @@ function call(pRef, js) {
       _vxi11.call(pRef, js);
       break;
     case 'MODBUS':
-      logger.log('MODBUS');
       _modbus.call(pRef, js);
       break;
     case 'XLSX-OUT':

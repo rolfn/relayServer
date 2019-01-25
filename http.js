@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-10-02
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -45,7 +45,7 @@ function call(pRef, js) {
       }
     }
   }
-  logger.debug('method: %s, proxy: %s, json: %s', method, proxy, json);
+  logger.debug(`method: ${method}, proxy: ${proxy}, json: ${json}`);
   utils.addStartTime(js);
   request(
     { method: method,
@@ -60,7 +60,7 @@ function call(pRef, js) {
     function (e, res, body) {
       if (!e && res.statusCode > 199 && res.statusCode < 300) {
         utils.addStopTime(js);
-        logger.debug('response body', body);
+        logger.debug('response body: ', body);
         response.prepareResult(pRef, js, body);
       } else {
         var x = res && res.statusCode ? res.statusCode : e.toString();

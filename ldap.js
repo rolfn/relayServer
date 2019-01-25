@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: version: 2015-02-24
+ * version: version: 2019-01-25
  */
 
 // noch ungetestet in der modularen Variante!
@@ -62,18 +62,18 @@ function search2(pRef, js, last) {
         js.Data = e.message;
         unbind(pRef, js);
       } else {
-        logger.debug('search: %s', 'SUCCESS');
+        logger.debug('search: ', 'SUCCESS');
         res.on('searchEntry', function(entry) {
           js.Data = JSON.stringify(entry.object);
           js.DN = entry.dn;
-          logger.debug('searchEntry', js.Data);
+          logger.debug('searchEntry: ', js.Data);
         });
         res.on('error', function(e) {
           js.Data = e.message;
           logger.error('error: ', js.Data);
         });
         res.on('end', function(result) {
-           logger.debug('status: %s', result.status);
+           logger.debug('status: ', result.status);
           if (last === undefined) {
             js.Success = true;
             unbind(pRef, js);
@@ -107,7 +107,7 @@ function search1(pRef, js, last) {
       logger.error('error', err);
       end(pRef, js); // kein "unbind"!
     } else {
-      logger.debug('%s', 'SUCCESS');
+      logger.debug('SUCCESS');
       search2(pRef, js, last);
     }
   });
@@ -132,7 +132,7 @@ function auth3(pRef, js) {
       if (err) {
         logger.error('wrong password', err);
       } else {
-        logger.debug('%s', 'SUCCESS');
+        logger.debug('SUCCESS');
         js.Success = true;
       }
       unbind(pRef, js);

@@ -2,9 +2,20 @@
   "name": "relayServer",
   "version": "13.0.0",
   "description": "Nodejs-basierter http-Server für Messaufgaben",
-  "author": {
-    "name": "Rolf Niepraschk",
-    "email": "Rolf.Niepraschk@ptb.de"
+  "main": "relayServer.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "coverage": "istanbul cover _mocha -- -R spec",
+    "test": "mocha --slow 2000 -t 10000 test/*.js",
+    "test-vxi11": "mocha --slow 200 test/relay.vxi11.test.js",
+    "test-tcp": "mocha --slow 200 test/relay.tcp.test.js",
+    "test-udp": "mocha --slow 10000 -t 10000 test/relay.udp.test.js",
+    "test-relay-add": "mocha  test/relay-add.*",
+    "test-rscript": "mocha --slow 1000 test/relay.rscript.test.js",
+    "test-rolf-inst": "env TESTHOST=i75434.berlin.ptb.de npm run test"
   },
   "dependencies": {
     "moment": ">=2.6.0",
@@ -24,14 +35,14 @@
     "mocha": ">=1.20.1",
     "istanbul": ">=0.3.0"
   },
-  "scripts": {
-    "coverage": "istanbul cover _mocha -- -R spec",
-    "test": "mocha --slow 2000 -t 10000 test/*.js",
-    "test-vxi11": "mocha --slow 200 test/relay.vxi11.test.js",
-    "test-tcp": "mocha --slow 200 test/relay.tcp.test.js",
-    "test-udp": "mocha --slow 10000 -t 10000 test/relay.udp.test.js",
-    "test-relay-add": "mocha  test/relay-add.*",
-    "test-rscript": "mocha --slow 1000 test/relay.rscript.test.js",
-    "test-rolf-inst": "env TESTHOST=i75434.berlin.ptb.de npm run test"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git@a75436.berlin.ptb.de:vaclab/relayServer.git"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Rolf Niepraschk",
+    "email": "Rolf.Niepraschk@ptb.de"
+  },
+  "license": "UNLICENSED"
 }

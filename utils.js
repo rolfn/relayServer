@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2014-05-12
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -59,11 +59,10 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
   // Wartezeit sich selbst erneut aufrufen.
   if (running) {
     addStartTime(js);
-    logger.debug('t_start.push %d', js.t_start[js.t_start.length-1]);
+    logger.debug('t_start.push: ', js.t_start[js.t_start.length-1]);
     exec(_buf, function() {
       addStopTime(js);
-      logger.debug('t_stop.push %d', js.t_stop[js.t_stop.length-1]);
-      //logger.debug('buf (nb: %d): ', nb, _buf);
+      logger.debug('t_stop.push: ', js.t_stop[js.t_stop.length-1]);
       if (--nb) {
         setTimeout(function() {
           repeat(nb, wait, exec, ready, pRef, js, _buf);

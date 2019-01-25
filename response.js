@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-11-29
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -21,10 +21,9 @@ var sandbox = {};
  */
 function sendResponse(pRef, js, _data) {
   js.OutputType = js.OutputType || 'json';
-  //logger.debug('_data: ', _data.toString().slice(0,100));
-  logger.debug('_data: ', tools.inspect(_data));
+  logger.debug('_data: ', _data);
   var data, head = js.Head ? js.Head : {};
-  logger.debug('OutputType: %s', js.OutputType);
+  logger.debug('OutputType: ', js.OutputType);
   if (js.OutputType == 'stream') {
     if (!head['Content-Type']) head['Content-Type'] =
       'application/octet-stream;charset=ISO-8859-1';
@@ -35,7 +34,7 @@ function sendResponse(pRef, js, _data) {
     data = JSON.stringify(_data) + '\n';
   }
   head['Access-Control-Allow-Origin'] = '*';
-  logger.debug('head: ', tools.inspect(head));
+  logger.debug('head: ', head);
   pRef.res.writeHead(200, head);
   pRef.res.end(data);
   pRef.req.connection.end();

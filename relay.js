@@ -1,7 +1,7 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-11-28
+ * version: 2019-01-25
  */
 
 var cfg = require('./config.js');
@@ -59,7 +59,7 @@ function analyzeActions3(pRef, js) {
     }, pRef, js);
   } else if ('Action' in js) {
     var aType = getActionType(js.Action);
-    logger.info('aType: %s', aType);
+    logger.info('aType: ', aType);
     if (aType == -1) {
       internal.call(pRef, js);
     } else if (aType == 1) {
@@ -124,7 +124,7 @@ function analyzeActions1(pRef, data) {
  */
 function start(_req, _res) {
   var pRef = {req:_req, res:_res, jobId:'NJS'+new Date().getTime()};
-  logger.info('open connection: %d', new Date().getTime());
+  logger.info('open connection: ', new Date().getTime());
   _req.setEncoding('utf8');
   _req.socket.setTimeout(0);
   var body = '';
@@ -135,7 +135,7 @@ function start(_req, _res) {
     analyzeActions1(pRef, body);
   });
   _res.connection.on('close', function () {
-    logger.info('close connection: %d', new Date().getTime());
+    logger.info('close connection: ', new Date().getTime());
     if (typeof gc == 'function') gc();
   });
 }
