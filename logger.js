@@ -9,8 +9,6 @@ const stackTrace = require('stack-trace');
 const path = require('path');
 const inspect = require('util').inspect;
 
-const { MESSAGE } = require('triple-beam');
-
 const inspectOpts = {
   depth:null, colors:true, maxArrayLength:255, breakLength:60, compact:true   
 }
@@ -26,7 +24,7 @@ function formatParams(info) {
   }
   const filename = path.basename(logCaller.getFileName()),
     linenumber = logCaller.getLineNumber(),
-    functionname =  logCaller.getFunctionName() || '[anonymous]';
+    functionname =  logCaller.getFunctionName() || '<anonymous>';
   var ret = `${info.timestamp} [${filename}:${linenumber}:${functionname}]\n`;  
   ret = ret + `${info.message === Object(info.message) ? 
     inspect(info.message, inspectOpts) : info.message}`;
