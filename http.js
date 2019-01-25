@@ -40,7 +40,7 @@ function call(pRef, js) {
     var np = process.env.no_proxy.split(',');
     for (var i=0;i<np.length;i++) {
       if (host.indexOf(np[i].trim()) != -1) {
-        logger.debug('no_proxy: %s', np[i]);
+        logger.debug(`no_proxy: ${np[i]}`);
         proxy = ''; break;
       }
     }

@@ -11,13 +11,13 @@ var port = 9001;
 var socket = io.connect('ws://' + host + ':' + port);
 
 function onReconnect(attemptNumber) {
-  console.log('»' + socket.id + '« reconnected');
+  console.log(`»${socket.id}« reconnected`);
 }
 function onConnect() {
-  console.log('»' + socket.id + '« connected');
+  console.log(`»${socket.id}« connected`);
 }
 function onDisconnect(reason) {
-  console.log('disconnected (' + reason + ')');
+  console.log(`disconnected (${reason})`);
   id = undefined;
 }
 function onError(e) {
@@ -31,7 +31,7 @@ function serverLog(data) {
 }
 
 socket.on('connect', onConnect);
-socket.on('reconnect', onReconnect);
+//socket.on('reconnect', onReconnect);
 socket.on('disconnect', onDisconnect);
 socket.on('logging', serverLog);
 socket.on('connect_failed', onError);

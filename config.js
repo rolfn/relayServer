@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2018-10-01
+ * version: 2019-01-25
  */
 
 var fs = require('fs'), pkg = require('./package.json');
@@ -61,19 +61,6 @@ try {
 } catch(err) {
 }
 
-var winston = require('winston');
-require('vwebsocket');
-cfg.logger = require('vlogger')({
-  transports: [
-    new winston.transports.vWebsocket({
-      level: 'silly',
-      port: cfg.WEBSOCKET_PORT,
-      handleExceptions: true,
-      colorize: true,
-      prettyPrint: true
-    })
-  ]
-});
-winston.remove(winston.transports.Console);
+cfg.logger = require('./logger');
 
 module.exports = cfg;
