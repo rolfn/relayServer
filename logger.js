@@ -4,6 +4,7 @@
  */
 
 const { createLogger, format, transports } = require('winston');
+const { SPLAT } = require('triple-beam');
 const SocketIOserver = require('./socketio-server-transport');
 const stackTrace = require('stack-trace');
 const path = require('path');
@@ -35,8 +36,7 @@ function formatParams(info) {
     linenumber = logCaller.getLineNumber(),
     functionname =  logCaller.getFunctionName() || '<anonymous>';
   var ret = `${info.timestamp} [${filename}:${linenumber}:${functionname} `;
-  ret = ret + `${level}]\n`;
-  ret = ret + fmt(info.message) + fmt(info.meta);
+  ret = ret + `${level}]\n` + fmt(info.message) + fmt(info[SPLAT]);
   return ret;
 }
 
@@ -51,7 +51,6 @@ const logger = createLogger({
       reconnect: true,
       format: format.combine(
         format.colorize(),
-        format.splat(),
         format.printf(formatParams)
       )
     })
