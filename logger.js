@@ -1,6 +1,6 @@
 /**
  *   @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
- *   2019-01-25
+ *   2019-01-28
  */
 
 const { createLogger, format, transports } = require('winston');
@@ -22,17 +22,21 @@ function formatParams(info) {
       break;
     }
   }
+  function fmt(_o) {
+    if (typeof _o === 'undefined') return '';
+    var o = Array.isArray(_o) ? _o : [_o], ret = '';
+    for (var i=0; i<o.length; i++) {
+      ret =  ret + (o[i] === Object(o[i]) ? inspect(o[i], inspectOpts) : o[i]);
+    }
+    return ret;
+  }
+  //console.log(inspect(info));
   const filename = path.basename(logCaller.getFileName()),
     linenumber = logCaller.getLineNumber(),
     functionname =  logCaller.getFunctionName() || '<anonymous>';
   var ret = `${info.timestamp} [${filename}:${linenumber}:${functionname} `;
   ret = ret + `${level}]\n`;
-  ret = ret + `${info.message === Object(info.message) ? 
-    inspect(info.message, inspectOpts) : info.message}`;
-  if (typeof info.meta !== 'undefined') {
-    ret = ret + `${info.meta === Object(info.meta) ? 
-      inspect(info.meta, inspectOpts) : info.meta}`;
-  }  
+  ret = ret + fmt(info.message) + fmt(info.meta);
   return ret;
 }
 
