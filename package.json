@@ -18,17 +18,16 @@
     "test-rolf-inst": "env TESTHOST=i75434.berlin.ptb.de npm run test"
   },
   "dependencies": {
-    "moment": "^2.24.0",
-    "request": "^2.88.0",
-    "socket.io": "^2.2.0",
-    "stack-trace": "^0.0.10",
-    "vxi11": "^0.0.29",
-    "winston": "^3.2.0",
-    "nodemailer": "^5.1.1",
-    "temp": "^0.9.0",
+    "bunyan": "^1.8.12",
+    "bunyan-debug-stream": "^2.0.0",
+    "crc": "^3.8.0",
     "h5.modbus": "^0.1.0",
     "node-xlsx": "^0.12.1",
-    "crc": "^3.8.0"
+    "nodemailer": "^5.1.1",
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0",
+    "temp": "^0.9.0",
+    "vxi11": "0.0.29"
   },
   "devDependencies": {
     "underscore": ">=1.4.4",

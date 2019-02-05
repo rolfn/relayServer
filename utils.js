@@ -59,10 +59,10 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
   // Wartezeit sich selbst erneut aufrufen.
   if (running) {
     addStartTime(js);
-    logger.debug('t_start.push: ', js.t_start[js.t_start.length-1]);
+    ///logger.debug('t_start.push: ', js.t_start[js.t_start.length-1]);
     exec(_buf, function() {
       addStopTime(js);
-      logger.debug('t_stop.push: ', js.t_stop[js.t_stop.length-1]);
+      ///logger.debug('t_stop.push: ', js.t_stop[js.t_stop.length-1]);
       if (--nb) {
         setTimeout(function() {
           repeat(nb, wait, exec, ready, pRef, js, _buf);

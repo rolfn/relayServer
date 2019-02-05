@@ -1,60 +1,60 @@
 /**
  *   @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
- *   2019-01-28
+ *   2019-02-05
  */
 
-const { createLogger, format, transports } = require('winston');
-const { SPLAT } = require('triple-beam');
-const SocketIOserver = require('./socketio-server-transport');
-const stackTrace = require('stack-trace');
-const path = require('path');
+const io = require('socket.io');
 const inspect = require('util').inspect;
+const bunyan = require('bunyan');
+const bunyanDebugStream = require('bunyan-debug-stream');
 
-const inspectOpts = {
-  depth:null, colors:true, maxArrayLength:255, breakLength:60, compact:true   
+function SocketStream(options) {
+  this.writable = true;
+  socket = io.listen(9001);
+  socket.sockets.on('connection', function (client) {
+    logger.info(`\n[${client.request.headers.host}]: »${client.id}« connected`);
+    client.on('disconnect', function () {
+      //console.log('client ' + '»' + client.id + '« disconnected');
+    });
+  }); 
 }
 
-function formatParams(info) {
-  const { timestamp, level, message, message2 } = info, trace = stackTrace.get();
-  var logCaller;
-  for (var i=0; i<trace.length; i++) {
-    if (trace[i].getFileName().indexOf('winston/create-logger.js') > -1) {
-      logCaller = trace[i+1];
-      break;
-    }
-  }
-  function fmt(_o) {
-    if (typeof _o === 'undefined') return '';
-    var o = Array.isArray(_o) ? _o : [_o], ret = '';
-    for (var i=0; i<o.length; i++) {
-      ret =  ret + (o[i] === Object(o[i]) ? inspect(o[i], inspectOpts) : o[i]);
-    }
-    return ret;
-  }
-  //console.log(inspect(info));
-  const filename = path.basename(logCaller.getFileName()),
-    linenumber = logCaller.getLineNumber(),
-    functionname =  logCaller.getFunctionName() || '<anonymous>';
-  var ret = `${info.timestamp} [${filename}:${linenumber}:${functionname} `;
-  ret = ret + `${level}]\n` + fmt(info.message) + fmt(info[SPLAT]);
-  return ret;
+SocketStream.prototype.write = function (record) {
+  //console.log(record);
+  socket.sockets.emit('logging', record);
+  return true;
+};
+
+var socket, socketStream = new SocketStream();
+
+function formateDate(d) {
+  return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + 
+    ('0' + d.getDate()).slice(-2) + ' ' + ('0' + d.getHours()).slice(-2) + ':' + 
+    ('0' + d.getMinutes()).slice(-2) + ':' + ('0' + d.getSeconds()).slice(-2);
 }
 
-const logger = createLogger({
-  level: 'debug',
-  handleExceptions: true,
-  format: format.combine(
-    format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  ),
-  transports: [
-    new SocketIOserver({
-      reconnect: true,
-      format: format.combine(
-        format.colorize(),
-        format.printf(formatParams)
-      )
+var logger = bunyan.createLogger({
+  name: 'vlLogging',
+  src: true,
+  serializers: bunyan.stdSerializers,
+  streams: [{
+    level: 'debug',
+    type: 'raw',    // use 'raw' to get raw log record objects
+    //type: 'stream', 
+    stream: bunyanDebugStream({
+      basepath: __dirname, // this should be the root folder of your project.
+      useColor: true,
+      forceColor: true,
+      showLoggerName: false,
+      showProcess: false,
+      showPid: false,
+      showLevel: true,
+      showMetadata: true,
+      showDate: formateDate,
+      out: socketStream
     })
-  ]
+  }],
+  //serializers: bunyanDebugStream.serializers
 });
 
 module.exports = logger;

@@ -59,7 +59,7 @@ function analyzeActions3(pRef, js) {
     }, pRef, js);
   } else if ('Action' in js) {
     var aType = getActionType(js.Action);
-    logger.info('aType: ', aType);
+    logger.info(`aType: ${aType}`);
     if (aType == -1) {
       internal.call(pRef, js);
     } else if (aType == 1) {
