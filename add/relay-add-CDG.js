@@ -45,8 +45,8 @@
      pos = l * (adr + i) - l;
      ba = [ b[pos + 0]
           , b[pos + 3]
-          , b[pos + 1]
-          , b[pos + 2]];
+          , b[pos + 2]
+          , b[pos + 1]];
      var nb = new Buffer(ba);
      ret.push(nb.readFloatBE(0));
    }
