@@ -17,8 +17,8 @@
  *
  * 0 --> 1
  * 3 --> 2
- * 2 --> 3
- * 5 --> 4
+ * 1 --> 3
+ * 2 --> 4
  *
  * @author Rolf Niepraschk
  * @param b Buffer buf Rückgabe des Modbus-Profibus-Gateways
