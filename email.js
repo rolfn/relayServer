@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2016-12-05
+ * version: 2019-02-11
  */
 
 var cfg = require('./config.js');
@@ -56,8 +56,8 @@ function call(pRef, js) {
   if (!mail.from || !mail.to) response.prepareError(pRef, js, 'missing parameter');
 
   var transporter = mailer.createTransport(options);
-  logger.debug('transporter', transporter);
-  logger.debug('message', mail.text || mail.html);
+  logger.debug('transporter: %o', transporter);
+  logger.debug('message: %s', mail.text || mail.html);
 
   utils.addStartTime(js);
   
