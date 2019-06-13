@@ -22,6 +22,7 @@ submodules = [
 './add/relay-add-CORVUS.js',
 './add/relay-add-VM212.js',
 './add/relay-add-FRS.js',
+'./add/relay-add-PARO.js',
 './add/relay-add-PM2535.js',
 './add/relay-add-MKSCDG.js',
 './add/relay-add-INFCDGCUBE.js',
