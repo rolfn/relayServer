@@ -1,6 +1,6 @@
 {
   "name": "relayServer",
-  "version": "13.0.0",
+  "version": "13.0.1",
   "description": "Nodejs-basierter http-Server für Messaufgaben",
   "main": "relayServer.js",
   "directories": {
