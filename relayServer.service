@@ -8,6 +8,8 @@ Type=simple
 StandardOutput=null
 StandardError=null
 Restart=no
+# Load if exist:
+EnvironmentFile=-/etc/environment
 ExecStart=/bin/bash -l -c '/usr/bin/node /usr/local/share/relayServer/relayServer.js'
 
 [Install]
