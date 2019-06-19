@@ -98,7 +98,7 @@ cat <<EOF | curl -T - -X PUT http://localhost:55555
 EOF
 
 cat <<EOF | curl -T - -X PUT http://localhost:55555
-{"Action":"_environment","PostProcessing":"Result=\"Hugo\""}
+{"Action":"_environment"}
 EOF
 
 cat <<EOF | curl -T - -X PUT http://localhost:55555
