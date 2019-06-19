@@ -11,8 +11,9 @@ var x = require('./relay-add-MISC.js');
  */
 function extractInfCube(s) {
 
-//PRE\r\n-0.003126628\n\rSL>"
-  var regex = /(PRE\r\n)([-+]?[0-9]*\.?[0-9]*)(\n\rSL\>)$/;
+    //PRE\r\n-0.003126628\n\rSL>"
+    //'2.295153\n\rSL>PRE\r\n'
+  var regex = /(PRE\r\n)?([-+]?[0-9]*\.?[0-9]*)(\n\rSL\>)(PRE\r\n)?$/;
 
   return x.strToNum(regex.exec(s), 2);
 }

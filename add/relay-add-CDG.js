@@ -17,8 +17,8 @@
  *
  * 0 --> 1
  * 3 --> 2
- * 2 --> 3
- * 5 --> 4
+ * 1 --> 3
+ * 2 --> 4
  *
  * @author Rolf Niepraschk
  * @param b Buffer buf Rückgabe des Modbus-Profibus-Gateways
@@ -43,10 +43,10 @@
    if (isNaN(cnt)) cnt = 1;
    for (var i = 0; i < cnt; i++) {
      pos = l * (adr + i) - l;
-     ba = [ b[pos]
+     ba = [ b[pos + 0]
           , b[pos + 3]
           , b[pos + 2]
-          , b[pos + 5]];
+          , b[pos + 1]];
      var nb = new Buffer(ba);
      ret.push(nb.readFloatBE(0));
    }
@@ -74,7 +74,7 @@
      , err
      , adr = parseInt(a)
      , cnt = parseInt(n)
-     , l = 10;
+     , l = 8;
 
    if (isNaN(adr)) adr = 1;
    if (isNaN(cnt)) cnt = 1;
