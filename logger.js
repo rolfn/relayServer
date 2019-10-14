@@ -7,6 +7,7 @@ const io = require('socket.io');
 const inspect = require('util').inspect;
 const bunyan = require('bunyan');
 const bunyanDebugStream = require('bunyan-debug-stream');
+const BunyanToGelfStream = require('bunyan-gelf');
 
 function SocketStream(options) {
   this.writable = true;
@@ -53,7 +54,14 @@ var logger = bunyan.createLogger({
       showDate: formateDate,
       out: socketStream
     })
-  }],
+  },
+  {
+    type: 'raw',
+    stream: new BunyanToGelfStream({
+      host: '172.30.56.22', 
+      port: 12201,
+    })
+   }],
   //serializers: bunyanDebugStream.serializers
 });
 

@@ -20,6 +20,7 @@
   "dependencies": {
     "bunyan": "^1.8.12",
     "bunyan-debug-stream": "^2.0.0",
+    "bunyan-gelf": ">=1.0.0",
     "crc": "^3.8.0",
     "h5.modbus": "^0.1.0",
     "node-xlsx": "^0.12.1",
