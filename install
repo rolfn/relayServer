@@ -1,5 +1,5 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2017-06-06
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2019-03-11
 
 # Vorbereitung und Start des relayServer-Prozesses.
 
@@ -9,11 +9,11 @@ dist=$(lsb_release -is | cut -d " " -f 1 | tr '[A-Z]' '[a-z]')
 
 case "$dist" in
   opensuse)
-    cp ${R_PATH}relayServer.service.opensuse \
+    cp ${R_PATH}relayServer.service \
       /usr/lib/systemd/system/relayServer.service   
     chown -R nobody:nobody ${R_PATH} ;;
   ubuntu|raspbian|debian)
-    cp ${R_PATH}relayServer.service.debian \
+    cp ${R_PATH}relayServer.service \
       /lib/systemd/system/relayServer.service
     chown -R nobody:nogroup ${R_PATH} ;;
 esac

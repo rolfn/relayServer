@@ -34,6 +34,20 @@ exports.extractKeithleyC = extractKeithleyC;
 
 /**
  * Extrahiert Float-Zahl aus String
+ * z.B. PPC Temperaturen
+ *
+ * @author matthias
+ * @param  String str String mit enthaltener Zahl.
+ * @return Number Zahl.
+ */
+function extractKeithley2701C(s) {
+  var regex = /^([+-][0-9]{1}\.?[0-9]{1,8}[Ee][-+][0-9]{2})( C)/;
+  return misc.strToNum(regex.exec(s), 1);
+}
+exports.extractKeithley2701C = extractKeithley2701C;
+
+/**
+ * Extrahiert Float-Zahl aus String
  * z.B. SE1  Temperatursensoren
  *
  * @author wactbprot

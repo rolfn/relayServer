@@ -98,6 +98,10 @@ cat <<EOF | curl -T - -X PUT http://localhost:55555
 EOF
 
 cat <<EOF | curl -T - -X PUT http://localhost:55555
+{"Action":"_environment"}
+EOF
+
+cat <<EOF | curl -T - -X PUT http://localhost:55555
 {"Action":"XLSX-IN","Value":"$(base64 -w 0 foo.xlsx)"}
 EOF
  

@@ -74,7 +74,7 @@
      , err
      , adr = parseInt(a)
      , cnt = parseInt(n)
-     , l = 10;
+     , l = 8;
 
    if (isNaN(adr)) adr = 1;
    if (isNaN(cnt)) cnt = 1;

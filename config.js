@@ -1,6 +1,5 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-02-05
  */
 
 var fs = require('fs'), pkg = require('./package.json');
@@ -12,7 +11,7 @@ var fs = require('fs'), pkg = require('./package.json');
 var cfg = {
   // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
   VERSION: pkg.version, 
-  DATE: '2019-02-05',
+  DATE: '2019-04-11',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
