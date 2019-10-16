@@ -57,6 +57,7 @@ var logger = bunyan.createLogger({
   },
   {
     type: 'raw',
+    level: 'trace',
     stream: new BunyanToGelfStream({
       host: '172.30.56.22', 
       port: 12201,
