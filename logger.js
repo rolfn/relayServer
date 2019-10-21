@@ -60,7 +60,7 @@ var logger = bunyan.createLogger({
     type: 'raw',
     level: 'trace',
     stream: new BunyanToGelfStream({
-      host: cfg.GRAYLOG_URL, 
+      host: cfg.GRAYLOG_HOST, 
       port: cfg.GRAYLOG_PORT,
     })
    }]//, serializers: bunyanDebugStream.serializers
