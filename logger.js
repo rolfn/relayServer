@@ -62,6 +62,15 @@ var logger = bunyan.createLogger({
     stream: new BunyanToGelfStream({
       host: cfg.GRAYLOG_HOST, 
       port: cfg.GRAYLOG_PORT,
+      basepath: __dirname,
+      useColor: false,
+      forceColor: false,
+      showLoggerName: false,
+      showProcess: false,
+      showPid: false,
+      showLevel: true,
+      showMetadata: true,
+      showDate: formateDate
     })
    }]//, serializers: bunyanDebugStream.serializers
 });
