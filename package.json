@@ -1,6 +1,6 @@
 {
   "name": "relayServer",
-  "version": "13.0.1",
+  "version": "13.1.0",
   "description": "Nodejs-basierter http-Server für Messaufgaben",
   "main": "relayServer.js",
   "directories": {
@@ -26,14 +26,14 @@
     "node-xlsx": "^0.12.1",
     "nodemailer": "^5.1.1",
     "request": "^2.88.0",
-    "socket.io": "^2.2.0",
+    "socket.io": "^2.3.0",
     "temp": "^0.9.0",
     "vxi11": "0.0.29"
   },
   "devDependencies": {
-    "underscore": ">=1.4.4",
-    "mocha": ">=1.20.1",
-    "istanbul": ">=0.3.0"
+    "istanbul": ">=0.3.0",
+    "mocha": "^6.2.2",
+    "underscore": ">=1.4.4"
   },
   "repository": {
     "type": "git",

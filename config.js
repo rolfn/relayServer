@@ -9,11 +9,12 @@ var fs = require('fs'), pkg = require('./package.json');
  */
  
 var cfg = {
-  // Nur wenn sie mit '?' beginnt, wird Eintrag aus "package.json" verwendet
   VERSION: pkg.version, 
-  DATE: '2019-04-11',
+  DATE: '2019-10-21',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
+  GRAYLOG_URL: 'i75422.berlin.ptb.de',
+  GRAYLOG_PORT: 12201,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
   MIN_EXEC_WAIT: 50, // msec // ???
@@ -42,24 +43,5 @@ var cfg = {
   theRepeats: {},
   vxi11_last_time: 0
 };
-
-try {
-  var fname = __dirname + '/package.json';
-  if (cfg.VERSION[0] == '?') {// nur, wenn nicht Test-Version
-    fs.stat(fname, function(err, stats) {
-      if (!err) {
-        var t = stats.mtime;
-        cfg.DATE = t.getFullYear() + '-' +
-          ("0" + (t.getMonth() + 1)).slice(-2) + '-' +
-          ("0" + (t.getDate())).slice(-2);
-        var data = JSON.parse(fs.readFileSync(fname, 'utf-8'));
-        if (data.version) cfg.VERSION = data.version;
-      }
-    });
-  }
-} catch(err) {
-}
-
-cfg.logger = require('./logger');
 
 module.exports = cfg;

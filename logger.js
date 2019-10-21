@@ -1,21 +1,22 @@
 /**
  *   @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
- *   2019-02-05
+ *   2019-10-21
  */
 
+const cfg = require('./config.js');
 const io = require('socket.io');
-const inspect = require('util').inspect;
+//const inspect = require('util').inspect;
 const bunyan = require('bunyan');
 const bunyanDebugStream = require('bunyan-debug-stream');
 const BunyanToGelfStream = require('bunyan-gelf');
 
 function SocketStream(options) {
   this.writable = true;
-  socket = io.listen(9001);
+  socket = io.listen(cfg.WEBSOCKET_PORT);
   socket.sockets.on('connection', function (client) {
-    logger.info(`\n[${client.request.headers.host}]: »${client.id}« connected`);
+    logger.info(`\n[${client.request.headers.host}]: Â»${client.id}Â« connected`);
     client.on('disconnect', function () {
-      //console.log('client ' + '»' + client.id + '« disconnected');
+      //console.log('client ' + 'Â»' + client.id + 'Â« disconnected');
     });
   }); 
 }
@@ -35,7 +36,7 @@ function formateDate(d) {
 }
 
 var logger = bunyan.createLogger({
-  name: 'vlLogging',
+  name: 'relayServer',
   src: true,
   serializers: bunyan.stdSerializers,
   streams: [{
@@ -59,11 +60,10 @@ var logger = bunyan.createLogger({
     type: 'raw',
     level: 'trace',
     stream: new BunyanToGelfStream({
-      host: '172.30.56.22', 
-      port: 12201,
+      host: cfg.GRAYLOG_URL, 
+      port: cfg.GRAYLOG_PORT,
     })
-   }],
-  //serializers: bunyanDebugStream.serializers
+   }]//, serializers: bunyanDebugStream.serializers
 });
 
 module.exports = logger;

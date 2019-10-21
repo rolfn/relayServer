@@ -2,11 +2,11 @@
 
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2019-10-21
  */
 
 var cfg = require('./config.js');
-var logger = cfg.logger;
+var logger = cfg.logger = require('./logger');
 var http = require('http');
 var relay = require('./relay.js');
 
