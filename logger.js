@@ -14,9 +14,9 @@ function SocketStream(options) {
   this.writable = true;
   socket = io.listen(cfg.WEBSOCKET_PORT);
   socket.sockets.on('connection', function (client) {
-    logger.info(`\n[${client.request.headers.host}]: Â»${client.id}Â« connected`);
+    logger.info(`\n[${client.request.headers.host}]: »${client.id}« connected`);
     client.on('disconnect', function () {
-      //console.log('client ' + 'Â»' + client.id + 'Â« disconnected');
+      //console.log('client ' + '»' + client.id + '« disconnected');
     });
   }); 
 }
