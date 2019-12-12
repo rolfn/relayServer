@@ -84,7 +84,7 @@ EOF
 cat <<EOF | curl -T - -X PUT http://localhost:55555
 {"Action":"EMAIL", "Host": "smtp-hub.bs.ptb.de", "Subject": "Grüße von NodeJS",
   "From": "Homunculus <homunculus@ptb.de>","To": "Thomas.Bock@ptb.de",
-  "Body": "Hallo, wie geht es Dir?\nHeute scheint die Sonne."}
+  "Text": "Hallo, wie geht es Dir?\nHeute scheint die Sonne."}
 EOF
 
 cat <<EOF | curl -T - -X PUT http://localhost:55555 > foo.pdf
