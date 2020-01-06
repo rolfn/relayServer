@@ -36,7 +36,8 @@ submodules = [
 './add/relay-add-VACOM.js',
 './add/relay-add-CDG.js',
 './add/relay-add-FESTO.js',
-'./add/relay-add-STATISTICS.js'
+'./add/relay-add-STATISTICS.js',
+'./add/relay-add-SETRA.js'
 ]
 
 for (var i=0; i<submodules.length; i++) {
