@@ -23,6 +23,11 @@ function call(pRef, js) {
   var host = url.parse(js.Url).hostname;
   var method = js.Method || false;
   var json = js.Json || false;
+  /*
+  TODO: Parameter "NoProxy" (Komma-Liste) einführen und nach 'process.env.no_proxy'
+  schreiben.
+  TODO: Ersatz für 'request' finden!
+  */
   var proxy = process.env.http_proxy;
   if (!method) {
     if (js.Body) {
