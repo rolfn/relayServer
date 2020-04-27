@@ -51,9 +51,8 @@ function call(pRef, js) {
   config.responseType = responseType;  
   if (noProxy) config.proxy = false;
   
-  axios(config)
-  .then(function (res) {
-    if (res.status > 199 && res.status < 300) {
+  axios(config).then(function (res) {
+    if (res.status > 199 && res.status < 500) {
       utils.addStopTime(js);
       logger.debug('response body: ', res.data);
       response.prepareResult(pRef, js, res.data);
@@ -62,14 +61,13 @@ function call(pRef, js) {
       logger.error(x);
       response.prepareError(pRef, js, x);      
     }
-  })
-  .catch(function (error) {
+  }).catch(function (error) {
     var x;
     if (error.response) {
       const e = error.response;
       x = e.statusText || e.status ? e.status : 'unknown error';
     } else if (error.request) {
-      x = error.request; // ???
+      x = error.request; 
     } else {
       x = error.message;
     }
