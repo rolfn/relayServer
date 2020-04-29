@@ -103,7 +103,7 @@ function call(pRef, js) {
   logger.debug('Head: ', js.Head);
   // "js.WorkingDir" anlegen und "js.Body" in Datei "cfg.TEX_FILE"
   //  schreiben, dann Aufruf von "external.call".
-  tmp.mkdir({dir:os.tmpDir(), prefix:'latex.'}, function(err, p) {
+  tmp.mkdir({dir:os.tmpdir(), prefix:'latex.'}, function(err, p) {
     js.WorkingDir = p;
     var fname = path.join(p, cfg.TEX_FILE);
     fs.writeFile(fname, content, function(err) {

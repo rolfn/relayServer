@@ -37,7 +37,7 @@ function call(pRef, js) {
 
   // "js.WorkingDir" erzeugen und "js.Body" in Datei "cfg.PRG_FILE" schreiben, 
   // dann zweiter Aufruf von "external.call" (Programmname aus "Action")
-  tmp.mkdir({dir:os.tmpDir(), prefix:'relayServer.'}, function(err, p) {
+  tmp.mkdir({dir:os.tmpdir(), prefix:'relayServer.'}, function(err, p) {
     js.WorkingDir = p;
     var fname = path.join(p, cfg.PRG_FILE)
     fs.writeFile(fname, content, function(err) {
