@@ -32,7 +32,7 @@ function call(pRef, js) {
   
   if (!js.Method) {
     if (js.Body) {
-      if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !json) {
+      if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !isJson) {
         response.prepareError(pRef, js, 
           "Wrong type of Body. (Missing 'Json:true'?)");
         return;
