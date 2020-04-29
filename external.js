@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2020-04-29
  */
 
 var exec = require('child_process').exec;
@@ -73,7 +73,8 @@ function call(pRef, js, postFunc) {
           var res;
 
           if (js.OutputEncoding == 'binary') {
-            res = new Buffer(stdout, 'binary');
+            //res = new Buffer(stdout, 'binary');
+            res = Buffer.from(stdout, 'binary');
           } else {
             res = stdout;
           }

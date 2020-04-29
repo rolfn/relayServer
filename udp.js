@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2020-04-29
  */
 
 var cfg = require('./config.js');
@@ -20,7 +20,8 @@ var logger = cfg.logger;
 function call(pRef, js) {
   function doIt(b, next) {
     var host = js.Host, port = tools.getInt(js.Port);
-    var buf = new Buffer((js.Value) ? js.Value : '');
+    //var buf = new Buffer((js.Value) ? js.Value : '');
+    var buf = Buffer.from(js.Value ? js.Value : '');
     var timeout = tools.getInt(js.Timeout, cfg.DEFAULT_UDP_TIMEOUT);
     var client = dgram.createSocket('udp4');
 

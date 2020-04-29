@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2020-04-29
  */
 
 var cfg = require('./config.js');
@@ -62,7 +62,8 @@ function fromXLSX(pRef, js) {
   try {
     logger.debug('Value.length: ', js.Value.length);
     utils.addStartTime(js);
-    var data = xlsx.parse(new Buffer(js.Value, 'base64'));
+    //var data = xlsx.parse(new Buffer(js.Value, 'base64'));
+    var data = xlsx.parse(Buffer.from(js.Value, 'base64'));
     utils.addStopTime(js);
     var short = (typeof js.ShortFormat == 'boolean') ? js.ShortFormat : true;
     //response.prepareResult(pRef, js, short ? simplify(data) : data);
