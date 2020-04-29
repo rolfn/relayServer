@@ -17,7 +17,7 @@
 \subject{PTB~--~AG~7.54}
 \title{Anleitung zu "`\theServer"'}
 %\subtitle{xxx}
-\date{2020-01-06}
+\date{2020-04-29}
 \author{Rolf Niepraschk}
 
 \maketitle
@@ -449,12 +449,12 @@ EOF
 
         \item[Body] -- Zu sendende Daten (optional)
 
-        \item[Method] -- HTTP"=Methode ("`GET"', "`POST"' oder "`PUT"';
+        \item[Method] -- HTTP"=Methode ("`get"', "`post"', "`put"', "`patch"', "`delete"' oder "`head"';
         optional). Ist sie nicht angegeben, so wird im Falle von vorhandenem
-        Body"=Eintrag "`POST"' gewählt, sonst "`GET"'.
+        Body"=Eintrag "`post"' gewählt, sonst "`get"'.
 
         \item[Json] -- "`true"' oder "`false"' (optional, Standard: false).
-        \item[Headers] -- "`|{}|"' (optional)
+        \item[Headers] -- "`|{foo:bar}|"' (optional)
         \item[Encoding] -- (optional, Standard: utf8).
         \item[Timeout] -- (optional, Standard: 20...120\,sec).
         \item[noProxy] -- (optional, Standard: false).
