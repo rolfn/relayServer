@@ -19,12 +19,16 @@ const logger = cfg.logger;
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
-  var method = js.Method || 'get';
-  const json = typeof js.Json == 'boolean' ? js.Json : false;
-  const timeout = js.Timeout || 0;
-  const noProxy = typeof js.NoProxy == 'boolean' ? js.NoProxy : false;
-  const responseType = js.ResponseType ? js.ResponseType : json ? 'json' : 'text';
-  // TODO: "js.Header" ??? 
+  var config = {}, isJson = typeof js.Json == 'boolean' ? js.Json : false,
+    isNoProxy = typeof js.NoProxy == 'boolean' ? js.NoProxy : false;
+  
+  config.url =  js.Url;
+  config.method = (js.Method || 'get').toLowerCase(); 
+  config.timeout = js.Timeout || 0;
+  if (js.Body) config.data = js.Body;
+  config.responseType = js.ResponseType || isJson ? 'json' : 'text';
+  if (isNoProxy) config.proxy = false;
+  config.headers = js.Headers || {};
   
   if (!js.Method) {
     if (js.Body) {
@@ -33,23 +37,14 @@ function call(pRef, js) {
           "Wrong type of Body. (Missing 'Json:true'?)");
         return;
       }
-      method = 'post';
-    } else {
-      method = 'get';
-    }
+      config.method = 'post';
+    } 
   }
-  logger.debug("************************************************");
-  logger.debug(`method: ${method}, json: ${json}, timeout: ${timeout}, noProxy: ${noProxy}`);
+
+  logger.debug(`method: ${config.method}, responseType: ${config.responseType}, 
+  timeout: ${config.timeout}, proxy: ${config.proxy}`);
   
   utils.addStartTime(js);
-  
-  var config = {};
-  config.url =  js.Url;
-  config.method =  method.toLowerCase()
-  config.timeout = timeout;
-  if (js.Body) config.data = js.Body;
-  config.responseType = responseType;  
-  if (noProxy) config.proxy = false;
   
   axios(config).then(function (res) {
     if (res.status > 199 && res.status < 500) {
