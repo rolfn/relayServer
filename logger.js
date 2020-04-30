@@ -55,15 +55,7 @@ var logger = bunyan.createLogger({
       showDate: formateDate,
       out: socketStream
     })
-  },
-  {
-    type: 'raw',
-    level: 'trace',
-    stream: new BunyanToGelfStream({
-      host: cfg.GRAYLOG_HOST, 
-      port: cfg.GRAYLOG_PORT,
-    })
-   }]//, serializers: bunyanDebugStream.serializers
+  }]
 });
 
 module.exports = logger;
