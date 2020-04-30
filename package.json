@@ -1,6 +1,6 @@
 {
   "name": "relayServer",
-  "version": "14.0.0-pre",
+  "version": "13.1.3",
   "description": "Nodejs-basierter http-Server für Messaufgaben",
   "main": "relayServer.js",
   "directories": {
@@ -18,22 +18,21 @@
     "test-rolf-inst": "env TESTHOST=i75434.berlin.ptb.de npm run test"
   },
   "dependencies": {
-    "bunyan": "*",
-    "bunyan-debug-stream": "*",
-    "bunyan-gelf": "*",
-    "crc": "*",
-    "h5.modbus": "*",
-    "node-xlsx": "*",
-    "nodemailer": "*",
-    "request": "*",
-    "socket.io": "*",
-    "temp": "*",
+    "axios": ">=0.19.2",
+    "bunyan": ">=1.8.12",
+    "bunyan-debug-stream": ">=2.0.0",
+    "crc": ">=3.8.0",
+    "h5.modbus": ">=0.1.0",
+    "node-xlsx": ">=0.12.1",
+    "nodemailer": ">=5.1.1",
+    "socket.io": ">=2.3.0",
+    "temp": ">=0.9.0",
     "vxi11": "0.0.29"
   },
   "devDependencies": {
-    "istanbul": "*",
-    "mocha": "*",
-    "underscore": "*"
+    "istanbul": ">=0.3.0",
+    "mocha": ">=6.2.2",
+    "underscore": ">=1.4.4"
   },
   "repository": {
     "type": "git",

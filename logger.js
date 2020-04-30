@@ -1,6 +1,6 @@
 /**
  *   @author Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
- *   2019-10-21
+ *   2020-04-30
  */
 
 const cfg = require('./config.js');
@@ -8,7 +8,6 @@ const io = require('socket.io');
 //const inspect = require('util').inspect;
 const bunyan = require('bunyan');
 const bunyanDebugStream = require('bunyan-debug-stream');
-const BunyanToGelfStream = require('bunyan-gelf');
 
 function SocketStream(options) {
   this.writable = true;
