@@ -1,16 +1,15 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2020-04-30
  */
 
-var cfg = require('./config.js');
-var tools = require('./tools.js');
-var utils = require('./utils.js');
-var response = require('./response.js');
-var url = require('url');
-var request = require('request');
+const cfg = require('./config.js');
+const tools = require('./tools.js');
+const utils = require('./utils.js');
+const axios = require('axios');
+const response = require('./response.js');
 
-var logger = cfg.logger;
+const logger = cfg.logger;
 
 /**
  * Konfiguration der nötigen Datenstrukturen und Aufnahme der HTTP-Kommunikation.
@@ -20,61 +19,59 @@ var logger = cfg.logger;
  * @param {object} js empfangene JSON-Struktur um weitere Daten ergänzt
  */
 function call(pRef, js) {
-  var host = url.parse(js.Url).hostname;
-  var method = js.Method || false;
-  var json = js.Json || false;
-  /*
-  TODO: Parameter "NoProxy" (Komma-Liste) einführen und nach 'process.env.no_proxy'
-  schreiben.
-  TODO: Ersatz für 'request' finden!
-  */
-  var proxy = process.env.http_proxy;
-  if (!method) {
+  var config = {}, isJson = typeof js.Json == 'boolean' ? js.Json : false,
+    isNoProxy = typeof js.NoProxy == 'boolean' ? js.NoProxy : false;
+  
+  config.url =  js.Url;
+  config.method = (js.Method || 'get').toLowerCase(); 
+  config.timeout = js.Timeout || 0;
+  if (js.Body) config.data = js.Body;
+  config.responseType = js.ResponseType || isJson ? 'json' : 'text';
+  if (isNoProxy) config.proxy = false;
+  config.headers = js.Headers || {};
+  
+  if (!js.Method) {
     if (js.Body) {
-      if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !json) {
+      if (typeof js.Body != 'string' && typeof js.Body != 'Buffer' && !isJson) {
         response.prepareError(pRef, js, 
           "Wrong type of Body. (Missing 'Json:true'?)");
         return;
       }
-      method = 'POST';
-    } else {
-      method = 'GET';
-    }
+      config.method = 'post';
+    } 
   }
-  if (process.env.no_proxy) {
-    var np = process.env.no_proxy.split(',');
-    for (var i=0;i<np.length;i++) {
-      if (host.indexOf(np[i].trim()) != -1) {
-        logger.debug(`no_proxy: ${np[i]}`);
-        proxy = ''; break;
-      }
-    }
-  }
-  logger.debug(`method: ${method}, proxy: ${proxy}, json: ${json}`);
+
+  logger.debug(`method: ${config.method}, responseType: ${config.responseType}, 
+  timeout: ${config.timeout}, proxy: ${config.proxy}`);
+  
   utils.addStartTime(js);
-  request(
-    { method: method,
-      uri: js.Url,
-      proxy: proxy, // TODO: Test ob unnötig/schädlich
-      body: js.Body,
-      timeout: js.Timeout,
-      headers: js.Headers || {},
-      encoding: js.Encoding || 'utf8',
-      json: json
-    },
-    function (e, res, body) {
-      if (!e && res.statusCode > 199 && res.statusCode < 300) {
-        utils.addStopTime(js);
-        logger.debug('response body: ', body);
-        response.prepareResult(pRef, js, body);
-      } else {
-        var x = res && res.statusCode ? res.statusCode : e.toString();
-        logger.error(x);
-        response.prepareError(pRef, js, x);
-      }
+  
+  axios(config).then(function (res) {
+    if (res.status > 199 && res.status < 500) {
+      utils.addStopTime(js);
+      logger.debug('response body: ', res.data);
+      response.prepareResult(pRef, js, res.data);
+    } else {
+      const x = res.statusText || res.status ? res.status : 'unknown error';
+      logger.error(x);
+      response.prepareError(pRef, js, x);      
     }
-  );
+  }).catch(function (error) {
+    var x;
+    if (error.response) {
+      const e = error.response;
+      x = e.statusText || e.status ? e.status : 'unknown error';
+    } else if (error.request) {
+      x = error.request; 
+    } else {
+      x = error.message;
+    }
+    logger.error(x);
+    response.prepareError(pRef, js, x);   
+  });
+  
 }
 
 exports.call = call;
+
 

@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2019-01-30
  */
 
 var fs = require('fs');
@@ -10,7 +10,7 @@ var utils = require('./utils.js');
 var response = require('./response.js');
 var _tcp = require('./tcp.js');
 var _udp = require('./udp.js');
-var _http = require('./http1.js');
+var _http = require('./http.js');
 var _email = require('./email.js');
 //var _ldap = require('./ldap.js');
 //    derzeit (2013-01-14) Probleme (buffertools)!
