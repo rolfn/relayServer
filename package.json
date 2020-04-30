@@ -15,7 +15,8 @@
     "test-udp": "mocha --slow 10000 -t 10000 test/relay.udp.test.js",
     "test-relay-add": "mocha  test/relay-add.*",
     "test-rscript": "mocha --slow 1000 test/relay.rscript.test.js",
-    "test-rolf-inst": "env TESTHOST=i75434.berlin.ptb.de npm run test"
+    "test-rolf-inst": "env TESTHOST=i75434.berlin.ptb.de npm run test",
+    "postinstall": "node-prune"
   },
   "dependencies": {
     "axios": ">=0.19.2",
