@@ -1,5 +1,5 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2018-08-21
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2020-04-30
 
 # Verteilt relayServer-Dateien zu ausgewählten Rechnern per "rsync" und
 # aktiviert den relayServer-Prozess dort.
@@ -26,6 +26,7 @@ function doIt {
     --exclude '.git'  \
     --exclude 'docs'  \
     --exclude 'tmp'   \
+    --exclude 'NOTIZEN' \
     "$2" root@$1:$(dirname $R_PATH)/
   # Auf dem Zielsystem Nacharbeiten durchführen  
   ssh root@$1 ${R_PATH}/install
