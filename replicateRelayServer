@@ -22,7 +22,10 @@ function doIt {
   echo "From: \"$2\" To: \"$R_PATH\""
   # »-L« – Behandle Symlinks auf dem Quellsystem wie Verzeichnisse.  
   # »--keep-dirlinks« – Behandle Symlinks auf dem Zielsystem wie Verzeichnisse.
-  rsync --info=STATS1 -azL --delete --keep-dirlinks --exclude '.git'  \
+  rsync --info=STATS1 -azL --delete --keep-dirlinks \
+    --exclude '.git'  \
+    --exclude 'docs'  \
+    --exclude 'tmp'   \
     "$2" root@$1:$(dirname $R_PATH)/
   # Auf dem Zielsystem Nacharbeiten durchführen  
   ssh root@$1 ${R_PATH}/install
