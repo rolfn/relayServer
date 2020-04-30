@@ -26,6 +26,7 @@ function doIt {
     --exclude '.git'  \
     --exclude 'docs'  \
     --exclude 'tmp'   \
+    --exclude 'test'   \
     --exclude 'NOTIZEN' \
     "$2" root@$1:$(dirname $R_PATH)/
   # Auf dem Zielsystem Nacharbeiten durchführen  
