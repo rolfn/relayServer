@@ -15,11 +15,11 @@ var cfg = {
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
   DEFAULT_EXEC_MAXBUFFER: 50 * 1024 * 1024,
-  MIN_EXEC_WAIT: 50, // msec // ???
-  MIN_VXI11_WAIT: 50, // msec
-  MIN_TCP_WAIT: 250, // msec // ???
-  MIN_UDP_WAIT: 250, // msec
-  MIN_MODBUS_WAIT: 250, // msec
+  MIN_EXEC_WAIT: 10, // msec // ???
+  MIN_VXI11_WAIT: 10, // msec
+  MIN_TCP_WAIT: 10, // msec // ???
+  MIN_UDP_WAIT: 10, // msec
+  MIN_MODBUS_WAIT: 10, // msec
   DEFAULT_TCP_TIMEOUT: 30000, // msec
   DEFAULT_UDP_TIMEOUT: 30000, // msec
   DEFAULT_SMTP_PORT: 25,

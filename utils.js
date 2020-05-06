@@ -71,7 +71,7 @@ function repeat(nb, wait, exec, ready, pRef, js, _buf) {
         }, wait);
       } else {
         delete cfg.theRepeats[pRef.jobId];
-        // Gleich Ende
+        // Letzter Aufruf ohne Wartezeit
         repeat(nb, wait, exec, ready, pRef, js, _buf);
       }
     });
