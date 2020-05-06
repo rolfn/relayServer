@@ -34,10 +34,12 @@ function addStopTime(js) {
  * Funktion, die aufgerufen wird, nachdem exec letztmalig aufgerufen wurde. Ihr
  * wird _buf als Parameter mitgegeben. Bei jedem Durchgang werden das t_start-
  * und das t_stop-Array ergänzt.
+ * Beispiel (n=2):
  * <pre>
- * |#######|<----- Wait ----->|#######|<----- Wait ----->|
- * start1                     stop1
- *                            start2                     stop2/Response
+ * |#######|<----- Wait ----->|#######|
+ * |                          |       |
+ * start1                     stop1   |
+ *                            start2   stop2/Response
  * </pre>
  * @param {number} nb Anzahl der Aufrufe.
  * @param {number} wait Wartezeit zwischen zwei Aufrufen in ms.
