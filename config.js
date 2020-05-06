@@ -2,7 +2,7 @@
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
  */
 
-var fs = require('fs'), pkg = require('./package.json');
+var pkg = require('./package.json');
 
 /**
  * Datenstruktur mit Default-Werten
@@ -10,7 +10,7 @@ var fs = require('fs'), pkg = require('./package.json');
  
 var cfg = {
   VERSION: pkg.version, 
-  DATE: '2019-10-25',
+  DATE: '2020-05-06',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec
