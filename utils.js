@@ -36,10 +36,10 @@ function addStopTime(js) {
  * und das t_stop-Array ergänzt.
  * Beispiel (n=2):
  * <pre>
- * |#######|<----- Wait ----->|#######|
- * |                          |       |
- * start1                     stop1   |
- *                            start2   stop2/Response
+ * |### exec ###|<----- Wait ----->|### exec ###|
+ * |                               |            |
+ * start1                          stop1        |
+ *                                 start2       stop2/Response
  * </pre>
  * @param {number} nb Anzahl der Aufrufe.
  * @param {number} wait Wartezeit zwischen zwei Aufrufen in ms.
