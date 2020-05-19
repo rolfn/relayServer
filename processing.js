@@ -1,6 +1,6 @@
 /**
  * @author Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
- * version: 2019-01-25
+ * version: 2020-05-19
  */
 
 var vm = require('vm');
@@ -17,12 +17,19 @@ var addon = null;
  * Wenn vorhanden, Datei "relay-add.js" laden.
  */
 
+var error = '';
+
 try {
   addon = require('./relay-add.js');
-  logger.info('"relay-add.js" loaded');
 } catch(e) {
-  logger.info('relay-add.js: ', e.toString());
+  error = e;
 } 
+
+if (addon) {
+  logger.info('"relay-add.js" loaded');
+} else {
+  logger.info('relay-add.js: ', error.toString());
+}
 
 var process = function(target, data, code, clbk, a1) {    
   // Einfache Strings und String-Arrays unterstützen.

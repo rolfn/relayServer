@@ -10,7 +10,7 @@
  *
  * im Postprocessing ausgeführt werden.
  *
- * version: 2016-11-28
+ * version: 2020-05-18
  */
 
 submodules = [
@@ -35,7 +35,7 @@ submodules = [
 './add/relay-add-KEITHLEY.js',
 './add/relay-add-VACOM.js',
 './add/relay-add-CDG.js',
-'./add/relay-add-FESTO.js',
+//'./add/relay-add-FESTO.js',  // verwendet noch veraltetes "request".
 './add/relay-add-STATISTICS.js',
 './add/relay-add-SETRA.js'
 ]
