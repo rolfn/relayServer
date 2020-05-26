@@ -36,9 +36,7 @@ function doIt {
   echo "End:   ************** $1 **************"
 }
 
-if [[ $(basename $PWD) == "relayServer" ]]; then
-   source="$PWD"
-else
+if [[ $(basename $PWD) != "relayServer" ]]; then
   echo "Error: You have to be in the relayServer directory"
   exit 1
 fi
@@ -51,7 +49,7 @@ else
 fi   
 
 for i in $server; do
-  doIt $i "$source"
+  doIt $i "$PWD"
 done
 
 exit
