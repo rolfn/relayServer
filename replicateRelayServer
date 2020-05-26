@@ -15,11 +15,12 @@ if false; then
 fi
 
 R_PATH=/usr/local/share/relayServer  # Path to relayServer installation
+TARGET_PATH=$(dirname $R_PATH)/
 
 # $1=server, $2=source dir
 function doIt {
   echo "Begin: ************** $1 **************"
-  echo "From: \"$2\" To: \"$R_PATH\""
+  echo "From: \"$2\" To: \"$1:$R_PATH\""
   # »-L« – Treat symlinks on the source system like directories.  
   # »--keep-dirlinks« – Treat symlinks on the target system like directories.
   rsync --info=STATS1 -azL --delete --keep-dirlinks \
@@ -29,33 +30,27 @@ function doIt {
     --exclude 'test'   \
     --exclude 'relayServer.spec'   \
     --exclude 'NOTIZEN' \
-    "$2" root@$1:$(dirname $R_PATH)/
+    "$2" root@$1:${TARGET_PATH}
   # Rework on the target system  
   ssh root@$1 ${R_PATH}/install
   echo "End:   ************** $1 **************"
 }
+
+if [[ $(basename $PWD) == "relayServer" ]]; then
+   source="$PWD"
+else
+  echo "Error: You have to be in the relayServer directory"
+  exit 1
+fi
 
 # All computers must / should be accessible via ssh without a password!
 if [[ $1 ]]; then
   server="$1"
 else
   server="localhost"
-fi
+fi   
 
 for i in $server; do
-  if [[ $i == 'localhost' || $i == '127.0.0.1' ]]; then
-    x=$(realpath -P "$PWD") ; y=$(realpath -P "$R_PATH") 
-    # Test the correct source and prevent overwriting of $PWD.
-    if [[ $(basename $PWD) == "relayServer" && "$x" != "$y" ]]; then
-       source="$PWD"
-    else
-       echo "Fehler: Du musst Dich in einem relayServer-Verzeichnis befinden,"
-       echo "        aber nicht in \"$R_PATH\" (ggf. Symlink weg)!"
-       exit 1
-    fi
-  else
-    source="$R_PATH"
-  fi
   doIt $i "$source"
 done
 

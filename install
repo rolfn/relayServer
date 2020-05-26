@@ -5,9 +5,18 @@
 
 R_PATH=/usr/local/share/relayServer/  # Path to relayServer installation
 
+dist=$(lsb_release -is | cut -d " " -f 1 | tr '[A-Z]' '[a-z]')
+
+case "$dist" in
+  opensuse)   
+    chown -R nobody:nobody ${R_PATH} ;;
+  ubuntu|raspbian|debian)
+    chown -R nobody:nogroup ${R_PATH} ;;
+esac
+
 cd ${R_PATH}
 ln -sf $PWD/vlLogging /usr/local/bin/vlLogging
-systemctl daemon-reload                        # if already exist 
+systemctl daemon-reload                        # if already running 
 systemctl link $PWD/relayServer.service
 systemctl restart relayServer.service
 systemctl enable relayServer.service
