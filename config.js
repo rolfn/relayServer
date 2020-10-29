@@ -10,7 +10,7 @@ var pkg = require('./package.json');
  
 var cfg = {
   VERSION: pkg.version, 
-  DATE: '2020-05-06',
+  DATE: '2020-10-29',
   RELAY_PORT: 55555,
   WEBSOCKET_PORT: 9001,
   DEFAULT_EXEC_TIMEOUT: 60000, // msec

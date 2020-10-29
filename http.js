@@ -57,17 +57,9 @@ function call(pRef, js) {
       response.prepareError(pRef, js, x);      
     }
   }).catch(function (error) {
-    var x;
-    if (error.response) {
-      const e = error.response;
-      x = e.statusText || e.status ? e.status : 'unknown error';
-    } else if (error.request) {
-      x = error.request; 
-    } else {
-      x = error.message;
-    }
+    var x = error.CODE ? error.CODE : 'unknown error';
     logger.error(x);
-    response.prepareError(pRef, js, x);   
+    response.prepareError(pRef, js, x);
   });
   
 }
