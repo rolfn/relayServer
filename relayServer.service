@@ -1,6 +1,7 @@
 [Unit]
 Description=The relayServer daemon.
-After=network.target
+Requires=network-online.target
+After=network-online.target
 
 [Service]
 User=nobody

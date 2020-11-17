@@ -30,6 +30,8 @@ function doIt {
     --exclude 'test'   \
     --exclude 'relayServer.spec'   \
     --exclude 'NOTIZEN' \
+    --exclude '*.png' \
+    --exclude '*.jpg' \
     "$2" root@$1:${TARGET_PATH}
   # Rework on the target system  
   ssh root@$1 ${R_PATH}/install
