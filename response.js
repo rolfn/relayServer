@@ -24,6 +24,7 @@ function sendResponse(pRef, js, _data) {
   logger.debug('_data: ', _data);
   var data, head = js.Head ? js.Head : {};
   logger.debug('OutputType: ', js.OutputType);
+  // evtl. besser: "pRef.res.setHeader(name, value)"?
   if (js.OutputType == 'stream') {
     if (!head['Content-Type']) head['Content-Type'] =
       'application/octet-stream;charset=ISO-8859-1';
@@ -34,6 +35,11 @@ function sendResponse(pRef, js, _data) {
     data = JSON.stringify(_data) + '\n';
   }
   head['Access-Control-Allow-Origin'] = '*';
+  head['Access-Control-Allow-Methods'] = 
+    'GET, POST, OPTIONS, PUT, PATCH, DELETE';
+  head['Access-Control-Allow-Headers'] = 
+    'accept, authorization, content-type, origin, referer';
+  head['Access-Control-Allow-Credentials'] = true;
   logger.debug('head: ', head);
   pRef.res.writeHead(200, head);
   pRef.res.end(data);
