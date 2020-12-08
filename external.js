@@ -83,8 +83,8 @@ function call(pRef, js, postFunc) {
           logger.debug(`res: ${typeof res} (${res.length} Bytes)`);
           logger.debug(`OutputType: ${js.OutputType}, OutputEncoding: ${js.OutputEncoding}`); 
           b.push(res);
+          next();
         }
-        next();
       }
     );
   };
