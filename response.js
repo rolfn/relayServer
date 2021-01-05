@@ -42,7 +42,7 @@ function sendResponse(pRef, js, _data) {
   head['Access-Control-Allow-Credentials'] = true;
   logger.debug('head: ', head);
   // TODO: Testen!
-  if (!res.writableEnded) {// prevent 'ERR_STREAM_WRITE_AFTER_END'
+  if (!pRef.res.writableEnded) {// prevent 'ERR_STREAM_WRITE_AFTER_END'
     pRef.res.writeHead(200, head);
     pRef.res.end(data);    
   } else {
