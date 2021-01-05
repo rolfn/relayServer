@@ -41,8 +41,12 @@ function sendResponse(pRef, js, _data) {
     'accept, authorization, content-type, origin, referer';
   head['Access-Control-Allow-Credentials'] = true;
   logger.debug('head: ', head);
-  pRef.res.writeHead(200, head);
-  pRef.res.end(data);
+  try {
+    pRef.res.writeHead(200, head);
+    pRef.res.end(data);
+  } catch(err) {
+    logger.debug('error: ', err.toString());   
+  }
   pRef.req.connection.end();
   return;
 }
