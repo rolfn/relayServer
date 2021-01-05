@@ -41,13 +41,14 @@ function sendResponse(pRef, js, _data) {
     'accept, authorization, content-type, origin, referer';
   head['Access-Control-Allow-Credentials'] = true;
   logger.debug('head: ', head);
-  try {
+  // TODO: Testen!
+  if (!res.writableEnded) {// prevent 'ERR_STREAM_WRITE_AFTER_END'
     pRef.res.writeHead(200, head);
-    pRef.res.end(data);
-  } catch(err) {
-    logger.debug('error: ', err.toString());   
+    pRef.res.end(data);    
+  } else {
+    logger.debug('error: ', 'write after end not possible');
   }
-  pRef.req.connection.end();
+  pRef.req.connection.end(); 
   return;
 }
 
