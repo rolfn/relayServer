@@ -1,0 +1,25 @@
+#! /bin/bash
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2024-03-20
+
+# Installiert eine neue Version  vom zugehörigen GIT-Repositorium
+# und lädt den Server-Prozess neu.
+
+# Aufruf als root (auf dem Server!):
+#
+# ./update_from_git
+#
+
+PROJECT="relayServer"
+GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}/-/archive/master/${PROJECT}-master.tar.gz
+DEST_USER=nobody
+DEST_GROUP=nobody
+
+# Struktur des tar-Archives herunterladen und gleichzeitig entpacken
+curl -s -o - ${GITLAB_URL} | tar -xzf - --strip-components=1
+
+###chown -R ${DEST_USER}.${DEST_GROUP} ./
+
+systemctl daemon-reload
+systemctl restart ${PROJECT}.service
+
+exit
