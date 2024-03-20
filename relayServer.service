@@ -4,7 +4,8 @@ Requires=network-online.target
 After=network-online.target
 
 [Service]
-User=nobody
+#User=nobody
+# ^^^ doch besser root, wegen TeX (font cache).
 Type=simple
 StandardOutput=null
 StandardError=null
