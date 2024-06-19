@@ -17,7 +17,7 @@
     "h5.modbus": ">=0.1.0",
     "node-xlsx": ">=0.12.1",
     "nodemailer": ">=5.1.1",
-    "socket.io": "=2.3.0",
+    "socket.io": "=2.5.0",
     "socket.io-client": "=2.3.0",
     "temp": ">=0.9.0",
     "vxi11": "0.0.29"
