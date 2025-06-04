@@ -12,12 +12,17 @@
 PROJECT="relayServer"
 GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}/-/archive/master/${PROJECT}-master.tar.gz
 DEST_USER=nobody
-DEST_GROUP=nobody
+
+if [ $(getent group nobody) ]; then
+  DEST_GROUP=nobody
+else
+  DEST_GROUP=nogroup
+fi
 
 # Struktur des tar-Archives herunterladen und gleichzeitig entpacken
 curl -s -o - ${GITLAB_URL} | tar -xzf - --strip-components=1
 
-###chown -R ${DEST_USER}.${DEST_GROUP} ./
+###chown -R ${DEST_USER}:${DEST_GROUP} ./
 
 systemctl daemon-reload
 systemctl restart ${PROJECT}.service
