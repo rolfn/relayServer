@@ -1,5 +1,5 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2024-03-20
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2025-07-09
 
 # Installiert eine neue Version  vom zugehörigen GIT-Repositorium
 # und lädt den Server-Prozess neu.
@@ -12,12 +12,9 @@
 PROJECT="relayServer"
 GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}/-/archive/master/${PROJECT}-master.tar.gz
 DEST_USER=nobody
-
-if [ $(getent group nobody) ]; then
-  DEST_GROUP=nobody
-else
-  DEST_GROUP=nogroup
-fi
+# Leere Gruppe führt zu Standardgruppe von "nobody"
+# (openSUSE: nobody, Ubuntu: nogroup)
+DEST_GROUP=""
 
 # Struktur des tar-Archives herunterladen und gleichzeitig entpacken
 curl -s -o - ${GITLAB_URL} | tar -xzf - --strip-components=1
