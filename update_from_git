@@ -1,5 +1,5 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2025-07-09
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2025-08-06
 
 # Installiert eine neue Version  vom zugehörigen GIT-Repositorium
 # und lädt den Server-Prozess neu.
@@ -8,6 +8,15 @@
 #
 # ./update_from_git
 #
+
+SCRIPT_DIR="$( dirname -- "$BASH_SOURCE"; )"
+if ! [[ ${SCRIPT_DIR} = "." ]]; then
+cat <<EOF
+  Error: Wrong directory!
+  Change to the directory where the script is installed.
+EOF
+exit -1
+fi
 
 PROJECT="relayServer"
 GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}/-/archive/master/${PROJECT}-master.tar.gz
