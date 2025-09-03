@@ -25,11 +25,12 @@ DEST_USER=nobody
 # (openSUSE: nobody, Ubuntu: nogroup)
 DEST_GROUP=""
 
+echo '* Update from GIT repository'
 # Struktur des tar-Archives herunterladen und gleichzeitig entpacken
 curl -s -o - ${GITLAB_URL} | tar -xzf - --strip-components=1
-
 ###chown -R ${DEST_USER}:${DEST_GROUP} ./
 
+echo '* Restart the server'
 systemctl daemon-reload
 systemctl restart ${PROJECT}.service
 
