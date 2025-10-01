@@ -1,5 +1,5 @@
 #! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de), 2025-09-03
+# Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
 
 # Installiert eine neue Version  vom zugehörigen GIT-Repositorium
 # und lädt den Server-Prozess neu.
@@ -19,15 +19,22 @@ exit -1
 fi
 
 PROJECT="relayServer"
-GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}/-/archive/master/${PROJECT}-master.tar.gz
-DEST_USER=vaclab
-DEST_GROUP=""
+THIS_USER=vaclab
+THIS_GROUP=""
+GIT_USER=vaclab
+GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}.git
 
 echo '* Update from GIT repository'
-# Struktur des tar-Archives herunterladen und gleichzeitig entpacken
-curl -s -o - ${GITLAB_URL} | tar -xzf - --strip-components=1
-# Leere Gruppe führt zu Standardgruppe
-chown -R ${DEST_USER}:${DEST_GROUP} ./
+THIS_DIR=$(pwd)
+pushd . > /dev/null
+TEMP_DIR=$(runuser -u ${GIT_USER} -- mktemp -d)
+cd ${TEMP_DIR}
+runuser -u ${GIT_USER} -- git clone "${GITLAB_URL}" >/dev/null 2>&1
+cd ${PROJECT} && rm -rf .git # we don't need the git overhead
+rsync -a . ${THIS_DIR}/      # "/" is important
+popd > /dev/null
+rm -rf ${TEMP_DIR}
+chown -R ${THIS_USER}:${THIS_GROUP} ./ 
 
 echo '* Restart the server'
 systemctl daemon-reload
