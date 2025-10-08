@@ -22,7 +22,7 @@ PROJECT="relayServer"
 THIS_USER=vaclab
 THIS_GROUP=""
 GIT_USER=vaclab
-GITLAB_URL=https://gitlab1.ptb.de/vaclab/${PROJECT}.git
+GITLAB_URL=git@gitlab1.ptb.de:vaclab/${PROJECT}.git
 
 echo '* Update from GIT repository'
 THIS_DIR=$(pwd)
