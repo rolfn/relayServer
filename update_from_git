@@ -1,5 +1,6 @@
-#! /bin/bash
-# Rolf Niepraschk (Rolf.Niepraschk@ptb.de)
+#!/bin/bash
+
+# Rolf Niepraschk (Rolf.Niepraschk@gmx.de)
 
 # Installiert eine neue Version  vom zugehörigen GIT-Repositorium
 # und lädt den Server-Prozess neu.
@@ -9,35 +10,55 @@
 # ./update_from_git
 #
 
-SCRIPT_DIR="$( dirname -- "$BASH_SOURCE"; )"
-if ! [[ ${SCRIPT_DIR} = "." ]]; then
-cat <<EOF
-  Error: Wrong directory!
-  Change to the directory where the script is installed.
-EOF
-exit -1
-fi
+# Abbrechen bei Fehlern, ungesetzten Variablen oder Fehlern in Pipes
+set -euo pipefail
 
 PROJECT="relayServer"
-THIS_USER=vaclab
-THIS_GROUP=""
-GIT_USER=vaclab
-GITLAB_URL=git@u99145.bs.ptb.de:vaclab/${PROJECT}.git
+THIS_USER="vaclab"
+GIT_USER="vaclab"
+GITLAB_URL="git@u99145.bs.ptb.de:vaclab/${PROJECT}.git"
+TARGET_DIR="$(pwd)"
 
-echo '* Update from GIT repository'
-THIS_DIR=$(pwd)
-pushd . > /dev/null
-TEMP_DIR=$(runuser -u ${GIT_USER} -- mktemp -d)
-cd ${TEMP_DIR}
-runuser -u ${GIT_USER} -- git clone "${GITLAB_URL}" >/dev/null 2>&1
-cd ${PROJECT} && rm -rf .git # we don't need the git overhead
-rsync -a . ${THIS_DIR}/      # "/" is important
-popd > /dev/null
-rm -rf ${TEMP_DIR}
-chown -R ${THIS_USER}:${THIS_GROUP} ./ 
+SCRIPT_NAME=$(basename "$0")
 
-echo '* Restart the server'
+# 1. Validierung des Verzeichnisses
+if [ ! -f "$SCRIPT_NAME" ]; then
+    echo "Error: Script must be executed in the target folder."
+    exit 1
+fi
+
+echo "* Start update for project: ${PROJECT}"
+
+# 2. Temporäres Verzeichnis erstellen
+TEMP_DIR=$(mktemp -d)
+chown "${GIT_USER}:" "${TEMP_DIR}"
+
+# 3. Git Clone als GIT_USER (nur der neueste Stand ohne Historie)
+sudo -u "${GIT_USER}" bash <<EOF
+    set -e
+    git clone --depth 1 --quiet "${GITLAB_URL}" "${TEMP_DIR}/${PROJECT}"
+EOF
+
+# 4. Sync ins Zielverzeichnis
+# -a: Archiv-Modus (Rechte, Zeiten)
+# --delete: Löscht Dateien im Ziel, die im Git nicht mehr existieren
+# --exclude='.git': Muss dann nicht extra gelöscht werden.
+echo "* Synchronize files..."
+rsync -a --exclude='.git' "${TEMP_DIR}/${PROJECT}/" "${TARGET_DIR}/"
+
+# 5. Berechtigungen im Ziel geradeziehen
+chown -R "${THIS_USER}:" "${TARGET_DIR}"
+
+# 6. Aufräumen
+rm -rf "${TEMP_DIR}"
+
+# 7. Systemd-Service neustarten
+echo "* Restart the service..."
 systemctl daemon-reload
-systemctl restart ${PROJECT}.service
+if systemctl is-active --quiet "${PROJECT}.service"; then
+    systemctl restart "${PROJECT}.service"
+else
+    systemctl start "${PROJECT}.service"
+fi
 
-exit
+echo "✓ Update successfully completed."
