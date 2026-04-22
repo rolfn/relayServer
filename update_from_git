@@ -33,10 +33,16 @@ echo "* Start update for project: ${PROJECT}"
 TEMP_DIR=$(mktemp -d)
 chown "${GIT_USER}:" "${TEMP_DIR}"
 
-# 3. Git Clone als GIT_USER (nur der neueste Stand ohne Historie)
+# 3. Git Clone als GIT_USER und Erstellen der Datei VERSION.
 sudo -u "${GIT_USER}" bash <<EOF
     set -e
-    git clone --depth 1 --quiet "${GITLAB_URL}" "${TEMP_DIR}/${PROJECT}"
+    git clone --quiet "${GITLAB_URL}" "${TEMP_DIR}/${PROJECT}"
+    if command -v create_version_file >/dev/null 2>&1; then
+      cd "${TEMP_DIR}/${PROJECT}"
+      create_version_file >/dev/null
+      # Das \ vor dem $ verhindert die sofortige Ausführung durch die lokale Shell
+      echo "* Version: \$(cat ./VERSION)"
+    fi
 EOF
 
 # 4. Sync ins Zielverzeichnis
